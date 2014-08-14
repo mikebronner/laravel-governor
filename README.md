@@ -7,7 +7,7 @@
 To install bones-keeper as a stand-alone module:
 
 ```sh
-composer require "genealabs/bones-keeper":"*"
+composer require genealabs/bones-keeper:*
 ```
 
 or add it to you composer.json file:
@@ -23,7 +23,7 @@ or add it to you composer.json file:
 And then add the service provider to your app.php config file:
 ```php
 	// 'providers' => array(
-		'GeneaLabs\BonesKeeper\BonesKeeperServiceProvider',
+		'GeneaLabs\Bones\Keeper\BonesKeeperServiceProvider',
     // );
 ```
 
