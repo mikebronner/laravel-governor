@@ -1,4 +1,4 @@
-<?php namespace Genealabs\BonesKeeper;
+<?php namespace GeneaLabs\Bones\Keeper;
 
 class Permission extends \BaseModel
 {
@@ -18,6 +18,6 @@ class Permission extends \BaseModel
 
 	public function roles()
 	{
-		return $this->belongsToMany('Genealabs\BonesKeeper\Role')->withTimestamps();
+		return $this->belongsToMany('GeneaLabs\Bones\Keeper\Role')->withTimestamps();
 	}
 }
