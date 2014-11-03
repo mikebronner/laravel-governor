@@ -12,8 +12,8 @@
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="#">Roles</a></li>
-        <li><a href="#">Permissions</a></li>
+        <li>{{ link_to_route('roles.index', 'Roles') }}</li>
+        <li>{{ link_to_route('permissions.index', 'Permissions') }}</li>
       </ul>
     </div>
   </div>

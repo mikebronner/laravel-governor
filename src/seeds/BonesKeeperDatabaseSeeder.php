@@ -11,10 +11,11 @@ class BonesKeeperDatabaseSeeder extends \Seeder {
     {
         Eloquent::unguard();
 
-        $this->call('BonesKeeperPermissionsTableSeeder');
+        $this->call('BonesKeeperEntitiesTableSeeder');
+        $this->call('BonesKeeperActionsTableSeeder');
+        $this->call('BonesKeeperOwnershipsTableSeeder');
         $this->call('BonesKeeperRolesTableSeeder');
-        $this->call('BonesKeeperRolesPermissionsTableSeeder');
-        $this->call('BonesKeeperRolesUsersTableSeeder');
+        $this->call('BonesKeeperPermissionsTableSeeder');
     }
 
 }

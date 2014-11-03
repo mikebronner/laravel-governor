@@ -1,4 +1,4 @@
-<?php namespace Genealabs\BonesKeeper;
+<?php namespace GeneaLabs\Bones\Keeper;
 
 //use GeneaLabs\Role;
 
@@ -96,4 +96,9 @@ trait BonesKeeperTrait
 		$this->checkImplementation();
 		return $this->roles()->detach($role);
 	}
+
+    public function roles()
+    {
+        return $this->belongsToMany('Genealabs\Bones\Keeper\Role', 'role_user', 'user_id', 'role');
+    }
 }

@@ -2,22 +2,26 @@
 
 class Permission extends \BaseModel
 {
-	protected $rules = [
-		'action' => 'required',
-		'ownership' => 'required',
-		'entity' => 'required',
-		'description' => 'required|min:3',
-	];
+	protected $rules = [];
+	protected $fillable = [];
 
-	protected $fillable = [
-		'action',
-		'ownership',
-		'entity',
-		'description',
-	];
-
-	public function roles()
+	public function role()
 	{
-		return $this->belongsToMany('GeneaLabs\Bones\Keeper\Role')->withTimestamps();
+		return $this->belongsTo('GeneaLabs\Bones\Keeper\Role', 'role_key', 'name');
 	}
+
+    public function entity()
+    {
+        return $this->belongsTo('GeneaLabs\Bones\Keeper\Entity', 'entity_key', 'name');
+    }
+
+    public function action()
+    {
+        return $this->belongsTo('GeneaLabs\Bones\Keeper\Action', 'action_key', 'name');
+    }
+
+    public function ownership()
+    {
+        return $this->belongsTo('GeneaLabs\Bones\Keeper\Ownership', 'ownership_key', 'name');
+    }
 }

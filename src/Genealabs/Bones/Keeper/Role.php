@@ -2,11 +2,10 @@
 
 class Role extends \BaseModel
 {
+    protected $primaryKey = 'name';
 	protected $rulesets = [
-		'saving' => [
-			'name' => 'required|min:3|unique:roles,name',
-			'description' => 'required|min:10',
-		],
+        'name' => 'required|min:3|unique:roles,name',
+        'description' => 'required|min:10',
 	];
 
 	protected $fillable = [
@@ -16,11 +15,11 @@ class Role extends \BaseModel
 
 	public function users()
 	{
-		return $this->belongsTo(Config::get('auth.model'));
+		return $this->belongsToMany(\Config::get('auth.model'), 'role_user', 'role', 'user_id');
 	}
 
 	public function permissions()
 	{
-		return $this->belongsToMany('GeneaLabs\Bones\Keeper\Permission');
+		return $this->hasMany('GeneaLabs\Bones\Keeper\Permission', 'role_key');
 	}
 }

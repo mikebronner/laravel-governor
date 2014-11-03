@@ -1,6 +1,6 @@
-@extends($layoutView)
+@extends('genealabs/bones-keeper::master')
 
-@section('content')
+@section('innerContent')
 <div class="container">
     <div class="page-header">
         {{ link_to_route('roles.create', 'Add New Role', null, ['class' => 'btn btn-default pull-right']) }}
@@ -8,7 +8,11 @@
     </div>
     <div class="list-group">
     @foreach($roles as $role)
-        <a href="#" class="list-group-item">
+        @if ($role->name != 'SuperAdmin')
+        <a href="{{ route('roles.edit', $role->name) }}" class="list-group-item">
+        @else
+        <a class="list-group-item">
+        @endif
             <h4 class="list-group-item-heading">{{ $role->name }}</h4>
             <p class="list-group-item-text">{{ $role->description }}</p>
         </a>

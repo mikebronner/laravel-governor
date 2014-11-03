@@ -12,12 +12,13 @@ class CreateRolesUsersTable extends Migration {
 	 */
 	public function up()
 	{
-        Schema::create('roles_users', function(Blueprint $table)
+        Schema::create('role_user', function(Blueprint $table)
         {
-            $table->increments('id');
-            $table->integer('role_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->timestamps();
+            $user = \App::make(\Config::get('auth.model'));
+            $table->string('role')->index();
+            $table->integer('user_id')->unsigned()->index();
+            $table->foreign('role')->references('name')->on('roles')->onDelete('cascade');
+            $table->foreign('user_id')->references($user['primaryKey'])->on($user['table'])->onDelete('cascade');
         });
 	}
 
@@ -28,6 +29,6 @@ class CreateRolesUsersTable extends Migration {
 	 */
 	public function down()
 	{
-        Schema::drop('roles_users');
+        Schema::drop('role_user');
 	}
 }
