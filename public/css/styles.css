@@ -23,9 +23,9 @@
   margin-left: .2em; }
 
 .navbar-brand {
-  text-decoration: none;
   font-weight: bold; }
   .navbar-brand a {
+    text-decoration: none;
     font-weight: normal; }
     .navbar-brand a .genea {
       font-family: Limelight; }

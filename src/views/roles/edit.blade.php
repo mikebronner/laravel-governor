@@ -65,10 +65,27 @@
                     </div>
                     <div class="col-sm-10 btn-group">
                         {{ Form::button('Update Role', ['class' => 'btn btn-success', 'onclick' => 'submitForm($("#editForm"));']) }}
-                        {{ Form::button('Delete Role', ['class' => 'btn btn-danger', 'onclick' => 'submitForm($("#deleteForm"));']) }}
+                        {{ Form::button('Delete Role', ['class' => 'btn btn-danger', 'data-toggle' => 'modal', 'data-target' => '#deleteModal']) }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="modal" id="deleteModal">
+        <div class="modal-dialog">
+            <div class="modal-content panel-danger">
+                <div class="modal-header panel-heading">
+                    <h4 class="modal-title">Delete this Role?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you absolutely sure you want to destroy this poor role? It will be blasted to oblivion, if you continue to the affirmative.</p>
+                </div>
+                <div class="modal-footer panel-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger pull-right" onclick="submitForm($('#deleteForm'));">Delete Role</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @stop
