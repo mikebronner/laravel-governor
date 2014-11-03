@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">GeneaLabs</a>
+      <span class="navbar-brand"><a href="http://genealabs.com"><span class="genea">Genea</span>Labs'</a> Bones/Keeper</span>
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">

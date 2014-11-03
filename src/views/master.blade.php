@@ -1,9 +1,9 @@
 @extends($layoutView)
 
 @section('content')
-    {{ HTML::script('/packages/genealabs/bones-keeper/scripts.js') }}
+    {{ HTML::script('/packages/genealabs/bones-keeper/js/scripts.js') }}
     <style>
-        @import url('/packages/genealabs/bones-keeper/styles.css');
+        @import url('/packages/genealabs/bones-keeper/css/styles.css');
     </style>
     @yield('innerContent')
 @stop

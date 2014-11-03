@@ -16,6 +16,11 @@
     return null;
   };
 
+  window.submitForm = function(form) {
+    form.submit();
+    return null;
+  };
+
 }).call(this);
 
 //# sourceMappingURL=scripts.js.map

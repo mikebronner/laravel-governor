@@ -66,9 +66,9 @@ class RolesController extends \BaseController
         return View::make('genealabs/bones-keeper::roles.edit', compact('layoutView', 'role', 'permissionMatrix', 'ownershipOptions'));
     }
 
-    public function update($id)
+    public function update($name)
     {
-        $role = Role::find($id);
+        $role = Role::find($name);
         $role->name = Input::has('name') ? Input::get('name') : $role->name;
         $role->description = Input::has('description') ? Input::get('description') : $role->description;
         $allActions = Action::all();
@@ -96,9 +96,9 @@ class RolesController extends \BaseController
         return Redirect::route('roles.index');
     }
 
-    public function destroy($id)
+    public function destroy($name)
     {
-        Role::destroy($id);
+        Role::destroy($name);
 
         return Redirect::route('roles.index');
     }

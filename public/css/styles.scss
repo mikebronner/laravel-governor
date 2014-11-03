@@ -1,0 +1,46 @@
+@import url(http://fonts.googleapis.com/css?family=Limelight);
+@font-face {
+  font-family: 'genealabs';
+  src: url('/packages/genealabs/bones-keeper/fonts/genealabs.eot?95891505');
+  src: url('/packages/genealabs/bones-keeper/fonts/genealabs.eot?95891505#iefix') format('embedded-opentype'),
+  url('/packages/genealabs/bones-keeper/fonts/genealabs.woff?95891505') format('woff'),
+  url('/packages/genealabs/bones-keeper/fonts/genealabs.ttf?95891505') format('truetype'),
+  url('/packages/genealabs/bones-keeper/fonts/genealabs.svg?95891505#genealabs') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.navbar-brand a:before
+{
+  content: '\e800';
+  font-family: "genealabs";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  color: rgb(0, 198, 91);
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1em;
+  margin-left: .2em;
+}
+
+.navbar-brand
+{
+  text-decoration: none;
+  font-weight: bold;
+
+  a
+  {
+    font-weight: normal;
+
+    .genea
+    {
+      font-family: Limelight;
+    }
+  }
+}

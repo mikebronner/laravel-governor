@@ -8,3 +8,7 @@ initializeDropDowns = () ->
     $('#selected-' + $(this).data('entity') + '-' + $(this).data('action')).text $(this).text()
     null
   null
+
+window.submitForm = (form) ->
+  form.submit();
+  null
