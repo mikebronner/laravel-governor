@@ -1,6 +1,6 @@
-    @extends('genealabs/bones-keeper::master')
+@extends('genealabs/bones-keeper::master')
 
-    @section('innerContent')
+@section('innerContent')
     <div class="container">
         <h1 class="page-header">Edit Role</h1>
         <div class="well">
@@ -87,5 +87,4 @@
             </div>
         </div>
     </div>
-
-    @stop
+@stop

@@ -20,10 +20,10 @@ class CreatePermissionsTable extends Migration {
             $table->string('action_key');
             $table->string('ownership_key');
             $table->unique(['role_key', 'entity_key', 'action_key', 'ownership_key']);
-            $table->foreign('role_key')->references('name')->on('roles')->onDelete('cascade');
-            $table->foreign('entity_key')->references('name')->on('entities')->onDelete('cascade');
-            $table->foreign('action_key')->references('name')->on('actions')->onDelete('cascade');
-            $table->foreign('ownership_key')->references('name')->on('ownerships')->onDelete('cascade');
+            $table->foreign('role_key')->references('name')->on('roles')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('entity_key')->references('name')->on('entities')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('action_key')->references('name')->on('actions')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('ownership_key')->references('name')->on('ownerships')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
 	}
