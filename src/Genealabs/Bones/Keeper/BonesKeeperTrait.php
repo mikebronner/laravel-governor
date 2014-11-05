@@ -1,9 +1,13 @@
 <?php namespace GeneaLabs\Bones\Keeper;
 
-//use GeneaLabs\Role;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
+use KoNB\User;
 
 trait BonesKeeperTrait
 {
+    protected $roles;
+
 	public function hasPermissionTo($action, $ownership, $entity, $ownerUserId = null)
 	{
 		return $this->prepPermissionsCheck($action, $ownership, $entity, $ownerUserId);
@@ -21,9 +25,6 @@ trait BonesKeeperTrait
 		$action = strtolower($action);
 		$entity = strtolower($entity);
 		$hasPermission = false;
-//		if ($ownerUserId == null) {
-//			$ownership = [];
-//		}
 		$ownershipTest = ($this->id == $ownerUserId) ? 'own' : 'other';
 		$ownership = ($ownership == null) ? [] : $ownership;
 		$ownership = (!is_array($ownership)) ? explode('|', strtolower($ownership)) : $ownership;
@@ -40,22 +41,34 @@ trait BonesKeeperTrait
 		return $hasPermission;
 	}
 
-	private function checkPermission($action, $ownership, $entity)
+	private function checkPermission($action, $ownership = 'any', $entity)
 	{
 		$this->checkImplementation();
-		foreach ($this->roles as $role) {
-			foreach ($role->permissions as $permission) {
-//				var_dump($permission->action . "|" . $action . "|" . $permission->entity . "|" . $entity . "|" . $permission->ownership . "|" . $ownership);
-				if (($permission->action == $action) &&
-				    ($permission->entity == $entity)) {
-					if (($ownership == null) || ($ownership == '')) {
-						return true;
-					} elseif ($permission->ownership == $ownership) {
-						return true;
-					}
-				}
-			}
-		}
+        $action = Action::find($action);
+        $entity = Entity::find($entity);
+        $ownership = Ownership::find($ownership);
+//        $role = Role::find('Adventurer');
+//        $user = User::with('roles')->find($this->id);
+//        Role::all();
+        $this->load('roles');
+        $role = Role::with('users')->find('SuperAdmin');
+        $queries = DB::getQueryLog();
+        $last_query = end($queries);
+        $test = User::with('roles')->find($this->id);
+        $test->load('roles');
+        dd($app);
+        if (count($this->roles)) {
+            foreach ($this->roles->permissions as $permission) {
+                var_dump($action);
+                dd($permission);
+                if (($permission->action == $action) &&
+                    ($permission->entity == $entity) &&
+                    ($permission->ownership == $ownership)
+                ) {
+                    return true;
+                }
+            }
+        }
 
 		return false;
 	}
@@ -64,10 +77,10 @@ trait BonesKeeperTrait
 	{
 		$role = new Role();
 
-		if (!$this->roles) {
+		if (!$this->roles()) {
 			throw new MissingPermissionsImplementationException('Please define a "roles" relationship in your model.');
 		}
-		if (!$role->permissions) {
+		if (!$role->permissions()) {
 			throw new MissingPermissionsImplementationException('Please define a "permissions" relationship in your Role model.');
 		}
 		unset($role);
@@ -76,13 +89,9 @@ trait BonesKeeperTrait
 	public function isA($name)
 	{
 		$this->checkImplementation();
-		foreach ($this->roles as $role) {
-			if ($role->name == $name) {
-				return true;
-			}
-		}
+        $role = Role::find($name);
 
-		return false;
+        return $this->roles->contains($role);
 	}
 
 	public function assignRole($role)
@@ -99,6 +108,6 @@ trait BonesKeeperTrait
 
     public function roles()
     {
-        return $this->belongsToMany('Genealabs\Bones\Keeper\Role', 'role_user', 'user_id', 'role');
+        return $this->belongsToMany('GeneaLabs\Bones\Keeper\Role', 'role_user', 'role', 'user_id');
     }
 }

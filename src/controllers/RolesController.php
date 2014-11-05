@@ -71,6 +71,8 @@ class RolesController extends \BaseController
         $role = Role::find($name);
         $role->name = Input::has('name') ? Input::get('name') : $role->name;
         $role->description = Input::has('description') ? Input::get('description') : $role->description;
+        $role->save();
+        $role = Role::find(Input::get('name'));
         $allActions = Action::all();
         $allOwnerships = Ownership::all();
         $allEntities = Entity::all();
