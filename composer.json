@@ -21,8 +21,8 @@
             "src/controllers",
             "src/seeds"
         ],
-        "psr-0": {
-            "GeneaLabs\\Bones\\Keeper\\": "src/"
+        "psr-4": {
+            "GeneaLabs\\Bones\\Keeper\\": "src"
         }
     },
     "scripts": {

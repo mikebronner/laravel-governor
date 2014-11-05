@@ -108,6 +108,6 @@ trait BonesKeeperTrait
 
     public function roles()
     {
-        return $this->belongsToMany('GeneaLabs\Bones\Keeper\Role', 'role_user', 'user_id', 'role_key');
+        return $this->belongsToMany('\GeneaLabs\Bones\Keeper\Role', 'role_user', 'user_id', 'role_key');
     }
 }
