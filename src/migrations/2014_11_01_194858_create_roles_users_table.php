@@ -17,8 +17,8 @@ class CreateRolesUsersTable extends Migration {
             $user = \App::make(\Config::get('auth.model'));
             $table->string('role_key')->index();
             $table->integer('user_id')->unsigned()->index();
-            $table->foreign('role_key')->references('name')->on('roles')->onDelete('cascade');
-            $table->foreign('user_id')->references($user['primaryKey'])->on($user['table'])->onDelete('cascade');
+            $table->foreign('role_key')->references('name')->on('roles')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references($user['primaryKey'])->on($user['table'])->onDelete('cascade')->onUpdate('cascade');
         });
 	}
 

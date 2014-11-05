@@ -1,7 +1,6 @@
 @extends('genealabs/bones-keeper::master')
 
 @section('innerContent')
-<div class="container">
     <div class="page-header">
         {{ link_to_route('entities.create', 'Add New Permission', null, ['class' => 'btn btn-default pull-right']) }}
         <h1>Entities</h1>
@@ -13,5 +12,4 @@
         </a>
     @endforeach
     </div>
-</div>
 @stop

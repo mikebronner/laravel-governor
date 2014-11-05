@@ -5,6 +5,7 @@
 ## Before You Get Started
 
 - This package depends on a BaseModel, belonging to the root namespace, so that it can be referenced by `\BaseModel`. Your BaseModel class should implement your ORM of choice (by default Eloquent); we will use this to connect to the database.
+- You must have at least 1 (one) user in your users table.
 
 ## Installation
 

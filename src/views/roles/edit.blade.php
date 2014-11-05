@@ -1,7 +1,6 @@
 @extends('genealabs/bones-keeper::master')
 
 @section('innerContent')
-    <div class="container">
         <h1 class="page-header">Edit Role</h1>
         <div class="well">
             {{ Form::model($role, ['route' => ['roles.update', $role->name], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'editForm']) }}
@@ -49,7 +48,7 @@
                                         </div>
                                     </div>
                                 @endforeach
-                                {{ $entity }}.
+                                {{ str_plural($entity) }}.
                             </li>
                             @endforeach
                         </ul>
@@ -70,7 +69,6 @@
                 </div>
             </div>
         </div>
-    </div>
     <div class="modal" id="deleteModal">
         <div class="modal-dialog">
             <div class="modal-content panel-danger">

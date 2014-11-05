@@ -7,5 +7,8 @@
         @import url('/packages/genealabs/bones-keeper/css/selectize.bootstrap3.css');
         @import url('/packages/genealabs/bones-keeper/css/styles.css');
     </style>
-    @yield('innerContent')
+    <div class="container">
+        @include('genealabs/bones-keeper::menu')
+        @yield('innerContent')
+    </div>
 @stop

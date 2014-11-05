@@ -1,7 +1,6 @@
-    @extends('genealabs/bones-keeper::master')
+@extends('genealabs/bones-keeper::master')
 
-    @section('innerContent')
-    <div class="container">
+@section('innerContent')
         <h1 class="page-header">Add Role</h1>
         {{ Form::open(['route' => 'roles.store', 'method' => 'POST', 'class' => 'form-horizontal well']) }}
             <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : ''; }}">
@@ -33,5 +32,4 @@
                 </div>
             </div>
         {{ Form::close() }}
-    </div>
     @stop

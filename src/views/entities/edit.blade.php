@@ -1,7 +1,6 @@
     @extends('genealabs/bones-keeper::master')
 
     @section('innerContent')
-    <div class="container">
         <h1 class="page-header">Edit Entities</h1>
         <div class="well">
         {{ Form::model($entity, ['route' => ['entities.update', $entity->name], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'editForm']) }}
@@ -30,7 +29,6 @@
                 </div>
             </div>
         </div>
-    </div>
     <div class="modal" id="deleteModal">
         <div class="modal-dialog">
             <div class="modal-content panel-danger">
