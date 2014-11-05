@@ -56,8 +56,8 @@ trait BonesKeeperTrait
         $last_query = end($queries);
         $test = User::with('roles')->find($this->id);
         $test->load('roles');
-        dd($app);
-        if (count($this->roles)) {
+        dd($this->roles);
+        if (count($this->roles())) {
             foreach ($this->roles->permissions as $permission) {
                 var_dump($action);
                 dd($permission);
@@ -108,6 +108,6 @@ trait BonesKeeperTrait
 
     public function roles()
     {
-        return $this->belongsToMany('GeneaLabs\Bones\Keeper\Role', 'role_user', 'role', 'user_id');
+        return $this->belongsToMany('GeneaLabs\Bones\Keeper\Role', 'role_user', 'user_id', 'role_key');
     }
 }

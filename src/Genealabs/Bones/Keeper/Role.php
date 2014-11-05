@@ -15,7 +15,7 @@ class Role extends \BaseModel
 
 	public function users()
 	{
-		return $this->belongsToMany(\Config::get('auth.model'), 'role_user', 'role', 'user_id');
+		return $this->belongsToMany(\Config::get('auth.model'), 'role_user', 'role_key', 'user_id');
 	}
 
 	public function permissions()
