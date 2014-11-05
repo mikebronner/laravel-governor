@@ -30,4 +30,7 @@
     .navbar-brand a .genea {
       font-family: Limelight; }
 
+.selectize-input > div {
+  background: none !important; }
+
 /*# sourceMappingURL=styles.css.map */

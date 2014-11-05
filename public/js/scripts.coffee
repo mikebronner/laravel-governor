@@ -2,6 +2,7 @@ $ ->
   getLatestVersion()
   initializeDropDowns()
   initializeCollapsers()
+  initializeSelectize()
   null
 
 initializeDropDowns = () ->
@@ -48,11 +49,23 @@ versionIsSmaller = (version1, version2) ->
   result
 
 initializeCollapsers = () ->
-  $('.collapse').collapse({
-      toggle: true,
-      hide: true
-    })
-  $('.collapse').on 'show','.collapse', () ->
-    $('.collapse').find('.collapse.in').collapse 'hide'
+  $('.collapse').collapse
+    hide: true
+  $('.collapse').on 'show', '.collapse', () ->
+    console.log 'test'
+    $('.collapse.in').collapse 'hide'
     null
   null
+
+initializeSelectize = () ->
+  $('.selectize').selectize
+    maxItems: null,
+    valueField: 'id',
+    labelField: 'name',
+    searchField: 'name',
+    options: window.userArray,
+    render:
+      item: (item, escape) ->
+          '<div><span class="btn btn-primary btn-sm">' + escape(item.name) + '</span></div>'
+        , option: (item, escape) ->
+          '<div><span class="dropdown-item">' + escape(item.name) + '</span></div>'

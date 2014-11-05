@@ -2,7 +2,9 @@
 
 @section('content')
     {{ HTML::script('/packages/genealabs/bones-keeper/js/scripts.js') }}
+    {{ HTML::script('/packages/genealabs/bones-keeper/js/selectize.min.js') }}
     <style>
+        @import url('/packages/genealabs/bones-keeper/css/selectize.bootstrap3.css');
         @import url('/packages/genealabs/bones-keeper/css/styles.css');
     </style>
     @yield('innerContent')

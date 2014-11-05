@@ -29,9 +29,15 @@ class UserRolesController extends \BaseController
         $layoutView = $this->layoutView;
         $displayNameField = $this->displayNameField;
         $users = $this->user->all();
-        $roles = Role::all();
+        $usersArray = $users->lists($this->user['primaryKey'], $this->displayNameField);
+        $roles = Role::with('users')->get();
+        $userList = [];
 
-        return View::make('genealabs/bones-keeper::userroles.index', compact('layoutView', 'users', 'roles', 'displayNameField'));
+        foreach ($usersArray as $displayName => $id) {
+            array_push($userList, ['id' => $id, 'name' => $displayName]);
+        }
+
+        return View::make('genealabs/bones-keeper::userroles.index', compact('layoutView', 'users', 'roles', 'displayNameField', 'userList'));
     }
 
     public function store()
