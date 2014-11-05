@@ -1,6 +1,7 @@
 $ ->
   getLatestVersion()
   initializeDropDowns()
+  initializeCollapsers()
   null
 
 initializeDropDowns = () ->
@@ -45,3 +46,13 @@ versionIsSmaller = (version1, version2) ->
     if version1[i] isnt version2[i]
       break
   result
+
+initializeCollapsers = () ->
+  $('.collapse').collapse({
+      toggle: true,
+      hide: true
+    })
+  $('.collapse').on 'show','.collapse', () ->
+    $('.collapse').find('.collapse.in').collapse 'hide'
+    null
+  null
