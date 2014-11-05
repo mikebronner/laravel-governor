@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
-use KoNB\User;
 
 trait BonesKeeperTrait
 {
@@ -47,18 +46,9 @@ trait BonesKeeperTrait
         $action = Action::find($action);
         $entity = Entity::find($entity);
         $ownership = Ownership::find($ownership);
-//        $role = Role::find('Adventurer');
-//        $user = User::with('roles')->find($this->id);
-//        Role::all();
-        $this->load('roles');
-        $role = Role::with('users')->find('SuperAdmin');
-        $queries = DB::getQueryLog();
-        $last_query = end($queries);
-        $test = User::with('roles')->find($this->id);
-        $test->load('roles');
-        dd($this->roles);
-        if (count($this->roles())) {
-            foreach ($this->roles->permissions as $permission) {
+        dd($this->load('userRoles')->userRoles);
+        if ($this->load('userRoles')->userRoles()->count()) {
+            foreach ($this->userRoles->permissions as $permission) {
                 var_dump($action);
                 dd($permission);
                 if (($permission->action == $action) &&
@@ -75,21 +65,20 @@ trait BonesKeeperTrait
 
 	private function checkImplementation()
 	{
-		$role = new Role();
-
-		if (!$this->roles()) {
+		if (!$this->userRoles()) {
 			throw new MissingPermissionsImplementationException('Please define a "roles" relationship in your model.');
 		}
+        $role = new Role();
 		if (!$role->permissions()) {
 			throw new MissingPermissionsImplementationException('Please define a "permissions" relationship in your Role model.');
 		}
 		unset($role);
 	}
 
-	public function isA($name)
+	public function isA($role)
 	{
 		$this->checkImplementation();
-        $role = Role::find($name);
+        $role = Role::find($role);
 
         return $this->roles->contains($role);
 	}
@@ -106,7 +95,7 @@ trait BonesKeeperTrait
 		return $this->roles()->detach($role);
 	}
 
-    public function roles()
+    public function userRoles()
     {
         return $this->belongsToMany('\GeneaLabs\Bones\Keeper\Role', 'role_user', 'user_id', 'role_key');
     }
