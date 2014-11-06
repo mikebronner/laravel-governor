@@ -16,7 +16,7 @@ class EntitiesController extends \BaseController
 
     public function __construct()
     {
-        $this->layoutView = Config::get('genealabs/bones-keeper::config.layoutView');
+        $this->layoutView = Config::get('bones-keeper::layoutView');
     }
 
     public function index()

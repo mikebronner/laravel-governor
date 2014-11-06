@@ -20,7 +20,6 @@ class BonesKeeperServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('genealabs/bones-keeper');
         View::addNamespace('genealabs/bones-keeper', __DIR__ . '/views');
         Config::addNamespace('genealabs/bones-keeper', __DIR__ . '/config');
 	}
@@ -32,6 +31,9 @@ class BonesKeeperServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+        $this->package('genealabs/bones-keeper');
+        $this->app['config']->package('genealabs/bones-keeper', __DIR__ . '/config');
+
         include_once(__DIR__ . '/routes.php');
 	}
 

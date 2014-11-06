@@ -15,9 +15,9 @@ class UserRolesController extends \BaseController
 
     public function __construct()
     {
-        $this->layoutView = Config::get('genealabs/bones-keeper::config.layoutView');
-        $this->displayNameField = Config::get('genealabs/bones-keeper::config.displayNameField');
-        $this->user = App::make(\Config::get('auth.model'));
+        $this->layoutView = Config::get('bones-keeper::layoutView');
+        $this->displayNameField = Config::get('bones-keeper::displayNameField');
+        $this->user = App::make(Config::get('auth.model'));
     }
 
     public function index()
