@@ -7,7 +7,12 @@
                 <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : ''; }}">
                     {{ Form::label('name', 'Name', ['class' => 'control-label col-sm-2']) }}
                     <div class="col-sm-5">
+                        @if ($role->name != 'Member')
                         {{ Form::text('name', null, ['class' => 'form-control']) }}
+                        @else
+                        {{ Form::hidden('name', $role->name) }}
+                        {{ Form::label('name', $role->name, ['class' => 'help-block']) }}
+                        @endif
                         @if (count($errors))
                         <span class="glyphicon {{ ($errors->has('name')) ? ' glyphicon-remove' : ' glyphicon-ok'; }} form-control-feedback"></span>
                         @endif
@@ -17,7 +22,12 @@
                 <div class="form-group{{ (count($errors) > 0) ? (($errors->has('description')) ? ' has-feedback has-error' : ' has-feedback has-success') : ''; }}">
                     {{ Form::label('description', 'Description', ['class' => 'control-label col-sm-2']) }}
                     <div class="col-sm-5">
+                        @if ($role->name != 'Member')
                         {{ Form::textarea('description', null, ['class' => 'form-control']) }}
+                        @else
+                        {{ Form::hidden('description', $role->description) }}
+                        {{ Form::label('description', $role->description, ['class' => 'help-block']) }}
+                        @endif
                         @if (count($errors))
                         <span class="glyphicon {{ ($errors->has('description')) ? ' glyphicon-remove' : ' glyphicon-ok'; }} form-control-feedback"></span>
                         @endif
@@ -64,7 +74,9 @@
                     </div>
                     <div class="col-sm-10 btn-group">
                         {{ Form::button('Update Role', ['class' => 'btn btn-success', 'onclick' => 'submitForm($("#editForm"));']) }}
+                        @if ($role->name != 'Member')
                         {{ Form::button('Delete Role', ['class' => 'btn btn-danger', 'data-toggle' => 'modal', 'data-target' => '#deleteModal']) }}
+                        @endif
                     </div>
                 </div>
             </div>

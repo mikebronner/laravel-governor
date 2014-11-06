@@ -45,6 +45,27 @@ class UserRolesController extends \BaseController
                 $role->users()->detach();
             });
             foreach ($assignedUsers as $role => $users) {
+                if ($role == 'SuperAdmin' || $role == 'Member') {
+                    continue;
+                }
+                $currentRole = Role::with('users')->find($role);
+                $currentRole->users()->attach($users);
+            }
+
+            // add all users to members role
+            $allUsers = $this->user->with('roles')->get();
+            $allUsers->each(function ($user) {
+                $user->roles()->attach('Member');
+            });
+
+            // remove superadmin users from any other roles
+            $role = 'SuperAdmin';
+            if (array_key_exists($role, $assignedUsers)) {
+                $users = $assignedUsers[$role];
+                foreach ($users as $id) {
+                    $user = $this->user->with('roles')->find($id);
+                    $user->roles()->detach();
+                }
                 $currentRole = Role::with('users')->find($role);
                 $currentRole->users()->attach($users);
             }
