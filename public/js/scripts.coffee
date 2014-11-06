@@ -19,7 +19,7 @@ window.submitForm = (form) ->
 getLatestVersion = () ->
   $.getJSON 'https://api.github.com/repos/GeneaLabs/bones-keeper/releases', (data) ->
     latestVersion = data[0]['tag_name']
-    currentVersion = $('#bonesKeeperInstalledVersion').text().replace('v', '')
+    currentVersion = $('#bonesKeeperInstalledVersion').text().replace 'v', ''
     if versionIsSmaller currentVersion, latestVersion
       $('#bonesKeeperCurrentVersion').text latestVersion
       $('#bonesKeeperCurrentVersion').addClass('btn-danger')
@@ -62,7 +62,6 @@ initializeSelectize = () ->
     valueField: 'id',
     labelField: 'name',
     searchField: 'name',
-    options: window.userArray,
     render:
       item: (item, escape) ->
           '<div><span class="btn btn-primary btn-sm">' + escape(item.name) + '</span></div>'
