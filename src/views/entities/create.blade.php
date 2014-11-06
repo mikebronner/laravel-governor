@@ -18,7 +18,7 @@
                     {{ link_to_route('entities.index', 'Cancel', null, ['class' => 'btn btn-default pull-left']) }}
                 </div>
                 <div class="col-sm-10">
-                    {{ Form::submit('Add Permission', ['class' => 'btn btn-success']) }}
+                    {{ Form::submit('Add Entity', ['class' => 'btn btn-success']) }}
                 </div>
             </div>
         {{ Form::close() }}
