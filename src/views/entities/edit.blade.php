@@ -20,7 +20,7 @@
             <div class="form-horizontal">
                 <div class="form-group">
                     <div class="col-sm-2">
-                        {{ link_to_route('roles.index', 'Cancel', null, ['class' => 'btn btn-default pull-left']) }}
+                        {{ link_to_route('entities.index', 'Cancel', null, ['class' => 'btn btn-default pull-left']) }}
                     </div>
                     <div class="col-sm-10 btn-group">
                         {{ Form::button('Update Entity', ['class' => 'btn btn-success', 'onclick' => 'submitForm($("#editForm"));']) }}

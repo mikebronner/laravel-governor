@@ -2,7 +2,7 @@
 
 @section('innerContent')
     <div class="page-header">
-        {{ link_to_route('roles.create', 'Add New Role', null, ['class' => 'btn btn-default pull-right']) }}
+        {{ link_to_route('roles.create', 'Add New Role', null, ['class' => 'btn btn-success btn-lg pull-right']) }}
         <h1>Roles</h1>
     </div>
     <div class="list-group">
