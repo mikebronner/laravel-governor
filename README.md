@@ -1,4 +1,4 @@
-#Warning: Not Yet Functional
+#Warning: still in final development stages, but functional.
 
 # Laravel Bones Keeper (bones-keeper)
 
