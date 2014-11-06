@@ -25,13 +25,7 @@ class UserRolesController extends \BaseController
         $layoutView = $this->layoutView;
         $displayNameField = $this->displayNameField;
         $users = $this->user->all();
-        $usersArray = $users->lists($this->user['primaryKey'], $this->displayNameField);
         $roles = Role::with('users')->get();
-        $userList = [];
-
-        foreach ($usersArray as $displayName => $id) {
-            array_push($userList, ['id' => $id, 'name' => $displayName]);
-        }
 
         return View::make('bones-keeper::userroles.index', compact('layoutView', 'users', 'roles', 'displayNameField', 'userList'));
     }
@@ -40,37 +34,59 @@ class UserRolesController extends \BaseController
     {
         if (Input::has('users')) {
             $assignedUsers = Input::get('users');
-            $roles = Role::with('users')->get();
-            $roles->each(function ($role) {
-                $role->users()->detach();
-            });
-            foreach ($assignedUsers as $role => $users) {
-                if ($role == 'SuperAdmin' || $role == 'Member') {
-                    continue;
-                }
-                $currentRole = Role::with('users')->find($role);
-                $currentRole->users()->attach($users);
-            }
-
-            // add all users to members role
-            $allUsers = $this->user->with('roles')->get();
-            $allUsers->each(function ($user) {
-                $user->roles()->attach('Member');
-            });
-
-            // remove superadmin users from any other roles
-            $role = 'SuperAdmin';
-            if (array_key_exists($role, $assignedUsers)) {
-                $users = $assignedUsers[$role];
-                foreach ($users as $id) {
-                    $user = $this->user->with('roles')->find($id);
-                    $user->roles()->detach();
-                }
-                $currentRole = Role::with('users')->find($role);
-                $currentRole->users()->attach($users);
-            }
+            $this->removeAllUsersFromRoles();
+            $this->assignUsersToRoles($assignedUsers);
+            $this->addAllUsersToMemberRole();
+            $this->removeAllSuperAdminUsersFromOtherRoles($assignedUsers);
         }
 
         return Redirect::route('userroles.index');
+    }
+
+    private function addAllUsersToMemberRole()
+    {
+        $allUsers = $this->user->with('roles')->get();
+        $allUsers->each(function ($user) {
+            $user->roles()->attach('Member');
+        });
+    }
+
+    /**
+     * @param $assignedUsers
+     */
+    private function removeAllSuperAdminUsersFromOtherRoles($assignedUsers)
+    {
+        $role = 'SuperAdmin';
+        if (array_key_exists($role, $assignedUsers)) {
+            $users = $assignedUsers[$role];
+            foreach ($users as $id) {
+                $user = $this->user->with('roles')->find($id);
+                $user->roles()->detach();
+            }
+            $currentRole = Role::with('users')->find($role);
+            $currentRole->users()->attach($users);
+        }
+    }
+
+    /**
+     * @param $assignedUsers
+     */
+    private function assignUsersToRoles($assignedUsers)
+    {
+        foreach ($assignedUsers as $role => $users) {
+            if ($role == 'SuperAdmin' || $role == 'Member') {
+                continue;
+            }
+            $currentRole = Role::with('users')->find($role);
+            $currentRole->users()->attach($users);
+        }
+    }
+
+    private function removeAllUsersFromRoles()
+    {
+        $roles = Role::with('users')->get();
+        $roles->each(function ($role) {
+            $role->users()->detach();
+        });
     }
 }
