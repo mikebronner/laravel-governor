@@ -1,4 +1,4 @@
-@extends('genealabs/bones-keeper::master')
+@extends('bones-keeper::master')
 
 @section('innerContent')
         <h1 class="page-header">Edit Role</h1>

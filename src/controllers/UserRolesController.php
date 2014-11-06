@@ -33,7 +33,7 @@ class UserRolesController extends \BaseController
             array_push($userList, ['id' => $id, 'name' => $displayName]);
         }
 
-        return View::make('genealabs/bones-keeper::userroles.index', compact('layoutView', 'users', 'roles', 'displayNameField', 'userList'));
+        return View::make('bones-keeper::userroles.index', compact('layoutView', 'users', 'roles', 'displayNameField', 'userList'));
     }
 
     public function store()

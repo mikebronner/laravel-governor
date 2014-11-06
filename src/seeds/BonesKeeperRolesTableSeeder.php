@@ -9,7 +9,7 @@ class BonesKeeperRolesTableSeeder extends \Seeder {
         $superuser = $user->find($user->min($user['primaryKey']));
         $role = new Role();
         $role->name = 'SuperAdmin';
-        $role->description = 'This role is for the main administrator of your site. They will be able to absolutely everything. (This role cannot be edited.)';
+        $role->description = 'This role is for the main administrator of your site. They will be able to do absolutely everything. (This role cannot be edited.)';
         $role->save();
         $role = Role::find('SuperAdmin');
         $role->users()->save($superuser);

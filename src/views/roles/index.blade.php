@@ -1,4 +1,4 @@
-@extends('genealabs/bones-keeper::master')
+@extends('bones-keeper::master')
 
 @section('innerContent')
     <div class="page-header">

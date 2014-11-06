@@ -24,14 +24,14 @@ class EntitiesController extends \BaseController
         $layoutView = $this->layoutView;
         $entities = Entity::groupBy('name')->get();
 
-        return View::make('genealabs/bones-keeper::entities.index', compact('layoutView', 'entities'));
+        return View::make('bones-keeper::entities.index', compact('layoutView', 'entities'));
     }
 
     public function create()
     {
         $layoutView = $this->layoutView;
 
-        return View::make('genealabs/bones-keeper::entities.create', compact('layoutView'));
+        return View::make('bones-keeper::entities.create', compact('layoutView'));
     }
 
     public function store()
@@ -62,7 +62,7 @@ class EntitiesController extends \BaseController
         $layoutView = $this->layoutView;
         $entity = Entity::find($name);
 
-        return View::make('genealabs/bones-keeper::entities.edit', compact('layoutView', 'entity'));
+        return View::make('bones-keeper::entities.edit', compact('layoutView', 'entity'));
     }
 
     public function update($name)
