@@ -33,4 +33,7 @@
 .selectize-input > div {
   background: none !important; }
 
+.panel-group .panel {
+  overflow: auto; }
+
 /*# sourceMappingURL=styles.css.map */
