@@ -8,7 +8,7 @@
         @import url('/packages/genealabs/bones-keeper/css/styles.css');
     </style>
     <div class="container">
-        @include('genealabs/bones-keeper::menu')
+        @include('bones-keeper::menu')
         @yield('innerContent')
     </div>
 @stop

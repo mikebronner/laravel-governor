@@ -24,14 +24,14 @@ class RolesController extends \BaseController
         $layoutView = $this->layoutView;
         $roles = Role::orderBy('name')->get();
 
-        return View::make('genealabs/bones-keeper::roles.index', compact('layoutView', 'roles'));
+        return View::make('bones-keeper::roles.index', compact('layoutView', 'roles'));
     }
 
     public function create()
     {
         $layoutView = $this->layoutView;
 
-        return View::make('genealabs/bones-keeper::roles.create', compact('layoutView'));
+        return View::make('bones-keeper::roles.create', compact('layoutView'));
     }
 
     public function store()
@@ -63,7 +63,7 @@ class RolesController extends \BaseController
             }
         }
         $ownershipOptions = array_merge(['no' => 'no'], $ownerships->lists('name', 'name'));
-        return View::make('genealabs/bones-keeper::roles.edit', compact('layoutView', 'role', 'permissionMatrix', 'ownershipOptions'));
+        return View::make('bones-keeper::roles.edit', compact('layoutView', 'role', 'permissionMatrix', 'ownershipOptions'));
     }
 
     public function update($name)

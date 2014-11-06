@@ -17,23 +17,13 @@
     },
     "autoload": {
         "classmap": [
+            "src/controllers",
             "src/migrations",
             "src/seeds"
         ],
-        "psr-4": {
+        "psr-0": {
             "GeneaLabs\\Bones\\Keeper\\": "src"
         }
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "php artisan migrate --package='genealabs/bones-keeper'",
-            "php artisan db:seed --class='BonesKeeperDatabaseSeeder'",
-            "php artisan asset:publish genealabs/boneskeeper"
-        ],
-        "post-update-cmd": [
-            "php artisan migrate --package='genealabs/bones-keeper'",
-            "php artisan asset:publish genealabs/boneskeeper"
-        ]
     },
     "minimum-stability": "stable"
 }
