@@ -1,9 +1,6 @@
 @extends('bones-keeper::master')
 
 @section('innerContent')
-<script>
-    var userArray = {{ json_encode($userList) }};
-</script>
     {{ Form::open(['route' => 'userroles.store']) }}
         <div class="page-header">
             {{ Form::submit('Save User Roles', ['class' => 'btn btn-success btn-lg pull-right']) }}

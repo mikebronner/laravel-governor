@@ -86,7 +86,6 @@
       valueField: 'id',
       labelField: 'name',
       searchField: 'name',
-      options: window.userArray,
       render: {
         item: function(item, escape) {
           return '<div><span class="btn btn-primary btn-sm">' + escape(item.name) + '</span></div>';
