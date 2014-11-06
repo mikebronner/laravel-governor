@@ -17,16 +17,15 @@ window.submitForm = (form) ->
   null
 
 getLatestVersion = () ->
-  $.getJSON 'https://api.github.com/repos/GeneaLabs/bones-keeper/git/refs/', (data) ->
-    if data.length > 1
-      latestVersion = data[1]['ref'].split('/')
-      latestVersion = latestVersion[latestVersion.length - 1]
-      if versionIsSmaller $('#bonesKeeperInstalledVersion').text(), latestVersion
-        $('#bonesKeeperCurrentVersion').text latestVersion
-        $('#bonesKeeperCurrentVersion').addClass('btn-danger')
-        $('#bonesKeeperCurrentVersion').parent().href('http://github.com/genealabs/bones-keeper')
-        $('#bonesKeeperCurrentVersion').parent().removeClass('navbar-text')
-        $('#bonesKeeperCurrentVersion').parent().addClass('btn btn-default navbar-btn')
+  $.getJSON 'https://api.github.com/repos/GeneaLabs/bones-keeper/releases', (data) ->
+    latestVersion = data[0]['tag_name']
+    currentVersion = $('#bonesKeeperInstalledVersion').text().replace('v', '')
+    if versionIsSmaller currentVersion, latestVersion
+      $('#bonesKeeperCurrentVersion').text latestVersion
+      $('#bonesKeeperCurrentVersion').addClass('btn-danger')
+      $('#bonesKeeperCurrentVersion').parent().attr('href', 'http://github.com/genealabs/bones-keeper')
+      $('#bonesKeeperCurrentVersion').parent().removeClass('navbar-text')
+      $('#bonesKeeperCurrentVersion').parent().addClass('btn btn-default navbar-btn')
     null
   null
 
