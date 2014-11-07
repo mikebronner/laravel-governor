@@ -15,6 +15,8 @@ class UserRolesController extends \BaseController
 
     public function __construct()
     {
+        $this->beforeFilter('auth');
+        $this->beforeFilter('csrf', ['on' => 'post']);
         $this->layoutView = Config::get('bones-keeper::layoutView');
         $this->displayNameField = Config::get('bones-keeper::displayNameField');
         $this->user = App::make(Config::get('auth.model'));
@@ -22,25 +24,30 @@ class UserRolesController extends \BaseController
 
     public function index()
     {
-        $layoutView = $this->layoutView;
-        $displayNameField = $this->displayNameField;
-        $users = $this->user->all();
-        $roles = Role::with('users')->get();
+        if (Auth::user()->hasPermissionTo('view', 'any', 'userroles')) {
+            $layoutView = $this->layoutView;
+            $displayNameField = $this->displayNameField;
+            $users = $this->user->all();
+            $roles = Role::with('users')->get();
 
-        return View::make('bones-keeper::userroles.index', compact('layoutView', 'users', 'roles', 'displayNameField', 'userList'));
+            return View::make('bones-keeper::userroles.index',
+                compact('layoutView', 'users', 'roles', 'displayNameField', 'userList'));
+        }
     }
 
     public function store()
     {
-        if (Input::has('users')) {
-            $assignedUsers = Input::get('users');
-            $this->removeAllUsersFromRoles();
-            $this->assignUsersToRoles($assignedUsers);
-            $this->addAllUsersToMemberRole();
-            $this->removeAllSuperAdminUsersFromOtherRoles($assignedUsers);
-        }
+        if (Auth::user()->hasPermissionTo('create', 'any', 'userroles')) {
+            if (Input::has('users')) {
+                $assignedUsers = Input::get('users');
+                $this->removeAllUsersFromRoles();
+                $this->assignUsersToRoles($assignedUsers);
+                $this->addAllUsersToMemberRole();
+                $this->removeAllSuperAdminUsersFromOtherRoles($assignedUsers);
+            }
 
-        return Redirect::route('userroles.index');
+            return Redirect::route('userroles.index');
+        }
     }
 
     private function addAllUsersToMemberRole()

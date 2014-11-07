@@ -16,6 +16,8 @@ class RolesController extends \BaseController
 
     public function __construct()
     {
+        $this->beforeFilter('auth');
+        $this->beforeFilter('csrf', ['on' => 'post']);
         $this->layoutView = Config::get('bones-keeper::layoutView');
     }
 
