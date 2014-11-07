@@ -10,7 +10,11 @@ trait BonesKeeperTrait
     public function hasAccessTo($action, $ownership, $entity, $ownerUserId = null)
     {
         if (!$this->prepPermissionsCheck($action, $ownership, $entity, $ownerUserId)) {
-            throw new NoPermissionsException;
+            $exception = new NoPermissionsException();
+            $exception->action = $action;
+            $exception->ownership = $ownership;
+            $exception->entity = $ownership;
+            throw $exception;
         }
     }
 
