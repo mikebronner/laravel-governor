@@ -11,12 +11,12 @@
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingOne">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ $role->name }}" aria-expanded="true" aria-controls="collapseOne">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ Str::slug($role->name) }}" aria-expanded="true" aria-controls="collapseOne">
                         {{ $role->users()->count() . ' ' . (($role->users()->count() != 1) ? str_plural($role->name) : str_singular($role->name)) }}
                         </a>
                     </h4>
                 </div>
-                <div id="collapse-{{ $role->name }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div id="collapse-{{ Str::slug($role->name) }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                     <div class="panel-body">
                         {{ Form::select('users[' . $role->name . '][]', $users->lists($displayNameField, $users->first()['primaryKey']), $role->users->lists($users->first()['primaryKey']), ['class' => 'selectize', 'multiple']) }}
                     </div>
