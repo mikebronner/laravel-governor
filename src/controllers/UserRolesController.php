@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\View;
 
 class UserRolesController extends \BaseController
 {
-    protected $layoutView;
     protected $user;
     protected $displayNameField;
 
@@ -17,7 +16,6 @@ class UserRolesController extends \BaseController
     {
         $this->beforeFilter('auth');
         $this->beforeFilter('csrf', ['on' => 'post']);
-        $this->layoutView = Config::get('bones-keeper::layoutView');
         $this->displayNameField = Config::get('bones-keeper::displayNameField');
         $this->user = App::make(Config::get('auth.model'));
     }
@@ -25,13 +23,12 @@ class UserRolesController extends \BaseController
     public function index()
     {
         if (Auth::user()->hasPermissionTo('view', 'any', 'userroles')) {
-            $layoutView = $this->layoutView;
             $displayNameField = $this->displayNameField;
             $users = $this->user->all();
             $roles = Role::with('users')->get();
 
             return View::make('bones-keeper::userroles.index',
-                compact('layoutView', 'users', 'roles', 'displayNameField', 'userList'));
+                compact('users', 'roles', 'displayNameField', 'userList'));
         }
     }
 

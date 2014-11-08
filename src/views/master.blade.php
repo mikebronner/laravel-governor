@@ -1,4 +1,4 @@
-@extends($layoutView)
+@extends(Config::get('bones-keeper::layoutView'))
 
 @section('content')
     {{ HTML::script('/packages/genealabs/bones-keeper/js/scripts.js') }}

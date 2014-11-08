@@ -12,28 +12,22 @@ use Illuminate\Support\Facades\View;
 
 class EntitiesController extends \BaseController
 {
-    protected $layoutView;
-
     public function __construct()
     {
         $this->beforeFilter('auth');
         $this->beforeFilter('csrf', ['on' => 'post']);
-        $this->layoutView = Config::get('bones-keeper::layoutView');
     }
 
     public function index()
     {
-        $layoutView = $this->layoutView;
         $entities = Entity::groupBy('name')->get();
 
-        return View::make('bones-keeper::entities.index', compact('layoutView', 'entities'));
+        return View::make('bones-keeper::entities.index', compact('entities'));
     }
 
     public function create()
     {
-        $layoutView = $this->layoutView;
-
-        return View::make('bones-keeper::entities.create', compact('layoutView'));
+        return View::make('bones-keeper::entities.create');
     }
 
     public function store()
@@ -61,10 +55,9 @@ class EntitiesController extends \BaseController
 
     public function edit($name)
     {
-        $layoutView = $this->layoutView;
         $entity = Entity::find($name);
 
-        return View::make('bones-keeper::entities.edit', compact('layoutView', 'entity'));
+        return View::make('bones-keeper::entities.edit', compact('entity'));
     }
 
     public function update($name)

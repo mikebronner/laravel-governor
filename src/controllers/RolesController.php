@@ -5,6 +5,7 @@ use GeneaLabs\Bones\Keeper\Entity;
 use GeneaLabs\Bones\Keeper\Ownership;
 use GeneaLabs\Bones\Keeper\Permission;
 use GeneaLabs\Bones\Keeper\Role;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -12,28 +13,24 @@ use Illuminate\Support\Facades\View;
 
 class RolesController extends \BaseController
 {
-    protected $layoutView;
-
     public function __construct()
     {
         $this->beforeFilter('auth');
         $this->beforeFilter('csrf', ['on' => 'post']);
-        $this->layoutView = Config::get('bones-keeper::layoutView');
     }
 
     public function index()
     {
-        $layoutView = $this->layoutView;
-        $roles = Role::orderBy('name')->get();
+        if (Auth::check() && Auth::user()->hasAccessTo('view', 'any', 'role')) {
+            $roles = Role::orderBy('name')->get();
 
-        return View::make('bones-keeper::roles.index', compact('layoutView', 'roles'));
+            return View::make('bones-keeper::roles.index', compact('roles'));
+        }
     }
 
     public function create()
     {
-        $layoutView = $this->layoutView;
-
-        return View::make('bones-keeper::roles.create', compact('layoutView'));
+        return View::make('bones-keeper::roles.create');
     }
 
     public function store()
@@ -45,7 +42,6 @@ class RolesController extends \BaseController
 
     public function edit($name)
     {
-        $layoutView = $this->layoutView;
         $role = Role::with('permissions')->find($name);
         $entities = Entity::all();
         $actions = Action::all();
@@ -65,7 +61,7 @@ class RolesController extends \BaseController
             }
         }
         $ownershipOptions = array_merge(['no' => 'no'], $ownerships->lists('name', 'name'));
-        return View::make('bones-keeper::roles.edit', compact('layoutView', 'role', 'permissionMatrix', 'ownershipOptions'));
+        return View::make('bones-keeper::roles.edit', compact('role', 'permissionMatrix', 'ownershipOptions'));
     }
 
     public function update($name)
