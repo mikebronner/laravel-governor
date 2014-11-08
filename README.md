@@ -47,12 +47,12 @@ You will need to add a global error handler **above** the existing default error
 /app/start/global.php:
 
 ```php
-App::error(function(NoPermissionsException $exception, $code) {
-	return Response::view('genealabs/bones-keeper:unauthorized', [], 404);
+App::error(function(InvalidAccessException $exception, $code) {
+    return Response::make(View::make('bones-keeper::errors.unauthorized'), 404);
 });
 ```
 
-The above uses the default error view that comes with the packages. You can configure this to any view you have set up 
+The above uses the default error view that comes with the package. You can configure this to any view you have set up 
 for your app, of course keeping the message in line with the unauthorized access attempt.
 
 ## Methods
