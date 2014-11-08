@@ -1,41 +1,9 @@
 <?php namespace GeneaLabs\Bones\Keeper;
 
-class InvalidAccessException extends \Exception
+use Exception;
+
+class BaseException extends Exception
 {
-    private $action;
-    private $entity;
-    private $ownership;
-
-    public function getAction()
-    {
-        return $this->action;
-    }
-
-    public function setAction($action)
-    {
-        $this->action = $action;
-    }
-
-    public function getEntity()
-    {
-        return $this->entity;
-    }
-
-    public function setEntity($entity)
-    {
-        $this->entity = $entity;
-    }
-
-    public function getOwnership()
-    {
-        return $this->ownership;
-    }
-
-    public function setOwnership($ownership)
-    {
-        $this->ownership = $ownership;
-    }
-
     public function __get($property)
     {
         $getter = 'get' . $property;

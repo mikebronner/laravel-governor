@@ -2,24 +2,37 @@
 All notable changes to this project will be documented in this file.
 
 ## //TODO
-- added exceptions for invalid entity, action, or ownership
-- refactor extra functionality out of user roles controller
+- refactor extra functionality out of user roles controller? possibly not necessary
+- publish assets automatically on update and install
+- publish config automaticall on install
+- load change log when clicking on new version button in menu
+- run superadmin permissions update after every package update
+- color code enabled permissions on roles
+- make callapse panels collapse when another is opened
+- implement form validation
 
-### Package Checklist: http://phppackagechecklist.com/#1,2,4,9,10,13
-- Switch back to PSR-4 and see if everything works, now that we have the service provider working properly in PSR-0.
-- Add any non-essential files to .gitattributes.
+### Package Checklist: http://phppackagechecklist.com/#1,2,3,4,9,10,13
 - Make package framework agnostic. This may be sometime after 1.0.0 release.
 - Follow PSR-1 and PSR-2 coding styles. (Configure PHPStorm for this as well.)
 - Implement PHP Code Sniffer.
 - Implement PHP Coding Standards Fixer.
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
 - Add DocBlocks to all code.
-- Follow SemVer specs: http://semver.org
 - Implement TravisCI or Scrutinizer.
 - Flesh out documentation and keep it updated.
 - Add a CONTRIBUTING file.
 
-## 0.9.8 on 7 Nov 2014
+## 0.10.1 on
+### Added ...
+- SemVer adherence (http://semver.org).
+- any non-essential files to .gitattributes to make dist lean.
+- exceptions for invalid use of entity, action, or ownership.
+- definition of keeper to readme.
+
+### Changed ...
+- back to PSR-4 from PSR-0.
+
+## 0.10.0 on 7 Nov 2014
 ### Added ...
 - security checks to controllers and views.
 - additional options to error handling.

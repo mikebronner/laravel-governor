@@ -17,11 +17,10 @@
     },
     "autoload": {
         "classmap": [
-            "src/controllers",
             "src/migrations",
             "src/seeds"
         ],
-        "psr-0": {
+        "psr-4": {
             "GeneaLabs\\Bones\\Keeper\\": "src/"
         }
     },

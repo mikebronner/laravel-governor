@@ -25,6 +25,10 @@ trait BonesKeeperTrait
     {
         $action = strtolower($action);
         $entity = strtolower($entity);
+        $ownership = strtolower($ownership);
+        $this->checkIfActionExists($action);
+        $this->checkIfEntityExists($entity);
+        $this->checkIfOwnershipExists($ownership);
         $hasPermission = false;
         $ownershipTest = ($this->id == $ownerUserId) ? 'own' : 'other';
         $ownership = ($ownership == null) ? [] : $ownership;
@@ -40,6 +44,33 @@ trait BonesKeeperTrait
         }
 
         return $hasPermission;
+    }
+
+    private function checkIfActionExists($action) {
+        $actions = Action::all()->lists('name');
+        if (!in_array($action, $actions)) {
+            $exception = new \GeneaLabs\Bones\Keeper\InvalidActionException('The Action "' . $action . '" does not exist. Use one of: ' . implode(', ', $actions) . '.');
+            $exception->action = $action;
+            throw $exception;
+        }
+    }
+
+    private function checkIfEntityExists($entity) {
+        $entities = Entity::all()->lists('name');
+        if (!in_array($entity, $entities)) {
+            $exception = new \GeneaLabs\Bones\Keeper\InvalidEntityException('The Entity "' . $entity . '" does not exist. Use one of: ' . implode(', ', $entities) . '.');
+            $exception->entity = $entity;
+            throw $exception;
+        }
+    }
+
+    private function checkIfOwnershipExists($ownership) {
+        $ownerships = Ownership::all()->lists('name');
+        if (!in_array($ownership, $ownerships)) {
+            $exception = new \GeneaLabs\Bones\Keeper\InvalidOwnershipException('The Ownership "' . $ownership . '" does not exist. Use one of: ' . implode(', ', $ownerships) . '.');
+            $exception->ownership = $ownership;
+            throw $exception;
+        }
     }
 
     private function checkPermission($action, $ownership = 'any', $entity)
