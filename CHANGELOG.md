@@ -19,7 +19,7 @@ All notable changes to this project will be documented in this file.
 - Flesh out documentation and keep it updated.
 - Add a CONTRIBUTING file.
 
-## dev-master
+## 0.9.8 on 7 Nov 2014
 ### Added ...
 - security checks to controllers and views.
 - additional options to error handling.
@@ -28,7 +28,3 @@ All notable changes to this project will be documented in this file.
 
 ### Changed ...
 - user roles to work with spaces (slugify ID on HTML elements)
-
-### Removed
-
-## 0.9.8
