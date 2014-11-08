@@ -1,6 +1,6 @@
 <?php namespace GeneaLabs\Bones\Keeper;
 
-class NoPermissionsException extends \Exception
+class InvalidAccessException extends \Exception
 {
     private $action;
     private $entity;
@@ -11,7 +11,7 @@ class NoPermissionsException extends \Exception
         return $this->action;
     }
 
-    public function setRole($action)
+    public function setAction($action)
     {
         $this->action = $action;
     }
@@ -21,7 +21,7 @@ class NoPermissionsException extends \Exception
         return $this->entity;
     }
 
-    public function setUser($entity)
+    public function setEntity($entity)
     {
         $this->entity = $entity;
     }
