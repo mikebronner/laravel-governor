@@ -1,6 +1,6 @@
-<?php namespace GeneaLabs\Bones\Keeper;
+<?php namespace GeneaLabs\Bones\Keeper\Exceptions;
 
-use Exception;
+use \Exception;
 
 class BaseException extends Exception
 {

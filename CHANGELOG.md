@@ -1,5 +1,4 @@
 # Change Log
-All notable changes to this project will be documented in this file.
 
 ## //TODO
 - refactor extra functionality out of user roles controller? possibly not necessary
@@ -22,7 +21,11 @@ All notable changes to this project will be documented in this file.
 - Flesh out documentation and keep it updated.
 - Add a CONTRIBUTING file.
 
-## 0.10.1 on
+## 0.10.2
+### Added ...
+
+
+## 0.10.1 on 8 Nov 2014
 ### Added ...
 - SemVer adherence (http://semver.org).
 - any non-essential files to .gitattributes to make dist lean.
@@ -30,7 +33,7 @@ All notable changes to this project will be documented in this file.
 - definition of keeper to readme.
 
 ### Changed ...
-- back to PSR-4 from PSR-0.
+- to PSR-4 from PSR-0.
 
 ## 0.10.0 on 7 Nov 2014
 ### Added ...

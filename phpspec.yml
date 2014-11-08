@@ -1,0 +1,5 @@
+suites:
+  bones-keeper_suite:
+    namespace: GeneaLabs\Bones\Keeper
+    src_path: src/
+    spec_prefix: spec

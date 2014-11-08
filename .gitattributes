@@ -3,3 +3,4 @@
 /.travis.yml                export-ignore
 /public/css/styles.scss     export-ignore
 /public/js/scripts.coffee   export-ignore
+/tests/                     export-ignore

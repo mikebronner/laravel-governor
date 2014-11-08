@@ -1,6 +1,6 @@
 <?php
 
-use GeneaLabs\Bones\Keeper\Ownership;
+use GeneaLabs\Bones\Keeper\Models\Ownership;
 
 class BonesKeeperOwnershipsTableSeeder extends Seeder {
     public function run()

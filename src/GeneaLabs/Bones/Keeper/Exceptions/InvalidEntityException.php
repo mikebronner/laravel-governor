@@ -1,4 +1,4 @@
-<?php namespace GeneaLabs\Bones\Keeper;
+<?php namespace GeneaLabs\Bones\Keeper\Exceptions;
 
 class InvalidEntityException extends BaseException
 {

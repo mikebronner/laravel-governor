@@ -3,7 +3,7 @@
 [![Coverage Status](https://img.shields.io/coveralls/GeneaLabs/bones-keeper.svg)](https://coveralls.io/r/GeneaLabs/bones-keeper) 
 [![Build Status](https://travis-ci.org/GeneaLabs/bones-keeper.svg)](https://travis-ci.org/GeneaLabs/bones-keeper)
 
-# Laravel Bones | Keeper (bones-keeper)
+# Laravel Bones | Keeper
 
 **keep·er**
 /ˈkēpər/
@@ -23,7 +23,7 @@ noun: keeper; plural noun: keepers
 To install bones-keeper package (terminal):
 
 ```sh
-composer require genealabs/bones-keeper:*
+composer require genealabs/bones-keeper:dev-master
 ```
 
 or manually add it to you composer.json file:
@@ -31,7 +31,7 @@ or manually add it to you composer.json file:
 ```json
     "require": {
         /* ... */,
-        "genealabs/bones-keeper": "*"
+        "genealabs/bones-keeper": "dev-master"
     },
     /* ... */
 ```

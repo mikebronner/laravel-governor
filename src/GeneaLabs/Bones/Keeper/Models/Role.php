@@ -1,4 +1,4 @@
-<?php namespace GeneaLabs\Bones\Keeper;
+<?php namespace GeneaLabs\Bones\Keeper\Models;
 
 class Role extends \BaseModel
 {
@@ -20,6 +20,6 @@ class Role extends \BaseModel
 
 	public function permissions()
 	{
-		return $this->hasMany('GeneaLabs\Bones\Keeper\Permission', 'role_key');
+		return $this->hasMany('GeneaLabs\Bones\Keeper\Models\Permission', 'role_key');
 	}
 }

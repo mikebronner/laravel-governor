@@ -1,6 +1,6 @@
 <?php namespace GeneaLabs\Bones\Keeper\Controllers;
 
-use GeneaLabs\Bones\Keeper\Role;
+use GeneaLabs\Bones\Keeper\Models\Role;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;

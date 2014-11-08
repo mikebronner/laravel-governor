@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use \Illuminate\Support\ServiceProvider;
-use ReflectionClass;
 
 class BonesKeeperServiceProvider extends ServiceProvider {
 
@@ -21,7 +20,7 @@ class BonesKeeperServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-        $this->package('genealabs/bones-keeper', null, __DIR__);
+        $this->package('genealabs/bones-keeper', null, __DIR__ . '/../../..');
 //        dd($this->app['config']);
 	}
 
@@ -32,7 +31,7 @@ class BonesKeeperServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-        include_once(__DIR__ . '/routes.php');
+        include_once(__DIR__ . '/../../../routes.php');
 	}
 
 	/**

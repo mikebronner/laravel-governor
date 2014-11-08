@@ -1,4 +1,4 @@
-<?php namespace GeneaLabs\Bones\Keeper;
+<?php namespace GeneaLabs\Bones\Keeper\Models;
 
 class Action extends \BaseModel
 {
@@ -13,6 +13,6 @@ class Action extends \BaseModel
 
 	public function permissions()
 	{
-		return $this->hasMany('GeneaLabs\Bones\Keeper\Permission', 'action_key');
+		return $this->hasMany('GeneaLabs\Bones\Keeper\Models\Permission', 'action_key');
 	}
 }
