@@ -17,12 +17,12 @@
     },
     "autoload": {
         "classmap": [
+            "src/controllers",
             "src/migrations",
             "src/seeds"
         ],
         "psr-0": {
-            "GeneaLabs\\Bones\\Keeper\\": "src",
-            "GeneaLabs\\Bones\\Keeper\\Controllers\\": "src/controllers"
+            "GeneaLabs\\Bones\\Keeper\\": "src/"
         }
     },
     "minimum-stability": "stable"
