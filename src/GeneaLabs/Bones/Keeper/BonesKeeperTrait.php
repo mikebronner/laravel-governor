@@ -17,6 +17,8 @@ trait BonesKeeperTrait
             $exception->entity = $ownership;
             throw $exception;
         }
+
+        return true;
     }
 
     private function prepPermissionsCheck($action, $ownership, $entity, $ownerUserId)

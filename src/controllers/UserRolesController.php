@@ -2,6 +2,7 @@
 
 use GeneaLabs\Bones\Keeper\Role;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -22,7 +23,7 @@ class UserRolesController extends \BaseController
 
     public function index()
     {
-        if (Auth::user()->hasPermissionTo('view', 'any', 'userroles')) {
+        if (Auth::user()->hasAccessTo('view', 'any', 'userrole')) {
             $displayNameField = $this->displayNameField;
             $users = $this->user->all();
             $roles = Role::with('users')->get();
@@ -34,10 +35,10 @@ class UserRolesController extends \BaseController
 
     public function store()
     {
-        if (Auth::user()->hasPermissionTo('create', 'any', 'userroles')) {
+        if (Auth::user()->hasAccessTo('edit', 'any', 'userrole')) {
+            $this->removeAllUsersFromRoles();
             if (Input::has('users')) {
                 $assignedUsers = Input::get('users');
-                $this->removeAllUsersFromRoles();
                 $this->assignUsersToRoles($assignedUsers);
                 $this->addAllUsersToMemberRole();
                 $this->removeAllSuperAdminUsersFromOtherRoles($assignedUsers);

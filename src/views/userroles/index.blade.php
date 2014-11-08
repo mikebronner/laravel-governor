@@ -3,9 +3,12 @@
 @section('innerContent')
     {{ Form::open(['route' => 'userroles.store']) }}
         <div class="page-header">
+            @if (Auth::check() && Auth::user()->hasPermissionTo('edit', 'any', 'userrole'))
             {{ Form::submit('Save User Roles', ['class' => 'btn btn-success btn-lg pull-right']) }}
+            @endif
             <h1>User Roles</h1>
         </div>
+        @if (Auth::check() && Auth::user()->hasPermissionTo('view', 'any', 'userrole'))
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         @foreach($roles as $role)
             <div class="panel panel-default">
@@ -18,11 +21,12 @@
                 </div>
                 <div id="collapse-{{ Str::slug($role->name) }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                     <div class="panel-body">
-                        {{ Form::select('users[' . $role->name . '][]', $users->lists($displayNameField, $users->first()['primaryKey']), $role->users->lists($users->first()['primaryKey']), ['class' => 'selectize', 'multiple']) }}
+                        {{ Form::select('users[' . $role->name . '][]', $users->lists($displayNameField, $users->first()['primaryKey']), $role->users->lists($users->first()['primaryKey']), ['class' => 'selectize', 'multiple', ((Auth::user()->hasPermissionTo('edit', 'any', 'userrole')) ? '' : 'disabled')]) }}
                     </div>
                 </div>
             </div>
         @endforeach
         </div>
+        @endif
     {{ Form::close() }}
 @stop
