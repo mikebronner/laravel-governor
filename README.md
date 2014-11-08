@@ -3,7 +3,15 @@
 [![Coverage Status](https://img.shields.io/coveralls/GeneaLabs/bones-keeper.svg)](https://coveralls.io/r/GeneaLabs/bones-keeper) 
 [![Build Status](https://travis-ci.org/GeneaLabs/bones-keeper.svg)](https://travis-ci.org/GeneaLabs/bones-keeper)
 
-# Laravel Bones Keeper (bones-keeper)
+# Laravel Bones | Keeper (bones-keeper)
+
+**keep·er**
+/ˈkēpər/
+
+noun: keeper; plural noun: keepers
+
+- a person who manages or looks after something or someone.
+- an object that keeps another in place, or protects something more fragile or valuable, in particular.
 
 ## Before You Get Started
 
