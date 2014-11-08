@@ -10,8 +10,15 @@ trait BonesKeeperTrait
     public function hasAccessTo($action, $ownership, $entity, $ownerUserId = null)
     {
         if (!$this->prepPermissionsCheck($action, $ownership, $entity, $ownerUserId)) {
-            throw new NoPermissionsException;
+
+            $exception = new \GeneaLabs\Bones\Keeper\InvalidAccessException();
+            $exception->action = $action;
+            $exception->ownership = $ownership;
+            $exception->entity = $ownership;
+            throw $exception;
         }
+
+        return true;
     }
 
     private function prepPermissionsCheck($action, $ownership, $entity, $ownerUserId)

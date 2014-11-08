@@ -1,4 +1,7 @@
-#Warning: still in final development stages, but functional.
+#Warning: still in final development stages, but functional. Do not use in production.
+
+[![Coverage Status](https://img.shields.io/coveralls/GeneaLabs/bones-keeper.svg)](https://coveralls.io/r/GeneaLabs/bones-keeper) 
+[![Build Status](https://travis-ci.org/GeneaLabs/bones-keeper.svg)](https://travis-ci.org/GeneaLabs/bones-keeper)
 
 # Laravel Bones Keeper (bones-keeper)
 
@@ -39,7 +42,18 @@ php artisan asset:publish genealabs/bones-keeper
 
 ## Usage
 
-// tba
+### Error Handler
+You will need to add a global error handler **above** the existing default error handler to manage when a user fails the permissions-check in 
+/app/start/global.php:
+
+```php
+App::error(function(InvalidAccessException $exception, $code) {
+    return Response::make(View::make('bones-keeper::errors.unauthorized'), 404);
+});
+```
+
+The above uses the default error view that comes with the package. You can configure this to any view you have set up 
+for your app, of course keeping the message in line with the unauthorized access attempt.
 
 ## Methods
 

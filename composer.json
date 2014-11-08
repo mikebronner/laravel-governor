@@ -22,7 +22,7 @@
             "src/seeds"
         ],
         "psr-0": {
-            "GeneaLabs\\Bones\\Keeper\\": "src"
+            "GeneaLabs\\Bones\\Keeper\\": "src/"
         }
     },
     "minimum-stability": "stable"

@@ -2,6 +2,7 @@
 
 use GeneaLabs\Bones\Keeper\Role;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -9,38 +10,42 @@ use Illuminate\Support\Facades\View;
 
 class UserRolesController extends \BaseController
 {
-    protected $layoutView;
     protected $user;
     protected $displayNameField;
 
     public function __construct()
     {
-        $this->layoutView = Config::get('bones-keeper::layoutView');
+        $this->beforeFilter('auth');
+        $this->beforeFilter('csrf', ['on' => 'post']);
         $this->displayNameField = Config::get('bones-keeper::displayNameField');
         $this->user = App::make(Config::get('auth.model'));
     }
 
     public function index()
     {
-        $layoutView = $this->layoutView;
-        $displayNameField = $this->displayNameField;
-        $users = $this->user->all();
-        $roles = Role::with('users')->get();
+        if (Auth::user()->hasAccessTo('view', 'any', 'userrole')) {
+            $displayNameField = $this->displayNameField;
+            $users = $this->user->all();
+            $roles = Role::with('users')->get();
 
-        return View::make('bones-keeper::userroles.index', compact('layoutView', 'users', 'roles', 'displayNameField', 'userList'));
+            return View::make('bones-keeper::userroles.index',
+                compact('users', 'roles', 'displayNameField', 'userList'));
+        }
     }
 
     public function store()
     {
-        if (Input::has('users')) {
-            $assignedUsers = Input::get('users');
+        if (Auth::user()->hasAccessTo('edit', 'any', 'userrole')) {
             $this->removeAllUsersFromRoles();
-            $this->assignUsersToRoles($assignedUsers);
-            $this->addAllUsersToMemberRole();
-            $this->removeAllSuperAdminUsersFromOtherRoles($assignedUsers);
-        }
+            if (Input::has('users')) {
+                $assignedUsers = Input::get('users');
+                $this->assignUsersToRoles($assignedUsers);
+                $this->addAllUsersToMemberRole();
+                $this->removeAllSuperAdminUsersFromOtherRoles($assignedUsers);
+            }
 
-        return Redirect::route('userroles.index');
+            return Redirect::route('userroles.index');
+        }
     }
 
     private function addAllUsersToMemberRole()
