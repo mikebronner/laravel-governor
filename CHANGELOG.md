@@ -19,11 +19,13 @@
 - Add DocBlocks to all code.
 - Implement TravisCI or Scrutinizer.
 - Flesh out documentation and keep it updated.
-- Add a CONTRIBUTING file.
 
-## 0.10.2
+## 0.10.2 on 8 Nov 2014
 ### Added ...
+- initial CONTRIBUTING file.
 
+### Changed ...
+- PSR-4 directory structure.
 
 ## 0.10.1 on 8 Nov 2014
 ### Added ...
