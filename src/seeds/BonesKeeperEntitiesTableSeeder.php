@@ -1,6 +1,6 @@
 <?php
 
-use GeneaLabs\Bones\Keeper\Entity;
+use GeneaLabs\Bones\Keeper\Models\Entity;
 
 class BonesKeeperEntitiesTableSeeder extends Seeder {
     public function run()

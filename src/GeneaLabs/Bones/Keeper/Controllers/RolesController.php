@@ -1,24 +1,34 @@
 <?php namespace GeneaLabs\Bones\Keeper\Controllers;
 
-use GeneaLabs\Bones\Keeper\Action;
-use GeneaLabs\Bones\Keeper\Entity;
-use GeneaLabs\Bones\Keeper\Ownership;
-use GeneaLabs\Bones\Keeper\Permission;
-use GeneaLabs\Bones\Keeper\Role;
+use GeneaLabs\Bones\Keeper\Models\Action;
+use GeneaLabs\Bones\Keeper\Models\Entity;
+use GeneaLabs\Bones\Keeper\Models\Ownership;
+use GeneaLabs\Bones\Keeper\Models\Permission;
+use GeneaLabs\Bones\Keeper\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Class RolesController
+ * @package GeneaLabs\Bones\Keeper\Controllers
+ */
 class RolesController extends \BaseController
 {
+    /**
+     *
+     */
     public function __construct()
     {
         $this->beforeFilter('auth');
         $this->beforeFilter('csrf', ['on' => 'post']);
     }
 
+    /**
+     * @return mixed
+     */
     public function index()
     {
         if (Auth::user()->hasAccessTo('view', 'any', 'role')) {
@@ -28,6 +38,9 @@ class RolesController extends \BaseController
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function create()
     {
         if (Auth::user()->hasAccessTo('create', 'any', 'role')) {
@@ -35,6 +48,9 @@ class RolesController extends \BaseController
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function store()
     {
         if (Auth::user()->hasAccessTo('create', 'any', 'role')) {
@@ -44,6 +60,10 @@ class RolesController extends \BaseController
         }
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function edit($name)
     {
         if (Auth::user()->hasAccessTo('edit', 'any', 'role')) {
@@ -71,6 +91,10 @@ class RolesController extends \BaseController
         }
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function update($name)
     {
         if (Auth::user()->hasAccessTo('edit', 'any', 'role')) {
@@ -105,6 +129,10 @@ class RolesController extends \BaseController
         }
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function destroy($name)
     {
         if (Auth::user()->hasAccessTo('remove', 'any', 'role')) {

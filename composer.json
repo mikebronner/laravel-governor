@@ -1,6 +1,6 @@
 {
     "name": "genealabs/bones-keeper",
-    "description": "Authentication and ACL functionality for Laravel.",
+    "description": "ACL functionality for Laravel.",
     "license": "MIT",
     "authors": [
         {
@@ -13,7 +13,9 @@
         "illuminate/support": "4.2.*"
     },
     "require-dev": {
-        "phpspec/phpspec": "*"
+        "phpspec/phpspec": "~2.1@dev",
+        "mockery/mockery": "0.9.*",
+        "phpunit/phpunit": "4.3.*"
     },
     "autoload": {
         "classmap": [
@@ -21,7 +23,7 @@
             "src/seeds"
         ],
         "psr-4": {
-            "GeneaLabs\\Bones\\Keeper\\": "src/"
+            "GeneaLabs\\Bones\\Keeper\\": "src/GeneaLabs/Bones/Keeper"
         }
     },
     "minimum-stability": "stable"

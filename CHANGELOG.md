@@ -1,5 +1,5 @@
 # Change Log
-All notable changes to this project will be documented in this file.
+[Package Checklist](http://phppackagechecklist.com/#1,2,3,4,8,9,10,12,13,14)
 
 ## //TODO
 - refactor extra functionality out of user roles controller? possibly not necessary
@@ -10,19 +10,21 @@ All notable changes to this project will be documented in this file.
 - color code enabled permissions on roles
 - make callapse panels collapse when another is opened
 - implement form validation
-
-### Package Checklist: http://phppackagechecklist.com/#1,2,3,4,9,10,13
 - Make package framework agnostic. This may be sometime after 1.0.0 release.
-- Follow PSR-1 and PSR-2 coding styles. (Configure PHPStorm for this as well.)
 - Implement PHP Code Sniffer.
 - Implement PHP Coding Standards Fixer.
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
-- Add DocBlocks to all code.
 - Implement TravisCI or Scrutinizer.
-- Flesh out documentation and keep it updated.
-- Add a CONTRIBUTING file.
 
-## 0.10.1 on
+## 0.10.2 on 8 Nov 2014
+### Added ...
+- initial CONTRIBUTING file.
+- DocBlocks to all code.
+
+### Changed ...
+- PSR-4 directory structure.
+
+## 0.10.1 on 8 Nov 2014
 ### Added ...
 - SemVer adherence (http://semver.org).
 - any non-essential files to .gitattributes to make dist lean.
@@ -30,7 +32,7 @@ All notable changes to this project will be documented in this file.
 - definition of keeper to readme.
 
 ### Changed ...
-- back to PSR-4 from PSR-0.
+- to PSR-4 from PSR-0.
 
 ## 0.10.0 on 7 Nov 2014
 ### Added ...

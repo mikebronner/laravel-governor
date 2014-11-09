@@ -1,6 +1,6 @@
 <?php
 
-use GeneaLabs\Bones\Keeper\Role;
+use GeneaLabs\Bones\Keeper\Models\Role;
 
 class BonesKeeperRolesTableSeeder extends \Seeder {
     public function run()

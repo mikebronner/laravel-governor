@@ -1,10 +1,10 @@
 <?php
 
-use GeneaLabs\Bones\Keeper\Action;
-use GeneaLabs\Bones\Keeper\Entity;
-use GeneaLabs\Bones\Keeper\Ownership;
-use GeneaLabs\Bones\Keeper\Permission;
-use GeneaLabs\Bones\Keeper\Role;
+use GeneaLabs\Bones\Keeper\Models\Action;
+use GeneaLabs\Bones\Keeper\Models\Entity;
+use GeneaLabs\Bones\Keeper\Models\Ownership;
+use GeneaLabs\Bones\Keeper\Models\Permission;
+use GeneaLabs\Bones\Keeper\Models\Role;
 
 class BonesKeeperPermissionsTableSeeder extends Seeder {
     public function run()
