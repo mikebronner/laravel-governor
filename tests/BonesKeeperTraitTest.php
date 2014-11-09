@@ -1,25 +1,30 @@
 <?php
 
-use GeneaLabs\Bones\Keeper\BonesKeeperTrait;
+use \GeneaLabs\Bones\Keeper\BonesKeeperTrait;
+use \Illuminate\Support\Facades\Input;
+use \Illuminate\Support\Facades\Validator;
 
-class BonesKeeperTraitTest extends PHPUnit_Framework_TestCase
+class BonesKeeperTraitTest extends \PHPUnit_Framework_TestCase
 {
-    private $traitObject;
+    public $trait;
 
     public function setUp()
     {
-        $this->traitObject = new BonesKeeperTraitImplementer();
-        // set upd database
+        $this->trait = Mockery::mock('BonesKeeperTraitStub')->makePartial();
     }
 
-    /** @test */
-    public function it_has_permission_to_view_any_role()
+    public function tearDown()
     {
+        Mockery::close();
+    }
 
+    public function testPermissionCheckDefaultsToFalse()
+    {
+        $this->assertFalse($this->trait->hasPermissionTo('view', 'any', 'role'));
     }
 }
 
-class BonesKeeperTraitImplementer
+class BonesKeeperTraitStub
 {
-    use BonesKeeperTrait;
+    use GeneaLabs\Bones\Keeper\BonesKeeperTrait;
 }
