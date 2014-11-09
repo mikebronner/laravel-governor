@@ -1,4 +1,5 @@
 # Change Log
+[Package Checklist](http://phppackagechecklist.com/#1,2,3,4,8,9,10,12,13,14)
 
 ## //TODO
 - refactor extra functionality out of user roles controller? possibly not necessary
@@ -9,14 +10,11 @@
 - color code enabled permissions on roles
 - make callapse panels collapse when another is opened
 - implement form validation
-
-### Package Checklist: http://phppackagechecklist.com/#1,2,3,4,9,10,13
 - Make package framework agnostic. This may be sometime after 1.0.0 release.
 - Implement PHP Code Sniffer.
 - Implement PHP Coding Standards Fixer.
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
 - Implement TravisCI or Scrutinizer.
-- Flesh out documentation and keep it updated.
 
 ## 0.10.2 on 8 Nov 2014
 ### Added ...
