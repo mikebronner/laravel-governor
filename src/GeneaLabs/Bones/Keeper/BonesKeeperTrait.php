@@ -57,7 +57,8 @@ trait BonesKeeperTrait
     }
 
     private function checkIfActionExists($action) {
-        $actions = Action::all()->lists('name');
+        $actions = new Action();
+        $actions = $actions->all()->lists('name');
         if (!in_array($action, $actions)) {
             $exception = new InvalidActionException('The Action "' . $action . '" does not exist. Use one of: ' . implode(', ', $actions) . '.');
             $exception->action = $action;
@@ -66,7 +67,8 @@ trait BonesKeeperTrait
     }
 
     private function checkIfEntityExists($entity) {
-        $entities = Entity::all()->lists('name');
+        $entities = new Entity();
+        $entities = $entities->all()->lists('name');
         if (!in_array($entity, $entities)) {
             $exception = new InvalidEntityException('The Entity "' . $entity . '" does not exist. Use one of: ' . implode(', ', $entities) . '.');
             $exception->entity = $entity;
@@ -75,7 +77,8 @@ trait BonesKeeperTrait
     }
 
     private function checkIfOwnershipExists($ownership) {
-        $ownerships = Ownership::all()->lists('name');
+        $ownerships = new Ownership();
+        $ownerships = $ownerships->all()->lists('name');
         if (!in_array($ownership, $ownerships)) {
             $exception = new InvalidOwnershipException('The Ownership "' . $ownership . '" does not exist. Use one of: ' . implode(', ', $ownerships) . '.');
             $exception->ownership = $ownership;
@@ -86,7 +89,8 @@ trait BonesKeeperTrait
     private function checkPermission($action, $ownership = 'any', $entity)
     {
         if ($this->roles()->count()) {
-            $permissions = Permission::where('action_key', $action)->where('entity_key', $entity)->where(function ($query) use ($ownership) {
+            $permissions = new Permission();
+            $permissions = $permissions->where('action_key', $action)->where('entity_key', $entity)->where(function ($query) use ($ownership) {
                 $query->where('ownership_key', $ownership);
                 if ($ownership != 'any') {
                     $query->orWhere('ownship_key', 'any');
@@ -104,7 +108,8 @@ trait BonesKeeperTrait
 
     public function isA($role)
     {
-        $role = Role::find($role);
+        $role = new Role();
+        $role = $role->find($role);
 
         return $this->roles->contains($role);
     }
