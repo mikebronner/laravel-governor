@@ -8,11 +8,24 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Class UserRolesController
+ * @package GeneaLabs\Bones\Keeper\Controllers
+ */
 class UserRolesController extends \BaseController
 {
+    /**
+     * @var
+     */
     protected $user;
+    /**
+     * @var
+     */
     protected $displayNameField;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->beforeFilter('auth');
@@ -21,6 +34,9 @@ class UserRolesController extends \BaseController
         $this->user = App::make(Config::get('auth.model'));
     }
 
+    /**
+     * @return mixed
+     */
     public function index()
     {
         if (Auth::user()->hasAccessTo('view', 'any', 'userrole')) {
@@ -33,6 +49,9 @@ class UserRolesController extends \BaseController
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function store()
     {
         if (Auth::user()->hasAccessTo('edit', 'any', 'userrole')) {
@@ -48,6 +67,9 @@ class UserRolesController extends \BaseController
         }
     }
 
+    /**
+     *
+     */
     private function addAllUsersToMemberRole()
     {
         $allUsers = $this->user->with('roles')->get();
@@ -87,6 +109,9 @@ class UserRolesController extends \BaseController
         }
     }
 
+    /**
+     *
+     */
     private function removeAllUsersFromRoles()
     {
         $roles = Role::with('users')->get();

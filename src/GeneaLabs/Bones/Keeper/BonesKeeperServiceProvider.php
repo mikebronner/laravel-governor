@@ -21,7 +21,6 @@ class BonesKeeperServiceProvider extends ServiceProvider {
 	public function boot()
 	{
         $this->package('genealabs/bones-keeper', null, __DIR__ . '/../../..');
-//        dd($this->app['config']);
 	}
 
 	/**

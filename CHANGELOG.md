@@ -12,17 +12,16 @@
 
 ### Package Checklist: http://phppackagechecklist.com/#1,2,3,4,9,10,13
 - Make package framework agnostic. This may be sometime after 1.0.0 release.
-- Follow PSR-1 and PSR-2 coding styles. (Configure PHPStorm for this as well.)
 - Implement PHP Code Sniffer.
 - Implement PHP Coding Standards Fixer.
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
-- Add DocBlocks to all code.
 - Implement TravisCI or Scrutinizer.
 - Flesh out documentation and keep it updated.
 
 ## 0.10.2 on 8 Nov 2014
 ### Added ...
 - initial CONTRIBUTING file.
+- DocBlocks to all code.
 
 ### Changed ...
 - PSR-4 directory structure.

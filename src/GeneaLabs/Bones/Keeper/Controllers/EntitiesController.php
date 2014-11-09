@@ -10,14 +10,24 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Class EntitiesController
+ * @package GeneaLabs\Bones\Keeper\Controllers
+ */
 class EntitiesController extends \BaseController
 {
+    /**
+     *
+     */
     public function __construct()
     {
         $this->beforeFilter('auth');
         $this->beforeFilter('csrf', ['on' => 'post']);
     }
 
+    /**
+     * @return mixed
+     */
     public function index()
     {
         $entities = Entity::groupBy('name')->get();
@@ -25,11 +35,17 @@ class EntitiesController extends \BaseController
         return View::make('bones-keeper::entities.index', compact('entities'));
     }
 
+    /**
+     * @return mixed
+     */
     public function create()
     {
         return View::make('bones-keeper::entities.create');
     }
 
+    /**
+     * @return mixed
+     */
     public function store()
     {
         $entity = new Entity();
@@ -53,6 +69,10 @@ class EntitiesController extends \BaseController
         return Redirect::route('entities.index');
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function edit($name)
     {
         $entity = Entity::find($name);
@@ -60,6 +80,10 @@ class EntitiesController extends \BaseController
         return View::make('bones-keeper::entities.edit', compact('entity'));
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function update($name)
     {
         $entity = Entity::with('permissions')->find($name);
@@ -73,6 +97,10 @@ class EntitiesController extends \BaseController
         return Redirect::route('entities.index');
     }
 
+    /**
+     * @param $name
+     * @return mixed
+     */
     public function destroy($name)
     {
         Entity::destroy($name);

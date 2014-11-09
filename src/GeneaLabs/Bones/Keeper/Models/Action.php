@@ -1,17 +1,33 @@
 <?php namespace GeneaLabs\Bones\Keeper\Models;
 
+/**
+ * Class Action
+ * @package GeneaLabs\Bones\Keeper\Models
+ */
 class Action extends \BaseModel
 {
+    /**
+     * @var string
+     */
     protected $primaryKey = 'name';
-	protected $rulesets = [
+    /**
+     * @var array
+     */
+    protected $rulesets = [
         'name' => 'required|min:3|unique:actions,name',
 	];
 
-	protected $fillable = [
+    /**
+     * @var array
+     */
+    protected $fillable = [
 		'name',
 	];
 
-	public function permissions()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function permissions()
 	{
 		return $this->hasMany('GeneaLabs\Bones\Keeper\Models\Permission', 'action_key');
 	}

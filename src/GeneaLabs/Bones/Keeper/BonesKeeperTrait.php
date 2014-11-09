@@ -10,13 +10,32 @@ use GeneaLabs\Bones\Keeper\Models\Ownership;
 use GeneaLabs\Bones\Keeper\Models\Permission;
 use GeneaLabs\Bones\Keeper\Models\Role;
 
+/**
+ * Class BonesKeeperTrait
+ * @package GeneaLabs\Bones\Keeper
+ */
 trait BonesKeeperTrait
 {
+    /**
+     * @param $action
+     * @param $ownership
+     * @param $entity
+     * @param null $ownerUserId
+     * @return bool
+     */
     public function hasPermissionTo($action, $ownership, $entity, $ownerUserId = null)
     {
         return $this->prepPermissionsCheck($action, $ownership, $entity, $ownerUserId);
     }
 
+    /**
+     * @param $action
+     * @param $ownership
+     * @param $entity
+     * @param null $ownerUserId
+     * @return bool
+     * @throws InvalidAccessException
+     */
     public function hasAccessTo($action, $ownership, $entity, $ownerUserId = null)
     {
         if (!$this->prepPermissionsCheck($action, $ownership, $entity, $ownerUserId)) {
@@ -31,6 +50,16 @@ trait BonesKeeperTrait
         return true;
     }
 
+    /**
+     * @param $action
+     * @param $ownership
+     * @param $entity
+     * @param $ownerUserId
+     * @return bool
+     * @throws InvalidActionException
+     * @throws InvalidEntityException
+     * @throws InvalidOwnershipException
+     */
     private function prepPermissionsCheck($action, $ownership, $entity, $ownerUserId)
     {
         $action = strtolower($action);
@@ -56,6 +85,10 @@ trait BonesKeeperTrait
         return $hasPermission;
     }
 
+    /**
+     * @param $action
+     * @throws InvalidActionException
+     */
     private function checkIfActionExists($action) {
         $actions = new Action();
         $actions = $actions->all()->lists('name');
@@ -66,6 +99,10 @@ trait BonesKeeperTrait
         }
     }
 
+    /**
+     * @param $entity
+     * @throws InvalidEntityException
+     */
     private function checkIfEntityExists($entity) {
         $entities = new Entity();
         $entities = $entities->all()->lists('name');
@@ -76,6 +113,10 @@ trait BonesKeeperTrait
         }
     }
 
+    /**
+     * @param $ownership
+     * @throws InvalidOwnershipException
+     */
     private function checkIfOwnershipExists($ownership) {
         $ownerships = new Ownership();
         $ownerships = $ownerships->all()->lists('name');
@@ -86,6 +127,12 @@ trait BonesKeeperTrait
         }
     }
 
+    /**
+     * @param $action
+     * @param string $ownership
+     * @param $entity
+     * @return bool
+     */
     private function checkPermission($action, $ownership = 'any', $entity)
     {
         if ($this->roles()->count()) {
@@ -106,6 +153,10 @@ trait BonesKeeperTrait
         return false;
     }
 
+    /**
+     * @param $role
+     * @return mixed
+     */
     public function isA($role)
     {
         $role = new Role();
@@ -114,16 +165,27 @@ trait BonesKeeperTrait
         return $this->roles->contains($role);
     }
 
+    /**
+     * @param $role
+     * @return mixed
+     */
     public function assignRole($role)
     {
         return $this->roles()->attach($role);
     }
 
+    /**
+     * @param $role
+     * @return mixed
+     */
     public function removeRole($role)
     {
         return $this->roles()->detach($role);
     }
 
+    /**
+     * @return mixed
+     */
     public function roles()
     {
         return $this->belongsToMany('\GeneaLabs\Bones\Keeper\Models\Role', 'role_user', 'user_id', 'role_key');

@@ -2,8 +2,16 @@
 
 use \Exception;
 
+/**
+ * Class BaseException
+ * @package GeneaLabs\Bones\Keeper\Exceptions
+ */
 class BaseException extends Exception
 {
+    /**
+     * @param $property
+     * @throws Exception
+     */
     public function __get($property)
     {
         $getter = 'get' . $property;
@@ -15,6 +23,11 @@ class BaseException extends Exception
         }
     }
 
+    /**
+     * @param $property
+     * @param $value
+     * @throws Exception
+     */
     public function __set($property, $value)
     {
         $setter = 'set' . $property;
