@@ -1,10 +1,11 @@
 <?php namespace GeneaLabs\Bones\Keeper\Controllers;
 
-use GeneaLabs\Bones\Keeper\Models\Action;
-use GeneaLabs\Bones\Keeper\Models\Entity;
-use GeneaLabs\Bones\Keeper\Models\Ownership;
-use GeneaLabs\Bones\Keeper\Models\Permission;
-use GeneaLabs\Bones\Keeper\Models\Role;
+use GeneaLabs\Bones\Keeper\BonesKeeperBaseController;
+use GeneaLabs\Bones\Marshal\Commands\CommandBus;
+use GeneaLabs\Bones\Keeper\Entities\Commands\AddEntityCommand;
+use GeneaLabs\Bones\Keeper\Entities\Commands\ModifyEntityCommand;
+use GeneaLabs\Bones\Keeper\Entities\Commands\RemoveEntityCommand;
+use GeneaLabs\Bones\Keeper\Entities\Entity;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -14,13 +15,12 @@ use Illuminate\Support\Facades\View;
  * Class EntitiesController
  * @package GeneaLabs\Bones\Keeper\Controllers
  */
-class EntitiesController extends \BaseController
+class EntitiesController extends BonesKeeperBaseController
 {
-    /**
-     *
-     */
-    public function __construct()
+
+    public function __construct(CommandBus $commandBus)
     {
+        parent::__construct($commandBus);
         $this->beforeFilter('auth');
         $this->beforeFilter('csrf', ['on' => 'post']);
     }
@@ -48,23 +48,8 @@ class EntitiesController extends \BaseController
      */
     public function store()
     {
-        $entity = new Entity();
-        if (Input::has('name')) {
-            $entity->name = Input::get('name');
-            $entity->save();
-            $entity = Entity::find(Input::get('name'));
-            $superadmin = Role::find('SuperAdmin');
-            $allActions = Action::all();
-            $anyOwnership = Ownership::find('any');
-            foreach ($allActions as $action) {
-                $permission = new Permission();
-                $permission->action()->associate($action);
-                $permission->ownership()->associate($anyOwnership);
-                $permission->entity()->associate($entity);
-                $permission->role()->associate($superadmin);
-                $permission->save();
-            }
-        }
+        $command = new AddEntityCommand(Input::only('name'));
+        $this->execute($command);
 
         return Redirect::route('entities.index');
     }
@@ -86,13 +71,8 @@ class EntitiesController extends \BaseController
      */
     public function update($name)
     {
-        $entity = Entity::with('permissions')->find($name);
-        if ($entity) {
-            if (Input::has('name')) {
-                $entity->name = Input::get('name');
-                $entity->save();
-            }
-        }
+        $command = new ModifyEntityCommand($name, Input::all());
+        $this->execute($command);
 
         return Redirect::route('entities.index');
     }
@@ -103,7 +83,8 @@ class EntitiesController extends \BaseController
      */
     public function destroy($name)
     {
-        Entity::destroy($name);
+        $command = new RemoveEntityCommand($name);
+        $this->execute($command);
 
         return Redirect::route('entities.index');
     }

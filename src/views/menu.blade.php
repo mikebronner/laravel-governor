@@ -14,10 +14,10 @@
       <ul class="nav navbar-nav">
         <li>{{ link_to_route('entities.index', 'Entities') }}</li>
         <li>{{ link_to_route('roles.index', 'Roles') }}</li>
-        <li>{{ link_to_route('userroles.index', 'User Roles') }}</li>
+        <li>{{ link_to_route('assignments.index', 'Assignments') }}</li>
       </ul>
       <span class="nav navbar-nav navbar-right">
-        <a href="http://github.com/genealabs/bones-keeper" target="_blank" class="navbar-text"><span id="bonesKeeperInstalledVersion">v0.10.2</span> <span id="bonesKeeperCurrentVersion" class="badge label-danger"></span></a>
+        <a href="http://github.com/genealabs/bones-keeper" target="_blank" class="navbar-text"><span id="bonesKeeperInstalledVersion">v0.11.0</span> <span id="bonesKeeperCurrentVersion" class="badge label-danger"></span></a>
       </span>
     </div>
   </div>

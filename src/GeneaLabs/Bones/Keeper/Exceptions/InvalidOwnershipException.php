@@ -1,10 +1,12 @@
 <?php namespace GeneaLabs\Bones\Keeper\Exceptions;
 
+use GeneaLabs\Bones\Keeper\BonesKeeperBaseException;
+
 /**
  * Class InvalidOwnershipException
  * @package GeneaLabs\Bones\Keeper\Exceptions
  */
-class InvalidOwnershipException extends BaseException
+class InvalidOwnershipException extends BonesKeeperBaseException
 {
     /**
      * @var

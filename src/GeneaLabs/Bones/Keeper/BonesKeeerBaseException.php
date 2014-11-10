@@ -1,12 +1,12 @@
-<?php namespace GeneaLabs\Bones\Keeper\Exceptions;
+<?php namespace GeneaLabs\Bones\Keeper;
 
 use \Exception;
 
 /**
  * Class BaseException
- * @package GeneaLabs\Bones\Keeper\Exceptions
+ * @package GeneaLabs\Bones\Marshal\Exceptions
  */
-class BaseException extends Exception
+class BonesKeeperBaseException extends Exception
 {
     /**
      * @param $property
@@ -19,7 +19,7 @@ class BaseException extends Exception
         {
             return $this->$getter();
         } else {
-            throw new \Exception("Non-existent property: $property");
+            throw new Exception("Non-existent property: $property");
         }
     }
 
@@ -37,9 +37,9 @@ class BaseException extends Exception
         } else {
             if (method_exists($this, 'get' . $property))
             {
-                throw new \Exception("property $property is read-only");
+                throw new Exception("property $property is read-only");
             } else {
-                throw new \Exception("Inexistent property: $property");
+                throw new Exception("Inexistent property: $property");
             }
         }
     }

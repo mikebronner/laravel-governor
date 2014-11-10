@@ -1,15 +1,23 @@
 <?php namespace GeneaLabs\Bones\Keeper\Models;
 
+use GeneaLabs\Bones\Keeper\BonesKeeperBaseModel;
+
 /**
  * Class Permission
  * @package GeneaLabs\Bones\Keeper\Models
  */
-class Permission extends \BaseModel
+class Permission extends BonesKeeperBaseModel
 {
     /**
      * @var array
      */
-    protected $rules = [];
+    protected $rules = [
+        'role_key' => 'required',
+        'entity_key' => 'required',
+        'action_key' => 'required',
+        'ownership_key' => 'required',
+    ];
+
     /**
      * @var array
      */
@@ -20,7 +28,7 @@ class Permission extends \BaseModel
      */
     public function role()
 	{
-		return $this->belongsTo('GeneaLabs\Bones\Keeper\Models\Role', 'role_key', 'name');
+		return $this->belongsTo('GeneaLabs\Bones\Keeper\Roles\Role', 'role_key', 'name');
 	}
 
     /**
@@ -28,7 +36,7 @@ class Permission extends \BaseModel
      */
     public function entity()
     {
-        return $this->belongsTo('GeneaLabs\Bones\Keeper\Models\Entity', 'entity_key', 'name');
+        return $this->belongsTo('GeneaLabs\Bones\Keeper\Entities\Entity', 'entity_key', 'name');
     }
 
     /**
