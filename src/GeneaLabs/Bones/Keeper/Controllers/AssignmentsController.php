@@ -2,9 +2,8 @@
 
 use GeneaLabs\Bones\Keeper\Assignments\Commands\AddAssignmentCommand;
 use GeneaLabs\Bones\Keeper\BonesKeeperBaseController;
-use GeneaLabs\Bones\Marshal\Commands\CommandMarshaller;
-use GeneaLabs\Bones\Marshal\Commands\CommandValidator;
 use GeneaLabs\Bones\Keeper\Roles\Role;
+use GeneaLabs\Bones\Marshal\Commands\CommandBus;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -27,9 +26,9 @@ class AssignmentsController extends BonesKeeperBaseController
      */
     protected $displayNameField;
 
-    public function __construct(CommandValidator $commandValidator, CommandMarshaller $commandMarshaller)
+    public function __construct(CommandBus $commandBus)
     {
-        parent::__construct($commandValidator, $commandMarshaller);
+        parent::__construct($commandBus);
         $this->beforeFilter('auth');
         $this->beforeFilter('csrf', ['on' => 'post']);
         $this->displayNameField = Config::get('bones-keeper::displayNameField');

@@ -1,6 +1,6 @@
 <?php namespace GeneaLabs\Bones\Keeper;
 
-use GeneaLabs\Bones\Marshal\Commands\CommandValidator;
+use GeneaLabs\Bones\Marshal\Commands\CommandBus;
 
 /**
  * Class BonesKeeperBaseController
@@ -11,15 +11,11 @@ class BonesKeeperBaseController extends \BaseController
     /**
      * @var CommandBus
      */
-    protected $commandMarshaller;
+    protected $commandBus;
 
-    /**
-     * @param CommandValidator $commandValidator
-     * @param CommandMarshaller $commandMarshaller
-     */
-    public function __construct(CommandValidator $commandValidator)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->commandMarshaller = $commandValidator;
+        $this->commandBus = $commandBus;
     }
 
     /**

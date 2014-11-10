@@ -1,8 +1,7 @@
 <?php namespace GeneaLabs\Bones\Keeper\Controllers;
 
 use GeneaLabs\Bones\Keeper\BonesKeeperBaseController;
-use GeneaLabs\Bones\Marshal\Commands\CommandMarshaller;
-use GeneaLabs\Bones\Marshal\Commands\CommandValidator;
+use GeneaLabs\Bones\Marshal\Commands\CommandBus;
 use GeneaLabs\Bones\Keeper\Models\Action;
 use GeneaLabs\Bones\Keeper\Entities\Entity;
 use GeneaLabs\Bones\Keeper\Models\Ownership;
@@ -22,12 +21,9 @@ use Illuminate\Support\Facades\View;
  */
 class RolesController extends BonesKeeperBaseController
 {
-    /**
-     *
-     */
-    public function __construct(CommandValidator $commandValidator, CommandMarshaller $commandMarshaller)
+    public function __construct(CommandBus $commandBus)
     {
-        parent::__construct($commandValidator, $commandMarshaller);
+        parent::__construct($commandBus);
         $this->beforeFilter('auth');
         $this->beforeFilter('csrf', ['on' => 'post']);
     }
