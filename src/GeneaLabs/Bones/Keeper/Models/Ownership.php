@@ -1,10 +1,12 @@
 <?php namespace GeneaLabs\Bones\Keeper\Models;
 
+use GeneaLabs\Bones\Keeper\BonesKeeperBaseModel;
+
 /**
  * Class Ownership
  * @package GeneaLabs\Bones\Keeper\Models
  */
-class Ownership extends \BaseModel
+class Ownership extends BonesKeeperBaseModel
 {
     /**
      * @var string
@@ -13,8 +15,9 @@ class Ownership extends \BaseModel
     /**
      * @var array
      */
-    protected $rulesets = [
-        'name' => 'required|min:3|unique:roles,name',
+    protected $rules = [
+//        'name' => 'required|min:3|unique:roles,name',
+        'name' => 'required|min:3',
 	];
 
     /**

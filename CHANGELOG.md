@@ -2,19 +2,30 @@
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,8,9,10,12,13,14)
 
 ## //TODO
-- refactor extra functionality out of user roles controller? possibly not necessary
+- remove all facades.
+- add route prefixes to package routes
 - publish assets automatically on update and install
-- publish config automaticall on install
+- publish config automatically on install
 - load change log when clicking on new version button in menu
 - run superadmin permissions update after every package update
 - color code enabled permissions on roles
 - make callapse panels collapse when another is opened
-- implement form validation
 - Make package framework agnostic. This may be sometime after 1.0.0 release.
 - Implement PHP Code Sniffer.
 - Implement PHP Coding Standards Fixer.
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
 - Implement TravisCI or Scrutinizer.
+
+## 0.11.0 on 10 Nov 2014
+### Added ...
+- model data validation. Temporarily disabled unique constraint until [issue #105](https://github.com/dwightwatson/validating/issues/105) can be addressed.
+- form validation.
+
+### Changed ...
+- text references of "user role" to "assignment".
+- architecture to command-pattern with events.
+
+### Removed ...
 
 ## 0.10.2 on 8 Nov 2014
 ### Added ...

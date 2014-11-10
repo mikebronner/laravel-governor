@@ -21,6 +21,10 @@ class BonesKeeperServiceProvider extends ServiceProvider {
 	public function boot()
 	{
         $this->package('genealabs/bones-keeper', null, __DIR__ . '/../../..');
+        $listeners = $this->app['config']->get('bones-keeper::eventListeners');
+        foreach ($listeners as $event => $listener) {
+            $this->app['events']->listen($event, $listener);
+        }
 	}
 
 	/**

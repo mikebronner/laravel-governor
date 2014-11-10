@@ -1,10 +1,15 @@
 <?php namespace GeneaLabs\Bones\Keeper\Controllers;
 
+use GeneaLabs\Bones\Keeper\BonesKeeperBaseController;
+use GeneaLabs\Bones\Marshal\Commands\CommandMarshaller;
+use GeneaLabs\Bones\Marshal\Commands\CommandValidator;
 use GeneaLabs\Bones\Keeper\Models\Action;
-use GeneaLabs\Bones\Keeper\Models\Entity;
+use GeneaLabs\Bones\Keeper\Entities\Entity;
 use GeneaLabs\Bones\Keeper\Models\Ownership;
-use GeneaLabs\Bones\Keeper\Models\Permission;
-use GeneaLabs\Bones\Keeper\Models\Role;
+use GeneaLabs\Bones\Keeper\Roles\Commands\AddRoleCommand;
+use GeneaLabs\Bones\Keeper\Roles\Commands\ModifyRoleCommand;
+use GeneaLabs\Bones\Keeper\Roles\Commands\RemoveRoleCommand;
+use GeneaLabs\Bones\Keeper\Roles\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
@@ -15,13 +20,14 @@ use Illuminate\Support\Facades\View;
  * Class RolesController
  * @package GeneaLabs\Bones\Keeper\Controllers
  */
-class RolesController extends \BaseController
+class RolesController extends BonesKeeperBaseController
 {
     /**
      *
      */
-    public function __construct()
+    public function __construct(CommandValidator $commandValidator, CommandMarshaller $commandMarshaller)
     {
+        parent::__construct($commandValidator, $commandMarshaller);
         $this->beforeFilter('auth');
         $this->beforeFilter('csrf', ['on' => 'post']);
     }
@@ -54,7 +60,8 @@ class RolesController extends \BaseController
     public function store()
     {
         if (Auth::user()->hasAccessTo('create', 'any', 'role')) {
-            Role::create(Input::all());
+            $command = new AddRoleCommand(Input::all());
+            $this->execute($command);
 
             return Redirect::route('roles.index');
         }
@@ -98,32 +105,8 @@ class RolesController extends \BaseController
     public function update($name)
     {
         if (Auth::user()->hasAccessTo('edit', 'any', 'role')) {
-            $role = Role::find($name);
-            $role->name = Input::has('name') ? Input::get('name') : $role->name;
-            $role->description = Input::has('description') ? Input::get('description') : $role->description;
-            $role->save();
-            $role = Role::find(Input::get('name'));
-            $allActions = Action::all();
-            $allOwnerships = Ownership::all();
-            $allEntities = Entity::all();
-            if (Input::has('permissions')) {
-                $role->permissions()->delete();
-                foreach (Input::get('permissions') as $entity => $actions) {
-                    foreach ($actions as $action => $ownership) {
-                        if ('no' != $ownership) {
-                            $currentAction = $allActions->find($action);
-                            $currentOwnership = $allOwnerships->find($ownership);
-                            $currentEntity = $allEntities->find($entity);
-                            $currentPermission = new Permission();
-                            $currentPermission->ownership()->associate($currentOwnership);
-                            $currentPermission->action()->associate($currentAction);
-                            $currentPermission->role()->associate($role);
-                            $currentPermission->entity()->associate($currentEntity);
-                            $currentPermission->save();
-                        }
-                    }
-                }
-            }
+            $command = new ModifyRoleCommand($name, Input::all());
+            $this->execute($command);
 
             return Redirect::route('roles.index');
         }
@@ -136,7 +119,8 @@ class RolesController extends \BaseController
     public function destroy($name)
     {
         if (Auth::user()->hasAccessTo('remove', 'any', 'role')) {
-            Role::destroy($name);
+            $command = new RemoveRoleCommand($name);
+            $this->execute($command);
 
             return Redirect::route('roles.index');
         }

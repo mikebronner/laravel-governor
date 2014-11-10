@@ -16,4 +16,9 @@ class ErrorsController extends \BaseController
     {
         return View::make('bones-keeper::errors.unauthorized');
     }
+
+    public function modelValidation()
+    {
+        return View::make('bones-keeper::errors.modelValidation');
+    }
 }

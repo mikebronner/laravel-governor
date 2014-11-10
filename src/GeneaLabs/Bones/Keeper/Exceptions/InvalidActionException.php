@@ -1,10 +1,12 @@
 <?php namespace GeneaLabs\Bones\Keeper\Exceptions;
 
+use GeneaLabs\Bones\Keeper\BonesKeeperBaseException;
+
 /**
  * Class InvalidActionException
  * @package GeneaLabs\Bones\Keeper\Exceptions
  */
-class InvalidActionException extends BaseException
+class InvalidActionException extends BonesKeeperBaseException
 {
     /**
      * @var

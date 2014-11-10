@@ -5,10 +5,10 @@ use GeneaLabs\Bones\Keeper\Exceptions\InvalidActionException;
 use GeneaLabs\Bones\Keeper\Exceptions\InvalidEntityException;
 use GeneaLabs\Bones\Keeper\Exceptions\InvalidOwnershipException;
 use GeneaLabs\Bones\Keeper\Models\Action;
-use GeneaLabs\Bones\Keeper\Models\Entity;
+use GeneaLabs\Bones\Keeper\Entities\Entity;
 use GeneaLabs\Bones\Keeper\Models\Ownership;
 use GeneaLabs\Bones\Keeper\Models\Permission;
-use GeneaLabs\Bones\Keeper\Models\Role;
+use GeneaLabs\Bones\Keeper\Roles\Role;
 
 /**
  * Class BonesKeeperTrait
@@ -188,6 +188,6 @@ trait BonesKeeperTrait
      */
     public function roles()
     {
-        return $this->belongsToMany('\GeneaLabs\Bones\Keeper\Models\Role', 'role_user', 'user_id', 'role_key');
+        return $this->belongsToMany('\GeneaLabs\Bones\Keeper\Roles\Role', 'role_user', 'user_id', 'role_key');
     }
 }
