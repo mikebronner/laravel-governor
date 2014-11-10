@@ -18,14 +18,11 @@
 
 ## 0.11.0 on 10 Nov 2014
 ### Added ...
-- model data validation. Temporarily disabled unique constraint until [issue #105](https://github.com/dwightwatson/validating/issues/105) can be addressed.
-- form validation.
+- model data validation.
 
 ### Changed ...
 - text references of "user role" to "assignment".
 - architecture to command-pattern with events.
-
-### Removed ...
 
 ## 0.10.2 on 8 Nov 2014
 ### Added ...
