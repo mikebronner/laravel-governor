@@ -16,6 +16,14 @@
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
 - Implement TravisCI or Scrutinizer.
 
+## 0.11.2 on 11 Nov 2014
+### Changed ...
+- moved base classes to bones-marshal package as part of bones-marshal 0.3.0 update.
+
+## 0.11.1 on 10 Nov 2014
+### Changed ...
+- updated to work with bones-marshal 0.2.0.
+
 ## 0.11.0 on 10 Nov 2014
 ### Added ...
 - model data validation.

@@ -1,9 +1,9 @@
 <?php namespace GeneaLabs\Bones\Keeper\Entities\Validators;
 
-use GeneaLabs\Bones\Keeper\BonesKeeperBaseValidator;
 use GeneaLabs\Bones\Keeper\Entities\Commands\AddEntityCommand;
+use GeneaLabs\Bones\Marshal\BonesMarshalBaseValidator;
 
-class AddEntityValidator extends BonesKeeperBaseValidator
+class AddEntityValidator extends BonesMarshalBaseValidator
 {
     protected static $rules = [
         'name' => 'required',

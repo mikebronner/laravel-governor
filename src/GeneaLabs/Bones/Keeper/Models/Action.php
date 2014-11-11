@@ -1,12 +1,12 @@
 <?php namespace GeneaLabs\Bones\Keeper\Models;
 
-use GeneaLabs\Bones\Keeper\BonesKeeperBaseModel;
+use GeneaLabs\Bones\Marshal\BonesMarshalBaseModel;
 
 /**
  * Class Action
  * @package GeneaLabs\Bones\Keeper\Models
  */
-class Action extends BonesKeeperBaseModel
+class Action extends BonesMarshalBaseModel
 {
     /**
      * @var string

@@ -1,16 +1,16 @@
 <?php namespace GeneaLabs\Bones\Keeper\Entities;
 
-use GeneaLabs\Bones\Keeper\BonesKeeperBaseModel;
 use GeneaLabs\Bones\Keeper\Entities\Events\EntityWasAddedEvent;
 use GeneaLabs\Bones\Keeper\Entities\Events\EntityWasModifiedEvent;
 use GeneaLabs\Bones\Keeper\Entities\Events\EntityWasNotModifiedEvent;
 use GeneaLabs\Bones\Keeper\Entities\Events\EntityWasRemovedEvent;
+use GeneaLabs\Bones\Marshal\BonesMarshalBaseModel;
 
 /**
  * Class Entity
  * @package GeneaLabs\Bones\Keeper\Entities
  */
-class Entity extends BonesKeeperBaseModel
+class Entity extends BonesMarshalBaseModel
 {
     /**
      * @var string
