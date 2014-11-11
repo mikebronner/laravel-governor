@@ -1,12 +1,12 @@
 <?php namespace GeneaLabs\Bones\Keeper\Models;
 
-use GeneaLabs\Bones\Keeper\BonesKeeperBaseModel;
+use GeneaLabs\Bones\Marshal\BonesMarshalBaseModel;
 
 /**
  * Class Permission
  * @package GeneaLabs\Bones\Keeper\Models
  */
-class Permission extends BonesKeeperBaseModel
+class Permission extends BonesMarshalBaseModel
 {
     /**
      * @var array

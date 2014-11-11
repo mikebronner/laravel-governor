@@ -1,8 +1,8 @@
 <?php namespace GeneaLabs\Bones\Keeper\Controllers;
 
 use GeneaLabs\Bones\Keeper\Assignments\Commands\AddAssignmentCommand;
-use GeneaLabs\Bones\Keeper\BonesKeeperBaseController;
 use GeneaLabs\Bones\Keeper\Roles\Role;
+use GeneaLabs\Bones\Marshal\BonesMarshalBaseController;
 use GeneaLabs\Bones\Marshal\Commands\CommandBus;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\View;
  * Class UserRolesController
  * @package GeneaLabs\Bones\Keeper\Controllers
  */
-class AssignmentsController extends BonesKeeperBaseController
+class AssignmentsController extends BonesMarshalBaseController
 {
     /**
      * @var

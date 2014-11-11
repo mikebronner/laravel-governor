@@ -1,15 +1,15 @@
 <?php namespace GeneaLabs\Bones\Keeper\Roles;
 
-use GeneaLabs\Bones\Keeper\BonesKeeperBaseModel;
 use GeneaLabs\Bones\Keeper\Roles\Events\RoleWasAddedEvent;
 use GeneaLabs\Bones\Keeper\Roles\Events\RoleWasModifiedEvent;
 use GeneaLabs\Bones\Keeper\Roles\Events\RoleWasRemovedEvent;
+use GeneaLabs\Bones\Marshal\BonesMarshalBaseModel;
 
 /**
  * Class Role
  * @package GeneaLabs\Bones\Keeper\Models
  */
-class Role extends BonesKeeperBaseModel
+class Role extends BonesMarshalBaseModel
 {
     /**
      * @var string

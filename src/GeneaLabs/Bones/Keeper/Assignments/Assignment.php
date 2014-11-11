@@ -1,11 +1,11 @@
 <?php namespace GeneaLabs\Bones\Keeper\Assignments;
 
 use GeneaLabs\Bones\Keeper\Assignments\Events\AssignmentWasAddedEvent;
-use GeneaLabs\Bones\Keeper\BonesKeeperBaseModel;
 use GeneaLabs\Bones\Keeper\Roles\Role;
+use GeneaLabs\Bones\Marshal\BonesMarshalBaseModel;
 use Illuminate\Support\Facades\Config;
 
-class Assignment extends BonesKeeperBaseModel
+class Assignment extends BonesMarshalBaseModel
 {
     protected $user;
 

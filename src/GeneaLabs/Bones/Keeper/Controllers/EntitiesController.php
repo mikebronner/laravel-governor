@@ -1,6 +1,6 @@
 <?php namespace GeneaLabs\Bones\Keeper\Controllers;
 
-use GeneaLabs\Bones\Keeper\BonesKeeperBaseController;
+use GeneaLabs\Bones\Marshal\BonesMarshalBaseController;
 use GeneaLabs\Bones\Marshal\Commands\CommandBus;
 use GeneaLabs\Bones\Keeper\Entities\Commands\AddEntityCommand;
 use GeneaLabs\Bones\Keeper\Entities\Commands\ModifyEntityCommand;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\View;
  * Class EntitiesController
  * @package GeneaLabs\Bones\Keeper\Controllers
  */
-class EntitiesController extends BonesKeeperBaseController
+class EntitiesController extends BonesMarshalBaseController
 {
 
     public function __construct(CommandBus $commandBus)
