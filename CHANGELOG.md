@@ -2,6 +2,8 @@
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,8,9,10,12,13,14)
 
 ## //TODO
+- perform permission check against pre-loaded permissions on Auth::user()
+- cache database lookups
 - remove all facades.
 - add route prefixes to package routes
 - publish assets automatically on update and install
@@ -15,6 +17,10 @@
 - Implement PHP Coding Standards Fixer.
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
 - Implement TravisCI or Scrutinizer.
+
+## 0.12.0 on 12 Nov 2014
+### Changed ...
+- actions from create, edit, view, inspect, remove to add, change, view, inspect, remove to be more in line with business language.
 
 ## 0.11.2 on 11 Nov 2014
 ### Changed ...

@@ -45,7 +45,7 @@ class RolesController extends BonesMarshalBaseController
      */
     public function create()
     {
-        if (Auth::user()->hasAccessTo('create', 'any', 'role')) {
+        if (Auth::user()->hasAccessTo('add', 'any', 'role')) {
             return View::make('bones-keeper::roles.create');
         }
     }
@@ -55,7 +55,7 @@ class RolesController extends BonesMarshalBaseController
      */
     public function store()
     {
-        if (Auth::user()->hasAccessTo('create', 'any', 'role')) {
+        if (Auth::user()->hasAccessTo('add', 'any', 'role')) {
             $command = new AddRoleCommand(Input::all());
             $this->execute($command);
 
@@ -69,7 +69,7 @@ class RolesController extends BonesMarshalBaseController
      */
     public function edit($name)
     {
-        if (Auth::user()->hasAccessTo('edit', 'any', 'role')) {
+        if (Auth::user()->hasAccessTo('change', 'any', 'role')) {
             $role = Role::with('permissions')->find($name);
             $entities = Entity::all();
             $actions = Action::all();
@@ -100,7 +100,7 @@ class RolesController extends BonesMarshalBaseController
      */
     public function update($name)
     {
-        if (Auth::user()->hasAccessTo('edit', 'any', 'role')) {
+        if (Auth::user()->hasAccessTo('change', 'any', 'role')) {
             $command = new ModifyRoleCommand($name, Input::all());
             $this->execute($command);
 

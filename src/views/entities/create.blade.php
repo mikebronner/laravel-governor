@@ -2,7 +2,7 @@
 
     @section('innerContent')
         <h1 class="page-header">Add Entity</h1>
-        @if (Auth::check() && Auth::user()->hasPermissionTo('create', 'any', 'entity'))
+        @if (Auth::check() && Auth::user()->hasPermissionTo('add', 'any', 'entity'))
         {{ Form::open(['route' => 'entities.store', 'method' => 'POST', 'class' => 'form-horizontal well']) }}
             <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : ''; }}">
                 {{ Form::label('name', 'Name', ['class' => 'control-label col-sm-2']) }}

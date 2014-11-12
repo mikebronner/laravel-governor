@@ -2,7 +2,7 @@
 
 @section('innerContent')
         <h1 class="page-header">Edit Role</h1>
-        @if ($role->name != 'SuperAdmin' && $role->name != 'Members' && Auth::check() && Auth::user()->hasPermissionTo('edit', 'any', 'role'))
+        @if ($role->name != 'SuperAdmin' && $role->name != 'Members' && Auth::check() && Auth::user()->hasPermissionTo('change', 'any', 'role'))
         <div class="well">
             {{ Form::model($role, ['route' => ['roles.update', $role->name], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'editForm']) }}
                 <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : ''; }}">

@@ -2,7 +2,7 @@
 
 @section('innerContent')
         <h1 class="page-header">Add Role</h1>
-        @if (Auth::check() && Auth::user()->hasPermissionTo('create', 'any', 'role'))
+        @if (Auth::check() && Auth::user()->hasPermissionTo('add', 'any', 'role'))
         {{ Form::open(['route' => 'roles.store', 'method' => 'POST', 'class' => 'form-horizontal well']) }}
             <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : ''; }}">
                 {{ Form::label('name', 'Name', ['class' => 'control-label col-sm-2']) }}

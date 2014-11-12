@@ -55,7 +55,7 @@ class AssignmentsController extends BonesMarshalBaseController
      */
     public function store()
     {
-        if (Auth::user()->hasAccessTo('edit', 'any', 'assignment')) {
+        if (Auth::user()->hasAccessTo('change', 'any', 'assignment')) {
             $command = new AddAssignmentCommand(Input::all());
             $this->execute($command);
 
