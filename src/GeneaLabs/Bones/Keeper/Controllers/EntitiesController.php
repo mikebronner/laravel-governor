@@ -6,6 +6,7 @@ use GeneaLabs\Bones\Keeper\Entities\Commands\AddEntityCommand;
 use GeneaLabs\Bones\Keeper\Entities\Commands\ModifyEntityCommand;
 use GeneaLabs\Bones\Keeper\Entities\Commands\RemoveEntityCommand;
 use GeneaLabs\Bones\Keeper\Entities\Entity;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -30,9 +31,11 @@ class EntitiesController extends BonesMarshalBaseController
      */
     public function index()
     {
-        $entities = Entity::groupBy('name')->get();
+        if (Auth::user()->hasAccessTo('view', 'any', 'entity')) {
+            $entities = Entity::groupBy('name')->get();
 
-        return View::make('bones-keeper::entities.index', compact('entities'));
+            return View::make('bones-keeper::entities.index', compact('entities'));
+        }
     }
 
     /**
@@ -40,7 +43,9 @@ class EntitiesController extends BonesMarshalBaseController
      */
     public function create()
     {
-        return View::make('bones-keeper::entities.create');
+        if (Auth::user()->hasAccessTo('add', 'any', 'entity')) {
+            return View::make('bones-keeper::entities.create');
+        }
     }
 
     /**
@@ -48,10 +53,12 @@ class EntitiesController extends BonesMarshalBaseController
      */
     public function store()
     {
-        $command = new AddEntityCommand(Input::only('name'));
-        $this->execute($command);
+        if (Auth::user()->hasAccessTo('add', 'any', 'entity')) {
+            $command = new AddEntityCommand(Input::only('name'));
+            $this->execute($command);
 
-        return Redirect::route('entities.index');
+            return Redirect::route('entities.index');
+        }
     }
 
     /**
@@ -60,9 +67,11 @@ class EntitiesController extends BonesMarshalBaseController
      */
     public function edit($name)
     {
-        $entity = Entity::find($name);
+        if (Auth::user()->hasAccessTo('change', 'any', 'entity')) {
+            $entity = Entity::find($name);
 
-        return View::make('bones-keeper::entities.edit', compact('entity'));
+            return View::make('bones-keeper::entities.edit', compact('entity'));
+        }
     }
 
     /**
@@ -71,10 +80,12 @@ class EntitiesController extends BonesMarshalBaseController
      */
     public function update($name)
     {
-        $command = new ModifyEntityCommand($name, Input::all());
-        $this->execute($command);
+        if (Auth::user()->hasAccessTo('change', 'any', 'entity')) {
+            $command = new ModifyEntityCommand($name, Input::all());
+            $this->execute($command);
 
-        return Redirect::route('entities.index');
+            return Redirect::route('entities.index');
+        }
     }
 
     /**
@@ -83,9 +94,11 @@ class EntitiesController extends BonesMarshalBaseController
      */
     public function destroy($name)
     {
-        $command = new RemoveEntityCommand($name);
-        $this->execute($command);
+        if (Auth::user()->hasAccessTo('remove', 'any', 'entity')) {
+            $command = new RemoveEntityCommand($name);
+            $this->execute($command);
 
-        return Redirect::route('entities.index');
+            return Redirect::route('entities.index');
+        }
     }
 }

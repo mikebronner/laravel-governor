@@ -3,7 +3,7 @@
 @section('innerContent')
     {{ Form::open(['route' => 'assignments.store']) }}
         <div class="page-header">
-            @if (Auth::check() && Auth::user()->hasPermissionTo('edit', 'any', 'assignment'))
+            @if (Auth::check() && Auth::user()->hasPermissionTo('change', 'any', 'assignment'))
             {{ Form::submit('Save User Roles', ['class' => 'btn btn-success btn-lg pull-right']) }}
             @endif
             <h1>User Roles</h1>
@@ -21,7 +21,7 @@
                 </div>
                 <div id="collapse-{{ Str::slug($role->name) }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                     <div class="panel-body">
-                        {{ Form::select('users[' . $role->name . '][]', $users->lists($displayNameField, $users->first()['primaryKey']), $role->users->lists($users->first()['primaryKey']), ['class' => 'selectize', 'multiple', ((Auth::user()->hasPermissionTo('edit', 'any', 'assignment')) ? '' : 'disabled')]) }}
+                        {{ Form::select('users[' . $role->name . '][]', $users->lists($displayNameField, $users->first()['primaryKey']), $role->users->lists($users->first()['primaryKey']), ['class' => 'selectize', 'multiple', ((Auth::user()->hasPermissionTo('change', 'any', 'assignment')) ? '' : 'disabled')]) }}
                     </div>
                 </div>
             </div>

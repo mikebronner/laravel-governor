@@ -2,7 +2,7 @@
 
     @section('innerContent')
         <h1 class="page-header">Edit Entities</h1>
-        @if (Auth::check() && Auth::user()->hasPermissionTo('edit', 'any', 'entity'))
+        @if (Auth::check() && Auth::user()->hasPermissionTo('change', 'any', 'entity'))
         <div class="well">
         {{ Form::model($entity, ['route' => ['entities.update', $entity->name], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'editForm']) }}
             <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : ''; }}">
