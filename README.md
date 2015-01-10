@@ -43,9 +43,10 @@ And then add the service provider to your app.php config file:
     // );
 ```
 
-Before we can get started, we need to update the database and run the migrations:
+Before we can get started, we need to update the database by running the migrations and data seeders:
 ```php
 php artisan migrate --package=genealabs/bones-keeper
+php artisan db:seed --class=BonesKeeperDatabaseSeeder
 ```
 
 Now we need to make the assets available (terminal):
