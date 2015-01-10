@@ -8,5 +8,6 @@ class BonesKeeperEntitiesTableSeeder extends Seeder {
         Entity::create(['name' => 'role']);
         Entity::create(['name' => 'entity']);
         Entity::create(['name' => 'permission']);
+        Entity::create(['name' => 'assignments']);
     }
 }
