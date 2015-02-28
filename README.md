@@ -3,7 +3,7 @@
 [![Coverage Status](https://img.shields.io/coveralls/GeneaLabs/bones-keeper.svg)](https://coveralls.io/r/GeneaLabs/bones-keeper) 
 [![Build Status](https://travis-ci.org/GeneaLabs/bones-keeper.svg)](https://travis-ci.org/GeneaLabs/bones-keeper)
 
-# Laravel Bones | Keeper
+# Laravel Bones|Keeper
 
 **keep·er**
 /ˈkēpər/

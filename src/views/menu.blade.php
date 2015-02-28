@@ -17,7 +17,7 @@
         <li>{{ link_to_route('assignments.index', 'Assignments') }}</li>
       </ul>
       <span class="nav navbar-nav navbar-right">
-        <a href="http://github.com/genealabs/bones-keeper" target="_blank" class="navbar-text"><span id="bonesKeeperInstalledVersion">v0.12.0</span> <span id="bonesKeeperCurrentVersion" class="badge label-danger"></span></a>
+        <a href="http://github.com/genealabs/bones-keeper" target="_blank" class="navbar-text"><span id="bonesKeeperInstalledVersion">v0.12.1</span> <span id="bonesKeeperCurrentVersion" class="badge label-danger"></span></a>
       </span>
     </div>
   </div>

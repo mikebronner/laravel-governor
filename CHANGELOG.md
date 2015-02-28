@@ -18,6 +18,16 @@
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
 - Implement TravisCI or Scrutinizer.
 
+## 0.13.0 on 28 Feb 2015
+### Changed ...
+- updated composer.json for Laravel 5.
+- removed `package` method in service provider.
+
+## 0.12.1 on 12 Nov 2014
+### Changed ...
+- updated version number in menu.
+- tweaked README.
+
 ## 0.12.0 on 12 Nov 2014
 ### Changed ...
 - actions from create, edit, view, inspect, remove to add, change, view, inspect, remove to be more in line with business language.
