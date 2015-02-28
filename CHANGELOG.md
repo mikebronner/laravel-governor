@@ -18,6 +18,10 @@
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
 - Implement TravisCI or Scrutinizer.
 
+## 0.13.1 on 28 Feb 2015
+### Changed ...
+- updated composer.json for watson\validating.
+
 ## 0.13.0 on 28 Feb 2015
 ### Changed ...
 - updated composer.json for Laravel 5.
