@@ -20,20 +20,16 @@ noun: keeper; plural noun: keepers
 
 ## Installation
 
-To install bones-keeper package (terminal):
+To install bones-keeper package for Laravel 4.2.* projects (terminal):
 
 ```sh
-composer require genealabs/bones-keeper:dev-master
+composer require genealabs/bones-keeper:0.12.1@dev
 ```
 
-or manually add it to you composer.json file:
+For Laravel 5 projects:
 
-```json
-    "require": {
-        /* ... */,
-        "genealabs/bones-keeper": "dev-master"
-    },
-    /* ... */
+```sh
+composer require genealabs/bones-keeper:^0.13.2@dev
 ```
 
 And then add the service provider to your app.php config file:
@@ -45,13 +41,18 @@ And then add the service provider to your app.php config file:
 
 Before we can get started, we need to update the database by running the migrations and data seeders:
 ```php
-php artisan migrate --package=genealabs/bones-keeper
+php artisan migrate --path=vendor/genealabs/bones-keeper/migrations
 php artisan db:seed --class=BonesKeeperDatabaseSeeder
 ```
 
-Now we need to make the assets available (terminal):
+Now we need to make the assets available (for Laravel 4):
 ```php
 php artisan asset:publish genealabs/bones-keeper
+```
+
+Now we need to make the assets and configuration available (for Laravel 5):
+```php
+php artisan vendor:publish
 ```
 
 ## Usage
