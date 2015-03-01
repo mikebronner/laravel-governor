@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2014 by original authors @ fontello.com</metadata>
+<defs>
+<font id="genealabs" horiz-adv-x="1000" >
+<font-face font-family="genealabs" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="genealabs_logo_cleaned" unicode="&#xe800;" d="m321 90c95 13 210 50 272 138 116 168 11 407 192 607 42 47-491-15-695-259-150-179-74-380-43-419 22-28 50-48 88-60v221c-33 14-56 47-56 85 0 51 41 92 92 92 51 0 93-41 93-92 0-38-23-71-56-85v-158c33 24 73 36 106 47 70 21 119 37 127 111-32 15-54 47-54 85 0 51 41 92 92 92 51 0 93-41 93-92 0-39-24-72-57-86-12-128-108-158-179-180-45-14-82-26-104-53 0 0 0 0 0 0 0 0 0 0 0 0-20-27-40-134-44-204-2-33 80-45 84-5 10 111 46 207 49 215" horiz-adv-x="787" />
+</font>
+</defs>
+</svg>
