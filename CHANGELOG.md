@@ -18,6 +18,11 @@
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
 - Implement TravisCI or Scrutinizer.
 
+## 0.13.2 on 28 Feb 2015
+### Changed ...
+- updated service provider to correctly publish assets and config file.
+- updated README with new instructions.
+
 ## 0.13.1 on 28 Feb 2015
 ### Changed ...
 - updated composer.json for watson\validating.
