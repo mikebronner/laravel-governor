@@ -190,4 +190,14 @@ trait BonesKeeperTrait
     {
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_key');
     }
+
+
+    public static function create(array $attributes)
+    {
+        $user = parent::create($attributes);
+        $memberRole = Role::findOrFail('Member');
+        $user->roles()->attach($memberRole->name);
+
+        return $user;
+    }
 }
