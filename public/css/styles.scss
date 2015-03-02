@@ -13,26 +13,8 @@
 nav.bones-keeper
 {
   margin-top: 25px;
-  
-  .navbar-brand a:before {
-    content: '\e800';
-    font-family: "genealabs";
-    font-style: normal;
-    font-weight: normal;
-    speak: none;
-    color: rgb(0, 198, 91);
-    display: inline-block;
-    text-decoration: inherit;
-    width: 1em;
-    margin-right: .2em;
-    text-align: center;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1em;
-    margin-left: .2em;
-  }
 
-  .navbar-brand {
+  .bones-keeper-brand {
     font-weight: bold;
 
     a {

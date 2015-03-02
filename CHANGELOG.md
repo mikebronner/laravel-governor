@@ -18,6 +18,13 @@
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
 - Implement TravisCI or Scrutinizer.
 
+## 0.13.4 on 2 Mar 2015
+### Added ...
+- functionality to automatically assign user to 'Members' group when created.
+
+### Changed ...
+- styling of BonesKeeper menu header.
+
 ## 0.13.3 on 1 Mar 2015
 ### Changed ...
 - removed eventing system.
