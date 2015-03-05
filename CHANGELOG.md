@@ -18,6 +18,10 @@
 - Write unit tests (starting with PHPUnit, then possibly phpSpec, Behat, Codeception).
 - Implement TravisCI or Scrutinizer.
 
+## 0.13.5 on 4 Mar 2015
+### Fixed ...
+- detecting combined ownerships like "own|other" or ["own", "other"].
+
 ## 0.13.4 on 2 Mar 2015
 ### Added ...
 - functionality to automatically assign user to 'Members' group when created.

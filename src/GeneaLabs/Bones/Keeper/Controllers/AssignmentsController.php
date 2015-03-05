@@ -43,7 +43,7 @@ class AssignmentsController extends Controller
             $users = $this->user->all();
             $roles = Role::with('users')->get();
 
-            return View::make('bones-keeper::assignments.index',
+            return view('bones-keeper::assignments.index',
                 compact('users', 'roles', 'displayNameField', 'userList'));
         }
     }
@@ -64,6 +64,6 @@ class AssignmentsController extends Controller
             }
         }
 
-        return Redirect::route('assignments.index');
+        return redirect()->route('assignments.index');
     }
 }
