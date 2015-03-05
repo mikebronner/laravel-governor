@@ -65,13 +65,15 @@ trait BonesKeeperTrait
         $action = strtolower($action);
         $entity = strtolower($entity);
         $ownership = strtolower($ownership);
-        $this->checkIfActionExists($action);
-        $this->checkIfEntityExists($entity);
-        $this->checkIfOwnershipExists($ownership);
         $hasPermission = false;
         $ownershipTest = ($this->id == $ownerUserId) ? 'own' : 'other';
         $ownership = ($ownership == null) ? [] : $ownership;
-        $ownership = (!is_array($ownership)) ? explode('|', strtolower($ownership)) : $ownership;
+        $ownership = (! is_array($ownership)) ? explode('|', strtolower($ownership)) : $ownership;
+
+        $this->checkIfActionExists($action);
+        $this->checkIfEntityExists($entity);
+        $this->checkIfOwnershipExists($ownership);
+
         if (count($ownership)) {
             if (in_array($ownershipTest, $ownership)) {
                 $hasPermission = $this->checkPermission($action, $ownershipTest, $entity);
@@ -117,13 +119,14 @@ trait BonesKeeperTrait
      * @param $ownership
      * @throws InvalidOwnershipException
      */
-    private function checkIfOwnershipExists($ownership) {
-        $ownerships = new Ownership();
-        $ownerships = $ownerships->all()->lists('name');
-        if (!in_array($ownership, $ownerships)) {
-            $exception = new InvalidOwnershipException('The Ownership "' . $ownership . '" does not exist. Use one of: ' . implode(', ', $ownerships) . '.');
-            $exception->ownership = $ownership;
-            throw $exception;
+    private function checkIfOwnershipExists($ownerships) {
+        $allOwnerships = Ownership::all()->lists('name');
+        foreach ($ownerships as $ownership) {
+            if (!in_array($ownership, $allOwnerships)) {
+                $exception = new InvalidOwnershipException('The Ownership "' . $ownership . '" does not exist. Use one of: ' . implode(', ', $allOwnerships) . '.');
+                $exception->ownership = $ownership;
+                throw $exception;
+            }
         }
     }
 
