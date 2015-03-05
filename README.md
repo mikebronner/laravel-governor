@@ -72,6 +72,20 @@ App::error(function (Watson\Validating\ValidationException\ValidationException $
 
 The above uses the default error views that come with the package. You can customize these using your own views, of course.
 
+## Components
+### Ownership
+#### no
+Used to detect or allow access based on a "no"-access condition.
+
+#### own
+Used to detect or allow access to user's own items only. The $userId belonging to the item in question must be passed in.
+
+#### other
+Used to detect or allow access to other's items, this is basically the inverse of "own". The $userId belonging to the item in question must be passed in.
+
+#### any
+Used to detect or allow access to all items in question, ownership is not checked if the user's role is set to "any".
+
 ## Methods
 
 // tba
