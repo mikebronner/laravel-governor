@@ -52,4 +52,12 @@ class Assignment extends Model
             $role->users()->detach();
         });
     }
+
+
+    public function getAllUsersOfRole($role)
+    {
+        $role = Role::with('users')->where('name', $role)->first();
+
+        return $role->users;
+    }
 }
