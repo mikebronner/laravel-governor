@@ -29,7 +29,7 @@ class EntitiesController extends Controller
         if (Auth::user()->hasAccessTo('view', 'any', 'entity')) {
             $entities = Entity::groupBy('name')->get();
 
-            return view('bones-keeper::entities.index', compact('entities'));
+            return view('genealabs-bones-keeper::entities.index', compact('entities'));
         }
     }
 
@@ -39,7 +39,7 @@ class EntitiesController extends Controller
     public function create()
     {
         if (Auth::user()->hasAccessTo('add', 'any', 'entity')) {
-            return view('bones-keeper::entities.create');
+            return view('genealabs-bones-keeper::entities.create');
         }
     }
 
@@ -65,7 +65,7 @@ class EntitiesController extends Controller
         if (Auth::user()->hasAccessTo('change', 'any', 'entity')) {
             $entity = Entity::find($name);
 
-            return view('bones-keeper::entities.edit', compact('entity'));
+            return view('genealabs-bones-keeper::entities.edit', compact('entity'));
         }
     }
 

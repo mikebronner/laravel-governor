@@ -29,7 +29,7 @@ class RolesController extends Controller
         if (Auth::user()->hasAccessTo('view', 'any', 'role')) {
             $roles = Role::orderBy('name')->get();
 
-            return view('bones-keeper::roles.index', compact('roles'));
+            return view('genealabs-bones-keeper::roles.index', compact('roles'));
         }
     }
 
@@ -39,7 +39,7 @@ class RolesController extends Controller
     public function create()
     {
         if (Auth::user()->hasAccessTo('add', 'any', 'role')) {
-            return view('bones-keeper::roles.create');
+            return view('genealabs-bones-keeper::roles.create');
         }
     }
 
@@ -82,7 +82,7 @@ class RolesController extends Controller
             }
             $ownershipOptions = array_merge(['no' => 'no'], $ownerships->lists('name', 'name'));
 
-            return view('bones-keeper::roles.edit', compact('role', 'permissionMatrix', 'ownershipOptions'));
+            return view('genealabs-bones-keeper::roles.edit', compact('role', 'permissionMatrix', 'ownershipOptions'));
         }
     }
 

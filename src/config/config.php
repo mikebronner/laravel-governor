@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'layoutView' => 'bones-keeper::layout',
+    'layoutView' => 'genealabs-bones-keeper::layout',
     'displayNameField' => 'name',
 ];

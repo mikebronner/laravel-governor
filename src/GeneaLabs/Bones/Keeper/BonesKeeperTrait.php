@@ -93,7 +93,8 @@ trait BonesKeeperTrait
      */
     private function checkIfActionExists($action) {
         $actions = new Action();
-        $actions = $actions->all()->lists('name');
+        $actions = $actions->all()->lists('name')->toArray();
+
         if (!in_array($action, $actions)) {
             $exception = new InvalidActionException('The Action "' . $action . '" does not exist. Use one of: ' . implode(', ', $actions) . '.');
             $exception->action = $action;
@@ -107,7 +108,8 @@ trait BonesKeeperTrait
      */
     private function checkIfEntityExists($entity) {
         $entities = new Entity();
-        $entities = $entities->all()->lists('name');
+        $entities = $entities->all()->lists('name')->toArray();
+
         if (!in_array($entity, $entities)) {
             $exception = new InvalidEntityException('The Entity "' . $entity . '" does not exist. Use one of: ' . implode(', ', $entities) . '.');
             $exception->entity = $entity;
@@ -120,7 +122,8 @@ trait BonesKeeperTrait
      * @throws InvalidOwnershipException
      */
     private function checkIfOwnershipExists($ownerships) {
-        $allOwnerships = Ownership::all()->lists('name');
+        $allOwnerships = Ownership::all()->lists('name')->toArray();
+
         foreach ($ownerships as $ownership) {
             if (!in_array($ownership, $allOwnerships)) {
                 $exception = new InvalidOwnershipException('The Ownership "' . $ownership . '" does not exist. Use one of: ' . implode(', ', $allOwnerships) . '.');
@@ -195,7 +198,7 @@ trait BonesKeeperTrait
     }
 
 
-    public static function create(array $attributes)
+    public static function create(array $attributes = [])
     {
         $user = parent::create($attributes);
         $memberRole = Role::findOrFail('Member');

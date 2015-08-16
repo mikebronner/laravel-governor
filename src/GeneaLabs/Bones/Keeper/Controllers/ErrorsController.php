@@ -6,11 +6,11 @@ class ErrorsController extends Controller
 {
     public function invalid()
     {
-        return view('bones-keeper::errors.unauthorized');
+        return view('genealabs-bones-keeper::errors.unauthorized');
     }
 
     public function modelValidation()
     {
-        return view('bones-keeper::errors.modelValidation');
+        return view('genealabs-bones-keeper::errors.modelValidation');
     }
 }

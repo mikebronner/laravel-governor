@@ -26,7 +26,7 @@ class BonesKeeperServiceProvider extends ServiceProvider
         $this->publishes([__DIR__ . '/../../../config/config.php' => config_path('/genealabs/bones-keeper.php')], 'genealabs-bones-keeper');
         $this->publishes([
             __DIR__ . '/../../../../public' => public_path('genealabs/bones-keeper')], 'genealabs-bones-keeper');
-        $this->loadViewsFrom(__DIR__.'/../../../views', 'bones-keeper');
+        $this->loadViewsFrom(__DIR__.'/../../../views', 'genealabs-bones-keeper');
     }
 
     /**
@@ -45,6 +45,6 @@ class BonesKeeperServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['bones-keeper'];
+        return ['genealabs-bones-keeper'];
     }
 }

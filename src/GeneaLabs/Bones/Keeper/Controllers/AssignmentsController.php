@@ -29,8 +29,8 @@ class AssignmentsController extends Controller
     {
         $this->middleware('auth');
 //        $this->beforeFilter('csrf', ['on' => 'post']);
-        $this->displayNameField = Config::get('genealabs.bones-keeper.displayNameField');
-        $this->user = App::make(Config::get('auth.model'));
+        $this->displayNameField = config('genealabs-bones-keeper.displayNameField');
+        $this->user = App::make(config('auth.model'));
     }
 
     /**
@@ -43,7 +43,7 @@ class AssignmentsController extends Controller
             $users = $this->user->all();
             $roles = Role::with('users')->get();
 
-            return view('bones-keeper::assignments.index',
+            return view('genealabs-bones-keeper::assignments.index',
                 compact('users', 'roles', 'displayNameField', 'userList'));
         }
     }

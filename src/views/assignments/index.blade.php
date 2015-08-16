@@ -1,4 +1,4 @@
-@extends('bones-keeper::master')
+@extends('genealabs-bones-keeper::master')
 
 @section('innerContent')
     {!! Form::open(['route' => 'assignments.store']) !!}
