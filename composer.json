@@ -12,7 +12,7 @@
     "php": ">=5.6.0",
     "illuminate/support": "~5.0",
     "genealabs/bones-macros": "~0.2@dev",
-    "watson/validating": "dev-master@dev"
+    "watson/validating": "~1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "*"
