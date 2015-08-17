@@ -80,7 +80,7 @@ class RolesController extends Controller
                     $permissionMatrix[$entity->name][$action->name] = $selectedOwnership;
                 }
             }
-            $ownershipOptions = array_merge(['no' => 'no'], $ownerships->lists('name', 'name'));
+            $ownershipOptions = array_merge(['no' => 'no'], $ownerships->lists('name', 'name')->toArray());
 
             return view('genealabs-bones-keeper::roles.edit', compact('role', 'permissionMatrix', 'ownershipOptions'));
         }
