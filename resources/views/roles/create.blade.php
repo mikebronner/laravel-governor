@@ -1,4 +1,4 @@
-@extends('genealabs-bones-keeper::master')
+@extends('genealabs-laravel-governor::master')
 
 @section('innerContent')
         <h1 class="page-header">Add Role</h1>

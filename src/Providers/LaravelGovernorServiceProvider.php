@@ -28,9 +28,9 @@ class LaravelGovernorServiceProvider extends ServiceProvider
             require __DIR__ . '/../Http/routes.php';
         }
 
-        $this->publishes([__DIR__ . '/../../config/config.php' => config_path('genealabs-bones-keeper.php')], 'genealabs-bones-keeper');
-        $this->publishes([__DIR__ . '/../../public' => public_path('genealabs/bones-keeper')], 'genealabs-bones-keeper');
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-bones-keeper');
+        $this->publishes([__DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')], 'genealabs-laravel-governor');
+        $this->publishes([__DIR__ . '/../../public' => public_path('genealabs-laravel-governor')], 'genealabs-laravel-governor');
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
     }
 
     /**
@@ -49,6 +49,6 @@ class LaravelGovernorServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['genealabs-bones-keeper'];
+        return ['genealabs-laravel-governor'];
     }
 }

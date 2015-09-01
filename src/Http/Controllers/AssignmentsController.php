@@ -13,7 +13,7 @@ class AssignmentsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->displayNameField = config('genealabs-bones-keeper.displayNameField');
+        $this->displayNameField = config('genealabs-laravel-governor.displayNameField');
         $this->user = App::make(config('auth.model'));
     }
 
@@ -28,7 +28,7 @@ class AssignmentsController extends Controller
         $users = $this->user->all();
         $roles = Role::with('users')->get();
 
-        return view('genealabs-bones-keeper::assignments.index',
+        return view('genealabs-laravel-governor::assignments.index',
             compact('users', 'roles', 'displayNameField', 'userList', 'assignment'));
     }
 
@@ -44,6 +44,6 @@ class AssignmentsController extends Controller
         $assignment->addAllUsersToMemberRole();
         $assignment->removeAllSuperAdminUsersFromOtherRoles($assignedUsers);
 
-        return redirect()->route('assignments.index');
+        return redirect()->route('genealabs.laravel-governor.assignments.index');
     }
 }

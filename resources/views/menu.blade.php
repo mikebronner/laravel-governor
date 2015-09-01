@@ -1,15 +1,23 @@
-<nav class="navbar navbar-default bones-keeper" role="navigation">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="bones-keeper-brand">Bones:Keeper</div>
-        <ul class="nav nav-pills">
-            <li>{!! link_to_route('entities.index', 'Entities') !!}</li>
-            <li>{!! link_to_route('roles.index', 'Roles') !!}</li>
-            <li>{!! link_to_route('assignments.index', 'Assignments') !!}</li>
-        </ul>
-      <span class="nav navbar-nav navbar-right">
-        <a href="http://github.com/genealabs/bones-keeper" target="_blank" class="navbar-text"><span id="bonesKeeperInstalledVersion">v0.13.4</span> <span id="bonesKeeperCurrentVersion" class="badge label-danger"></span></a>
-      </span>
-  </div>
-</nav>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Governor for Laravel</a>
+        </div>
 
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li>{!! link_to_route('genealabs.laravel-governor.entities.index', 'Entities') !!}</li>
+                <li>{!! link_to_route('genealabs.laravel-governor.roles.index', 'Roles') !!}</li>
+                <li>{!! link_to_route('genealabs.laravel-governor.assignments.index', 'Assignments') !!}</li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

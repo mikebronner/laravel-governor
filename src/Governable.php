@@ -40,4 +40,19 @@ trait Governable
 
         return $user;
     }
+
+    public function getDisplayNameAttribute()
+    {
+        $name = $this->getAttribute('first_name') . ' ' . $this->getAttribute('last_name');
+
+        if (! strlen(trim($name))) {
+            $name = $this->getAttribute('name');
+        }
+
+        if (! strlen(trim($name))) {
+            $name = $this->getAttribute('email');
+        }
+
+        return $name;
+    }
 }

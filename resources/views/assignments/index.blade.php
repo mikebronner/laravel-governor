@@ -1,7 +1,7 @@
-@extends('genealabs-bones-keeper::master')
+@extends('genealabs-laravel-governor::master')
 
 @section('innerContent')
-    {!! Form::open(['route' => 'assignments.store']) !!}
+    {!! Form::open(['route' => 'genealabs.laravel-governor.assignments.store']) !!}
         <div class="page-header">
             @can('edit', $assignment)
             {!! Form::submit('Save User Roles', ['class' => 'btn btn-success btn-lg pull-right']) !!}
@@ -21,7 +21,7 @@
                 </div>
                 <div id="collapse-{{ str_slug($role->name) }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                     <div class="panel-body">
-                        {!! Form::select('users[' . $role->name . '][]', $users->lists($displayNameField, $users->first()['primaryKey']), $role->users->lists($users->first()['primaryKey']), ['class' => 'selectize', 'multiple', ((Auth::user()->can('edit', $assignment)) ? '' : 'disabled')]) !!}
+                        {!! Form::select('users[' . $role->name . '][]', $users->lists($displayNameField, $users->first()['primaryKey'])->toArray(), $role->users->lists($users->first()['primaryKey'])->toArray(), ['class' => 'selectize', 'multiple', ((Auth::user()->can('edit', $assignment)) ? '' : 'disabled')]) !!}
                     </div>
                 </div>
             </div>

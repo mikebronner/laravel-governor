@@ -1,10 +1,10 @@
-@extends('genealabs-bones-keeper::master')
+@extends('genealabs-laravel-governor::master')
 
 @section('innerContent')
         <h1 class="page-header">Edit Role</h1>
         @if ($role->name != 'SuperAdmin' && $role->name != 'Members' && Auth::check() && Auth::user()->can('edit', $role))
         <div class="well">
-            {!! Form::model($role, ['route' => ['roles.update', $role->name], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'editForm']) !!}
+            {!! Form::model($role, ['route' => ['genealabs.laravel-governor.roles.update', $role->name], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'editForm']) !!}
                 <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : '' }}">
                     {!! Form::label('name', 'Name', ['class' => 'control-label col-sm-2']) !!}
                     <div class="col-sm-5">
@@ -66,12 +66,12 @@
                     </div>
                 </div>
             {!! Form::close() !!}
-            {!! Form::open(['route' => ['roles.destroy', $role->name], 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'deleteForm']) !!}
+            {!! Form::open(['route' => ['genealabs.laravel-governor.roles.destroy', $role->name], 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'deleteForm']) !!}
             {!! Form::close() !!}
             <div class="form-horizontal">
                 <div class="form-group">
                     <div class="col-sm-2">
-                        {!! link_to_route('roles.index', 'Cancel', [], ['class' => 'btn btn-default pull-left']) !!}
+                        {!! link_to_route('genealabs.laravel-governor.roles.index', 'Cancel', [], ['class' => 'btn btn-default pull-left']) !!}
                     </div>
                     <div class="col-sm-10 btn-group">
                         {!! Form::button('Update Role', ['class' => 'btn btn-success', 'onclick' => 'submitForm($("#editForm"));']) !!}

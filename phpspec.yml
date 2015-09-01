@@ -1,7 +1,0 @@
-suites:
-  bones-keeper_suite:
-    namespace: GeneaLabs\LaravelGovernor
-    src_path: src
-    spec_path: specs
-    spec_prefix: spec
-    psr4_prefix: GeneaLabs\LaravelGovernor

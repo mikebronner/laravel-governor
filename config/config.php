@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'layoutView' => 'genealabs-bones-keeper::layout',
+    'layoutView' => 'genealabs-laravel-governor::layout',
     'displayNameField' => 'name',
 ];

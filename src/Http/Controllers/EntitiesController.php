@@ -2,7 +2,6 @@
 
 use GeneaLabs\LaravelGovernor\Entity;
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateEntityRequest;
-use GeneaLabs\LaravelGovernor\Http\Requests\DestroyEntityRequest;
 use GeneaLabs\LaravelGovernor\Http\Requests\UpdateEntityRequest;
 
 class EntitiesController extends Controller
@@ -21,7 +20,7 @@ class EntitiesController extends Controller
         $this->authorize('view', (new Entity()));
         $entities = Entity::groupBy('name')->get();
 
-        return view('genealabs-bones-keeper::entities.index', compact('entities'));
+        return view('genealabs-laravel-governor::entities.index', compact('entities'));
     }
 
     /**
@@ -32,7 +31,7 @@ class EntitiesController extends Controller
         $entity = new Entity();
         $this->authorize('create', $entity);
 
-        return view('genealabs-bones-keeper::entities.create', compact('entity'));
+        return view('genealabs-laravel-governor::entities.create', compact('entity'));
     }
 
     /**
@@ -55,7 +54,7 @@ class EntitiesController extends Controller
         $entity = Entity::find($name);
         $this->authorize($entity);
 
-        return view('genealabs-bones-keeper::entities.edit', compact('entity'));
+        return view('genealabs-laravel-governor::entities.edit', compact('entity'));
     }
 
     /**
@@ -83,6 +82,6 @@ class EntitiesController extends Controller
         $entity->destroy();
         $this->resetSuperAdminPermissions();
 
-        return redirect()->route('entities.index');
+        return redirect()->route('genealabs.laravel-governor.entities.index');
     }
 }

@@ -29,7 +29,7 @@ class RolesController extends Controller
         $this->authorize('view', (new Role()));
         $roles = Role::orderBy('name')->get();
 
-        return view('genealabs-bones-keeper::roles.index', compact('roles'));
+        return view('genealabs-laravel-governor::roles.index', compact('roles'));
     }
 
     /**
@@ -40,7 +40,7 @@ class RolesController extends Controller
         $role = new Role();
         $this->authorize('create', $role);
 
-        return view('genealabs-bones-keeper::roles.create', compact('role'));
+        return view('genealabs-laravel-governor::roles.create', compact('role'));
     }
 
     /**
@@ -50,7 +50,7 @@ class RolesController extends Controller
     {
         Role::create($request->all());
 
-        return redirect()->route('roles.index');
+        return redirect()->route('genealabs.laravel-governor.roles.index');
     }
 
     /**
@@ -84,7 +84,7 @@ class RolesController extends Controller
 
         $ownershipOptions = array_merge(['no' => 'no'], $ownerships->lists('name', 'name')->toArray());
 
-        return view('genealabs-bones-keeper::roles.edit', compact('role', 'permissionMatrix', 'ownershipOptions'));
+        return view('genealabs-laravel-governor::roles.edit', compact('role', 'permissionMatrix', 'ownershipOptions'));
     }
 
     /**
@@ -122,7 +122,7 @@ class RolesController extends Controller
         $role->fill($request->only(['name', 'description']));
         $role->save();
 
-        return redirect()->route('roles.index');
+        return redirect()->route('genealabs.laravel-governor.roles.index');
     }
 
     /**
@@ -135,6 +135,6 @@ class RolesController extends Controller
         $this->authorize('remove', $role);
         $role->destroy();
 
-        return redirect()->route('roles.index');
+        return redirect()->route('genealabs.laravel-governor.roles.index');
     }
 }

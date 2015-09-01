@@ -5,20 +5,9 @@
   src: url("/packages/genealabs/bones-keeper/fonts/genealabs.eot?95891505#iefix") format("embedded-opentype"), url("/packages/genealabs/bones-keeper/fonts/genealabs.woff?95891505") format("woff"), url("/packages/genealabs/bones-keeper/fonts/genealabs.ttf?95891505") format("truetype"), url("/packages/genealabs/bones-keeper/fonts/genealabs.svg?95891505#genealabs") format("svg");
   font-weight: normal;
   font-style: normal; }
-nav.bones-keeper {
-  margin-top: 25px; }
-  nav.bones-keeper .bones-keeper-brand {
-    font-weight: bold; }
-    nav.bones-keeper .bones-keeper-brand a {
-      text-decoration: none;
-      font-weight: normal; }
-      nav.bones-keeper .bones-keeper-brand a .genea {
-        font-family: Limelight; }
 
 .selectize-input > div {
   background: none !important; }
 
 .panel-group .panel {
   overflow: visible !important; }
-
-/*# sourceMappingURL=styles.css.map */
