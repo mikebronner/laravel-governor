@@ -1,7 +1,7 @@
 suites:
   bones-keeper_suite:
-    namespace: GeneaLabs\Bones\Keeper
+    namespace: GeneaLabs\LaravelGovernor
     src_path: src
     spec_path: specs
     spec_prefix: spec
-    psr4_prefix: GeneaLabs\Bones\Keeper
+    psr4_prefix: GeneaLabs\LaravelGovernor

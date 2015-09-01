@@ -4,10 +4,10 @@ We encourage and welcome any contributions to the project created with the follo
 ### Before You Start
 Before you start, please make sure that you are aware of, and agree to, the following conditions of contribution:
 
-* By making a contribution to **Bones | Keeper**, you accept that you are granting copyright ownership for that contribution to GeneaLabs, LLC. In countries where copyright reassignment is not permitted, you grant GeneaLabs a perpetual, non-exclusive licence to use your contribution in any way and for any purpose.
-* By making a contribution to **Bones | Keeper**, you accept that your code will be released under the open-source MIT License.
+* By making a contribution to **Governor for Laravel**, you accept that you are granting copyright ownership for that contribution to GeneaLabs, LLC. In countries where copyright reassignment is not permitted, you grant GeneaLabs a perpetual, non-exclusive licence to use your contribution in any way and for any purpose.
+* By making a contribution to **Governor for Laravel**, you accept that your code will be released under the open-source MIT License.
 
-GeneaLabs is commited to providing **Bones | Keeper** as a free and open-source project in an effort to give back to the community.
+GeneaLabs is commited to providing **Governor for Laravel** as a free and open-source project in an effort to give back to the community.
 
 ### The Contribution Process
 
@@ -23,7 +23,6 @@ All pull requests must satisfy the following requirements:
 * PSR-1, PSR-2 compliance for all code
 * PSR-4 compliance for all namespaces
 * Doc-blocks for all classes and methods
-* All files must contain the standard file-level docblock, including the copyright, license and link tags.
 * README updated for any changes in functionality.
 
 If you're working on files that don't satisfy these requirements, bring them up to par while you're working on them.

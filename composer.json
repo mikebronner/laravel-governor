@@ -1,30 +1,31 @@
 {
-  "name": "genealabs/bones-keeper",
-  "description": "ACL functionality for Laravel.",
+  "name": "genealabs/laravel-governor",
+  "description": "Managing policy and control in Laravel.",
   "license": "MIT",
   "authors": [
     {
       "name": "GeneaLabs, LLC",
-      "email": "info@genealabs.com"
+      "email": "hello@genealabs.com"
     }
   ],
   "require": {
-    "php": ">=5.6.0",
-    "illuminate/support": "~5.0",
-    "genealabs/bones-macros": "~0.2@dev",
-    "watson/validating": "~1.0"
+    "php": ">=5.5.9",
+    "illuminate/support": "~5.1",
+    "genealabs/bones-macros": "~0.2"
   },
   "require-dev": {
     "phpunit/phpunit": "*"
   },
   "autoload": {
     "classmap": [
-      "src/migrations",
-      "src/seeds"
+      "database/migrations",
+      "database/seeds"
     ],
     "psr-4": {
-      "GeneaLabs\\Bones\\Keeper\\": "src/GeneaLabs/Bones/Keeper"
+      "GeneaLabs\\LaravelGovernor\\": "src/"
     }
   },
-  "minimum-stability": "dev"
+  "config": {
+    "preferred-install": "dist"
+  }
 }
