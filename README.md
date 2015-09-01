@@ -1,6 +1,8 @@
 # Governor for Laravel
 Managing policy and control in Laravel.
 
+[![Build Status](https://travis-ci.org/GeneaLabs/laravel-governor.svg?branch=master)](https://travis-ci.org/GeneaLabs/laravel-governor)
+
 ## Before You Get Started
 - You must have at least 1 (one) user in your users table. The user with the lowest ID will become your admin by default. This can be changed after the installation, of course.
 - You must add a `created_by` column to each of your tables. For example:
