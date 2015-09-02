@@ -1,6 +1,6 @@
 @extends(config('genealabs-laravel-governor.layoutView'))
 
-@section('content')
+@section(config('genealabs-laravel-governor.bladeContentSection'))
     <script>
         var governorDisplayNameField = '<?= config('genealabs-laravel-governor.displayNameField') ?>';
     </script>
@@ -11,7 +11,6 @@
         @import url('{!! asset('genealabs-laravel-governor/css/styles.css') !!}');
     </style>
     <div class="container">
-        @include('genealabs-laravel-governor::menu')
         @yield('innerContent')
     </div>
 @stop

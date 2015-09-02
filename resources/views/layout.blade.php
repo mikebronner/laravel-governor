@@ -14,6 +14,9 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     </head>
     <body>
+        <div class="container">
+            @include('genealabs-laravel-governor::menu')
+        </div>
         @yield('content')
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     </body>

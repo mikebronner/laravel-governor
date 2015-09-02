@@ -111,9 +111,12 @@ php artisan vendor:publish --tag=genealabs-laravel-governor --force
 
 ## Configuration
 Once you have published the assets, you will be able to customize the configuration of Governor for Laravel in 
-`/app/config/genealabs-laravel-governor.php`. There are only two aspects to this:
+`/app/config/genealabs-laravel-governor.php`. (See the Examples section for what the default config file looks like.)
+There are only three aspects to this:
 - The master layout view (Blade template), by default it includes a bare-bones layout. Customizing this to your own view
   lets it adopt your site's theme (as long as it is a Bootstrap theme).
+- The blade section used to display body content in your layout template. Change this to what your blade layout template
+  uses.
 - The field you want to use as a display name field. This defaults to `name`, but you can use email, or any other field
   in the User model (you can also create your own custom attribute getter to concatenate fields, etc.).
 
@@ -222,4 +225,15 @@ class MyModelPolicy extends LaravelGovernorPolicy
         return $this->validatePermissions($user, 'remove', 'myModel', $myModel->created_by);
     }
 }
+```
+
+### Config
+```php
+<?php
+
+return [
+    'layoutView' => 'genealabs-laravel-governor::layout',
+    'bladeContentSection' => 'content',
+    'displayNameField' => 'name',
+];
 ```
