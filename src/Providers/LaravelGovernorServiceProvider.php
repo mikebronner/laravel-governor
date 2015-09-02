@@ -1,7 +1,9 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
 
 class LaravelGovernorServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,12 @@ class LaravelGovernorServiceProvider extends ServiceProvider
         if (! $this->app->routesAreCached()) {
             require __DIR__ . '/../Http/routes.php';
         }
+
+        Model::creating(function ($model) {
+            if (Auth::check() && ! property_exists($model, 'isGoverned') && $model->isGoverned === false) {
+                $model->setAttribute('created_by', Auth::user()->id);
+            }
+        });
 
         $this->publishes([__DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')], 'genealabs-laravel-governor');
         $this->publishes([__DIR__ . '/../../public' => public_path('genealabs-laravel-governor')], 'genealabs-laravel-governor');
