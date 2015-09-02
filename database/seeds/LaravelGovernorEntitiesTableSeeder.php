@@ -1,9 +1,9 @@
 <?php
 
-use GeneaLabs\LaravelGovernor\Models\Entity;
+use GeneaLabs\LaravelGovernor\Entity;
 use Illuminate\Database\Seeder;
 
-class BonesKeeperEntitiesTableSeeder extends Seeder {
+class LaravelGovernorEntitiesTableSeeder extends Seeder {
     public function run()
     {
         Entity::create(['name' => 'role']);

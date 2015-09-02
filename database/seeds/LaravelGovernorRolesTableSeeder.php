@@ -1,11 +1,11 @@
 <?php
 
-use GeneaLabs\LaravelGovernor\Models\Role;
+use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
-class BonesKeeperRolesTableSeeder extends Seeder {
+class LaravelGovernorRolesTableSeeder extends Seeder {
     public function run()
     {
         $user = App::make(Config::get('auth.model'));

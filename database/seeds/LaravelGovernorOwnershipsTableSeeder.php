@@ -1,9 +1,9 @@
 <?php
 
-use GeneaLabs\LaravelGovernor\Models\Ownership;
+use GeneaLabs\LaravelGovernor\Ownership;
 use Illuminate\Database\Seeder;
 
-class BonesKeeperOwnershipsTableSeeder extends Seeder {
+class LaravelGovernorOwnershipsTableSeeder extends Seeder {
     public function run()
     {
         Ownership::create(['name' => 'any']);

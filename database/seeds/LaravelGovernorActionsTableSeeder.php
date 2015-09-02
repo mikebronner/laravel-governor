@@ -1,15 +1,15 @@
 <?php
 
-use GeneaLabs\LaravelGovernor\Models\Action;
+use GeneaLabs\LaravelGovernor\Action;
 use Illuminate\Database\Seeder;
 
-class BonesKeeperActionsTableSeeder extends Seeder {
+class LaravelGovernorActionsTableSeeder extends Seeder {
     public function run()
     {
-        Action::create(['name' => 'add']);
+        Action::create(['name' => 'create']);
         Action::create(['name' => 'view']);
         Action::create(['name' => 'inspect']);
-        Action::create(['name' => 'change']);
+        Action::create(['name' => 'edit']);
         Action::create(['name' => 'remove']);
     }
 }
