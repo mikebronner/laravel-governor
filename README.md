@@ -6,15 +6,19 @@ User/Roles management. It lets you specify the policies using the native Authori
 manage user access to the various parts of your system.
 
 ### Entities
+![screen shot 2015-09-01 at 18 47 09](https://cloud.githubusercontent.com/assets/1791050/9621338/21878380-50da-11e5-86bc-e2c0cd11635a.png)
 You define a list of entities, named after your Policy classes. This is not a requirement, but helps keep things organized.
 
 ### Roles
+![screen shot 2015-09-01 at 18 46 40](https://cloud.githubusercontent.com/assets/1791050/9621341/25faf32a-50da-11e5-9c4c-cb1b8ac0c0e0.png)
 Roles are basically your user-groups. Two roles are created out of the box (these cannot be removed):
 - Superadmin: is set up with the user with the lowest ID by default. You can add more users as necessary.
 - Members: all users are by default members. You cannot remove users from the Members group.
 Editing each role will let you specify granular access to each policy.
+![screen shot 2015-09-01 at 18 47 42](https://cloud.githubusercontent.com/assets/1791050/9621333/1d621f5e-50da-11e5-9e1b-92e242dc180f.png)
 
 ### Assignments
+![screen shot 2015-09-01 at 18 48 18](https://cloud.githubusercontent.com/assets/1791050/9621369/73eed088-50da-11e5-8bd1-72c61edd3548.jpg)
 Assignments tie users to roles; this is where you add and remove users to and from roles.
 
 ## Notices
