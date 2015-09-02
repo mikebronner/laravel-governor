@@ -60,17 +60,9 @@ This package adds multiple routes under `genealabs/laravel-governor`. Please ver
 your existing routes.
 
 #### Policies
-Your policy classes must extend `GeneaLabs\LaravelGovernor\Policies\LaravelGovernorPolicy`, for example:
-```php
-<?php namespace App\Policies;
-
-use GeneaLabs\LaravelGovernor\Policies\LaravelGovernorPolicy;
-
-class MySecretSaucePolicy extends LaravelGovernorPolicy
-{
-    // [...]
-}
-```
+Your policy classes must extend `GeneaLabs\LaravelGovernor\Policies\LaravelGovernorPolicy`, and call the 
+`validatePermissions` method. Please see the example policy class below. As you can see, all your policies are very
+straightforward, clean, and easy to understand. Governor and Laravel take care of all the dirty work for you.
 
 ## Features
 Governor for Laravel takes full advantage of the Authorization functionality added to Laravel 5.1.12 and provides full
@@ -138,10 +130,11 @@ The easiest way to integrate Governor for Laravel into your app is to add the me
 We recommend making a custom 403 error page to let the user know they don't have access. Otherwise the user will just
 see the Symfony Whoops error message.
 
-## Example Migration
+## Examples
+### Migration
 The following migration should be a good starting point, of not provide all the functionality you need to add a 
 `created_by` column to all your tables. Customize as necessary.
-  ```php
+```php
   use Illuminate\Database\Schema\Blueprint;
   use Illuminate\Database\Migrations\Migration;
   
@@ -192,4 +185,41 @@ The following migration should be a good starting point, of not provide all the 
           }
       }
   }
-  ```
+```
+
+### Policy
+```php
+<?php namespace App\Policies;
+
+use App\MyModel;
+use App\User;
+use GeneaLabs\LaravelGovernor\Policies\LaravelGovernorPolicy;
+
+class MyModelPolicy extends LaravelGovernorPolicy
+{
+    public function create(User $user, MyModel $myModel)
+    {
+        return $this->validatePermissions($user, 'create', 'myModel', $myModel->created_by);
+    }
+
+    public function edit(User $user, MyModel $myModel)
+    {
+        return $this->validatePermissions($user, 'edit', 'myModel', $myModel->created_by);
+    }
+
+    public function view(User $user, MyModel $myModel)
+    {
+        return $this->validatePermissions($user, 'view', 'myModel', $myModel->created_by);
+    }
+
+    public function inspect(User $user, MyModel $myModel)
+    {
+        return $this->validatePermissions($user, 'inspect', 'myModel', $myModel->created_by);
+    }
+
+    public function remove(User $user, MyModel $myModel)
+    {
+        return $this->validatePermissions($user, 'remove', 'myModel', $myModel->created_by);
+    }
+}
+```
