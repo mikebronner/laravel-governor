@@ -20,10 +20,61 @@ Assignments tie users to roles; this is where you add and remove users to and fr
 
 ## Before You Get Started
 - You must have at least 1 (one) user in your users table. The user with the lowest ID will become your admin by default. This can be changed after the installation, of course.
-- You must add a `created_by` column to each of your tables. For example:
+- You must add a `created_by` column to each of your tables. I purposefully chose not to write a 'magical' migration that 
+  would do all this for you, as that could lead to problems. However, the following is what such a migration might look like
   ```php
+  use Illuminate\Database\Schema\Blueprint;
+  use Illuminate\Database\Migrations\Migration;
   
+  class AddCreatedByToAllTables extends Migration
+  {
+      public function up()
+      {
+          $user = app(config('auth.model'));
+          $userIdFieldName = $user->getKeyName();
+          $userTableName = $user->getTable();
+          $tables = DB::table('information_schema.tables')
+              ->where('table_schema', env('DB_DATABASE'))
+              ->where('table_type', 'BASE TABLE')
+              ->select(['table_name'])
+              ->get();
+  
+          foreach ($tables as $tableInfo) {
+              if (Schema::hasColumn($tableInfo->table_name, 'created_by')) {
+                  throw new Exception('The `created_by` column already exists in one of your tables. Please fix the conflict and try again. This migration has not been run.');
+              }
+          }
+  
+          foreach ($tables as $tableInfo) {
+              Schema::table($tableInfo->table_name, function(Blueprint $table) use ($userIdFieldName, $userTableName)
+              {
+                  $table->integer('created_by')->unsigned()->nullable();
+                  $table->foreign('created_by')->references($userIdFieldName)->on($userTableName)->onDelete('cascade');
+              });
+          }
+      }
+  
+      public function down()
+      {
+          $tables = DB::table('information_schema.tables')
+              ->where('table_schema', env('DB_DATABASE'))
+              ->where('table_type', 'BASE TABLE')
+              ->select(['table_name'])
+              ->get();
+  
+          foreach ($tables as $tableInfo) {
+              if (Schema::hasColumn($tableInfo->table_name, 'created_by')) {
+                  Schema::table($tableInfo->table_name, function(Blueprint $table) use ($tableInfo)
+                  {
+                      $table->dropForeign($tableInfo->table_name . '_created_by_foreign');
+                      $table->dropColumn('created_by');
+                  });
+              }
+          }
+      }
+  }
   ```
+
 - You must save the user's ID to the respective created_by field in the `store` methods of your controllers.
 
 ## Installation
