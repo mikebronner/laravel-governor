@@ -1,6 +1,8 @@
-[![Build Status](https://travis-ci.org/GeneaLabs/laravel-governor.svg?branch=master)](https://travis-ci.org/GeneaLabs/laravel-governor)
+![governor for laravel](https://cloud.githubusercontent.com/assets/1791050/9620997/05b36650-50d6-11e5-864b-f15bd9622d08.jpg)
 
 # Governor for Laravel
+[![Build Status](https://travis-ci.org/GeneaLabs/laravel-governor.svg?branch=master)](https://travis-ci.org/GeneaLabs/laravel-governor)
+
 ## Features
 Governor for Laravel takes full advantage of the Authorization functionality added to Laravel 5.1.12 and provides full
 User/Roles management. It lets you specify the policies using the native Authorization mechanisms, and lets you granularly
