@@ -5,22 +5,33 @@
     initializeDropDowns();
     initializeCollapsers();
     initializeSelectize();
-
-    return null;
   });
 
   initializeDropDowns = function() {
     $('.ownershipDropDown a').click(function() {
-      $('#permissions-' + $(this).data('entity') + '-' + $(this).data('action')).val($(this).text());
-      $('#selected-' + $(this).data('entity') + '-' + $(this).data('action')).text($(this).text());
-      return null;
+        var className = 'text-info';
+
+        if ($(this).text().indexOf(' no') > 0) {
+            className = 'text-danger';
+        }
+        console.log($(this).text().indexOf(' no'));
+        console.log($(this).text().indexOf(' any'));
+        if ($(this).text().indexOf(' any') > 0) {
+            className = 'text-success';
+        }
+        console.log(className);
+
+        $('#permissions-' + $(this).data('entity') + '-' + $(this).data('action')).val($(this).text());
+        $('#selected-' + $(this).data('entity') + '-' + $(this).data('action')).text($(this).text())
+            .removeClass('text-info')
+            .removeClass('text-success')
+            .removeClass('text-danger')
+            .addClass(className);
     });
-    return null;
   };
 
   window.submitForm = function(form) {
     form.submit();
-    return null;
   };
 
   initializeCollapsers = function() {
