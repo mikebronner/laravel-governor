@@ -79,7 +79,7 @@ Roles are basically your user-groups. Two roles are created out of the box (thes
 - Superadmin: is set up with the user with the lowest ID by default. You can add more users as necessary.
 - Members: all users are by default members. You cannot remove users from the Members group.
 
-![screen shot 2015-09-02 at 10 19 46](https://cloud.githubusercontent.com/assets/1791050/9638690/de9a635c-515c-11e5-8bef-7127b3eae718.png)
+![screen shot 2015-09-02 at 10 28 52](https://cloud.githubusercontent.com/assets/1791050/9638813/77f0d928-515d-11e5-95c8-ab00289a5fad.png)
 Editing each role will let you specify granular access to each policy.
 
 ### Assignments

@@ -42,7 +42,7 @@
                         @foreach($permissionMatrix as $entity => $actionSubMatrix)
                             <?php $policyCounter = 0; ?>
                             <li class="list-group-item form-inline">
-                                {{{ str_plural($role->name) }}} <span class="text-muted">can</span>
+                                <span class="text-muted">Can</span>
                                 @foreach($actionSubMatrix as $action => $ownershipSelected)
                                     {!! Form::hidden('permissions[' . $entity . '][' . $action . ']', $ownershipSelected, ['id' => 'permissions-' . $entity . '-' . $action]) !!}
                                     <span class="dropdown">
