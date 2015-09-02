@@ -126,11 +126,17 @@ Once you have published the assets, you will be able to customize the configurat
   in the User model (you can also create your own custom attribute getter to concatenate fields, etc.).
 
 ## Implementation
-The easiest way to integrate Governor for Laravel into your app is to add menu items to your app's menu. Make sure that
-you restrict who has access to these. The following routes can be added:
+### Admin Views
+The easiest way to integrate Governor for Laravel into your app is to add the menu items to the relevant section of your
+ app's menu (make sure to restrict access appropriately using the Laravel Authorization methods). The following routes
+ can be added:
 - Entity Management: `genealabs.laravel-governor.entities`
 - Role Management: `genealabs.laravel-governor.roles`
 - User-Role Assignments: `genealabs.laravel-governor.assignments`
+
+### 403 Unauthorized
+We recommend making a custom 403 error page to let the user know they don't have access. Otherwise the user will just
+see the Symfony Whoops error message.
 
 ## Example Migration
 The following migration should be a good starting point, of not provide all the functionality you need to add a 
