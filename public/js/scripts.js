@@ -50,14 +50,14 @@
     return $('.selectize').selectize({
       maxItems: null,
       valueField: 'id',
-      labelField: window[governorDisplayNameField],
-      searchField: window[governorDisplayNameField],
+      labelField: window.governorDisplayNameField,
+      searchField: window.governorDisplayNameField,
       render: {
         item: function(item, escape) {
-          return '<div><span class="btn btn-primary btn-sm">' + escape(item.name) + '</span></div>';
+          return '<div><span class="btn btn-primary btn-sm">' + escape(item[window.governorDisplayNameField]) + '</span></div>';
         },
         option: function(item, escape) {
-          return '<div><span class="dropdown-item">' + escape(item.name) + '</span></div>';
+          return '<div><span class="dropdown-item">' + escape(item[window.governorDisplayNameField]) + '</span></div>';
         }
       }
     });
