@@ -13,7 +13,7 @@ class LaravelGovernorPolicy
 
     protected function validatePermissions($user, $action, $entity, $entityCreatorId)
     {
-        if (! $user->roles->count()) {
+        if (! $user->roles) {
             return false;
         }
 
