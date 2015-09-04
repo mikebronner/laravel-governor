@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/GeneaLabs/laravel-governor-tests.svg?branch=master)](https://travis-ci.org/GeneaLabs/laravel-governor-tests)
+ [![Coverage Status](https://coveralls.io/repos/GeneaLabs/laravel-governor-tests/badge.svg?branch=master&service=github)](https://coveralls.io/github/GeneaLabs/laravel-governor-tests?branch=master)
 
 ![governor for laravel](https://cloud.githubusercontent.com/assets/1791050/9620997/05b36650-50d6-11e5-864b-f15bd9622d08.jpg)
 
