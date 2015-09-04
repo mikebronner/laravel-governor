@@ -1,6 +1,6 @@
-![governor for laravel](https://cloud.githubusercontent.com/assets/1791050/9620997/05b36650-50d6-11e5-864b-f15bd9622d08.jpg)
-
 [![Build Status](https://travis-ci.org/GeneaLabs/laravel-governor-tests.svg?branch=master)](https://travis-ci.org/GeneaLabs/laravel-governor-tests)
+
+![governor for laravel](https://cloud.githubusercontent.com/assets/1791050/9620997/05b36650-50d6-11e5-864b-f15bd9622d08.jpg)
 
 ## Overview
 ### Goal
