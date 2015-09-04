@@ -100,7 +100,7 @@ And then add the service provider to your app.php config file:
 
 Before we can get started, we need to update the database by running the migrations and data seeders:
 ```sh
-php artisan migrate --path=vendor/genealabs/laravel-governor/src/migrations
+php artisan migrate --path=vendor/genealabs/laravel-governor/database/migrations
 php artisan db:seed --class=LaravelGovernorDatabaseSeeder
 ```
 
