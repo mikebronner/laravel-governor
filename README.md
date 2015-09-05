@@ -94,9 +94,10 @@ Assignments tie users to roles; this is where you add and remove users to and fr
 composer require genealabs/laravel-governor:^0.1.0
 ```
 
-And then add the service provider to your app.php config file:
+And then add the service providers to your app.php config file:
 ```php
 	// 'providers' => [
+        Collective\Html\HtmlServiceProvider::class,
 		GeneaLabs\LaravelGovernor\Providers\LaravelGovernorServiceProvider::class,
     // ];
 ```
