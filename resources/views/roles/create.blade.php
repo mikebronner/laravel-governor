@@ -3,7 +3,7 @@
 @section('innerContent')
         <h1 class="page-header">Add Role</h1>
         @can('create', $role)
-        {!! Form::open(['route' => 'roles.store', 'method' => 'POST', 'class' => 'form-horizontal well']) !!}
+        {!! Form::open(['route' => 'genealabs.laravel-governor.roles.store', 'method' => 'POST', 'class' => 'form-horizontal well']) !!}
             <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : '' }}">
                 {!! Form::label('name', 'Name', ['class' => 'control-label col-sm-2']) !!}
                 <div class="col-sm-5">
@@ -26,7 +26,7 @@
             </div>
             <div class="form-group{{ (count($errors) > 0) ? (($errors->has('message')) ? ' has-feedback has-error' : ' has-feedback has-success') : '' }}">
                 <div class="col-sm-2">
-                    {!! link_to_route('roles.index', 'Cancel', [], ['class' => 'btn btn-default pull-left']) !!}
+                    {!! link_to_route('genealabs.laravel-governor.roles.index', 'Cancel', [], ['class' => 'btn btn-default pull-left']) !!}
                 </div>
                 <div class="col-sm-10">
                     {!! Form::submit('Add Role', ['class' => 'btn btn-success']) !!}
