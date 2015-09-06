@@ -16,7 +16,7 @@ class LaravelGovernorRolesTableSeeder extends Seeder {
         $role->description = 'This role is for the main administrator of your site. They will be able to do absolutely everything. (This role cannot be edited.)';
         $role->save();
         $role = Role::find('SuperAdmin');
-        $role->users()->save($superuser);
+        $role->users()->attach($superuser);
         Role::create([
             'name' => 'Member',
             'description' => 'Represents the baseline registered user. Customize permissions as best suits your site.',
