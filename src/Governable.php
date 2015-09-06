@@ -55,4 +55,16 @@ trait Governable
 
         return $name;
     }
+
+    public function getIsSuperAdminAttribute()
+    {
+        $superAdminRole = Role::where('name', 'SuperAdmin')->first();
+        $this->load('roles');
+
+        if ($this->roles->contains($superAdminRole->name)) {
+            return true;
+        }
+
+        return false;
+    }
 }
