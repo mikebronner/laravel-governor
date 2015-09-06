@@ -11,26 +11,31 @@ class Assignment extends Model
     {
         parent::__construct();
 
-        $this->user = app(Config::get('auth.model'));
+        $this->user = app(config('auth.model'));
     }
 
     public function addAllUsersToMemberRole()
     {
         $allUsers = $this->user->with('roles')->get();
         $allUsers->each(function ($user) {
-            $user->roles()->attach('Member');
+            if (! $user->roles->contains('Member')) {
+                $user->roles()->attach('Member');
+            }
         });
     }
 
     public function removeAllSuperAdminUsersFromOtherRoles($assignedUsers)
     {
         $role = 'SuperAdmin';
+
         if (array_key_exists($role, $assignedUsers)) {
             $users = $assignedUsers[$role];
+
             foreach ($users as $id) {
                 $user = $this->user->with('roles')->find($id);
                 $user->roles()->detach();
             }
+
             $currentRole = Role::with('users')->find($role);
             $currentRole->users()->attach($users);
         }
@@ -39,9 +44,10 @@ class Assignment extends Model
     public function assignUsersToRoles($assignedUsers)
     {
         foreach ($assignedUsers as $role => $users) {
-            if ($role == 'SuperAdmin' || $role == 'Member') {
+            if ($role === 'SuperAdmin' || $role === 'Member') {
                 continue;
             }
+
             $currentRole = Role::with('users')->find($role);
             $currentRole->users()->attach($users);
         }
@@ -58,7 +64,7 @@ class Assignment extends Model
 
     public function getAllUsersOfRole($role)
     {
-        $role = Role::with('users')->where('name', $role)->first();
+        $role = Role::with('users')->find($role);
 
         return $role->users;
     }
