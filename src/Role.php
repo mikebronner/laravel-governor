@@ -1,29 +1,14 @@
 <?php namespace GeneaLabs\LaravelGovernor;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Config;
 
-/**
- * Class Role
- * @package GeneaLabs\LaravelGovernor\Models
- */
 class Role extends Model
 {
-    /**
-     * @var string
-     */
     protected $primaryKey = 'name';
-    /**
-     * @var array
-     */
     protected $rules = [
         'name' => 'required|min:3|unique:roles,name',
         'description' => 'required|min:25',
     ];
-
-    /**
-     * @var array
-     */
     protected $fillable = [
         'name',
         'description',
@@ -34,7 +19,7 @@ class Role extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(Config::get('auth.model'), 'role_user', 'role_key', 'user_id');
+        return $this->belongsToMany(config('auth.model'), 'role_user', 'role_key', 'user_id');
     }
 
     /**

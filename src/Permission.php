@@ -2,25 +2,14 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Permission
- * @package GeneaLabs\LaravelGovernor\Models
- */
 class Permission extends Model
 {
-    /**
-     * @var array
-     */
     protected $rules = [
         'role_key' => 'required',
         'entity_key' => 'required',
         'action_key' => 'required',
         'ownership_key' => 'required',
     ];
-
-    /**
-     * @var array
-     */
     protected $fillable = [
         'role_key',
         'entity_key',

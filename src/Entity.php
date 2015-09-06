@@ -2,26 +2,12 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Entity
- * @package GeneaLabs\LaravelGovernor\Entities
- */
 class Entity extends Model
 {
-    /**
-     * @var string
-     */
     protected $primaryKey = 'name';
-    /**
-     * @var array
-     */
     protected $rules = [
         'name' => 'required|min:3|unique:entities,name',
     ];
-
-    /**
-     * @var array
-     */
     protected $fillable = [
         'name',
     ];
