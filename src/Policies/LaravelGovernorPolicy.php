@@ -11,6 +11,11 @@ class LaravelGovernorPolicy
         $this->permissions = Permission::with('role')->get();
     }
 
+    public function before($user, $ability)
+    {
+        return $user->isSuperAdmin;
+    }
+
     protected function validatePermissions($user, $action, $entity, $entityCreatorId)
     {
         if (! $user->roles) {

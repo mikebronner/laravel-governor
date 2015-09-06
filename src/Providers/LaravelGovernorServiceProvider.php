@@ -34,10 +34,6 @@ class LaravelGovernorServiceProvider extends ServiceProvider
 
         Event::listen('eloquent.creating: *', CreatingListener::class);
 
-        $gate->before(function ($user, $ability) {
-            return $user->isSuperAdmin;
-        });
-
         $this->publishes([__DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')], 'genealabs-laravel-governor');
         $this->publishes([__DIR__ . '/../../public' => public_path('genealabs-laravel-governor')], 'genealabs-laravel-governor');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
