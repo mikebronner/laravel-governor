@@ -48,7 +48,7 @@ class RolesController extends Controller
      */
     public function store(CreateRoleRequest $request)
     {
-        Role::create($request->all());
+        Role::create($request->except(['_token']));
 
         return redirect()->route('genealabs.laravel-governor.roles.index');
     }
