@@ -10,7 +10,7 @@ By leveraging Laravel's native Authorization functionality there is no additiona
 you need to know is Laravel, and you will know how to use Governor for Laravel.
 
 ### Reasoning
-I was looking for a straight-forward approach to ACL management that didn't require extensive customization, 
+I was looking for a straight-forward approach to ACL management that didn't require extensive customization,
 configuration, or even project rewrites. The following criteria shaped the development of this package:
 - Provide drop-in capability, so you can equally add it to existing or new Laravel projects without issues.
 - Allow granular access management, yet keep it simple to use.
@@ -18,11 +18,11 @@ configuration, or even project rewrites. The following criteria shaped the devel
 
 ### Considerations
 #### User Requirements
-- You must have at least 1 (one) user in your users table. The user with the lowest ID will become your admin by default. 
+- You must have at least 1 (one) user in your users table. The user with the lowest ID will become your admin by default.
   This can be changed after the installation, of course.
 
 #### Tables
-You must add a `created_by` column to each of your tables. I purposefully chose not to write a 'magical' migration that 
+You must add a `created_by` column to each of your tables. I purposefully chose not to write a 'magical' migration that
 would do all this for you, as that could lead to problems. However, I have added such a migration at the end to give you
 a solid starting point.
 
@@ -40,13 +40,13 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract 
+class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
     use Authenticatable;
     use Authorizable;
     use CanResetPassword;
     use Governable;
-    
+
     // [...]
 }
 ```
@@ -63,13 +63,13 @@ This package adds multiple routes under `genealabs/laravel-governor`. Please ver
 your existing routes.
 
 #### Policies
-Your policy classes must extend `GeneaLabs\LaravelGovernor\Policies\LaravelGovernorPolicy`, and call the 
+Your policy classes must extend `GeneaLabs\LaravelGovernor\Policies\LaravelGovernorPolicy`, and call the
 `validatePermissions` method. Please see the example policy class below. As you can see, all your policies are very
 straightforward, clean, and easy to understand. Governor and Laravel take care of all the dirty work for you.
 
 ## Features
 Governor for Laravel takes full advantage of the Authorization functionality added to Laravel 5.1.12 and provides full
-User/Roles management. It lets you specify the policies using the native Authorization mechanisms, and lets you 
+User/Roles management. It lets you specify the policies using the native Authorization mechanisms, and lets you
 granularly manage user access to the various parts of your system.
 
 ### Entities
@@ -120,7 +120,7 @@ php artisan vendor:publish --tag=genealabs-laravel-governor --force
 ```
 
 ## Configuration
-Once you have published the assets, you will be able to customize the configuration of Governor for Laravel in 
+Once you have published the assets, you will be able to customize the configuration of Governor for Laravel in
 `/app/config/genealabs-laravel-governor.php`. (See the Examples section for what the default config file looks like.)
 There are only three aspects to this:
 - The master layout view (Blade template), by default it includes a bare-bones layout. Customizing this to your own view
@@ -145,12 +145,12 @@ see the Symfony Whoops error message.
 
 ## Examples
 ### Migration
-The following migration should be a good starting point, of not provide all the functionality you need to add a 
+The following migration should be a good starting point, if not provide all the functionality you need to add a
 `created_by` column to all your tables. Customize as necessary.
 ```php
   use Illuminate\Database\Schema\Blueprint;
   use Illuminate\Database\Migrations\Migration;
-  
+
   class AddCreatedByToAllTables extends Migration
   {
       public function up()
@@ -163,13 +163,13 @@ The following migration should be a good starting point, of not provide all the 
               ->where('table_type', 'BASE TABLE')
               ->select(['table_name'])
               ->get();
-  
+
           foreach ($tables as $tableInfo) {
               if (Schema::hasColumn($tableInfo->table_name, 'created_by')) {
                   throw new Exception('The `created_by` column already exists in one of your tables. Please fix the conflict and try again. This migration has not been run.');
               }
           }
-  
+
           foreach ($tables as $tableInfo) {
               Schema::table($tableInfo->table_name, function(Blueprint $table) use ($userIdFieldName, $userTableName)
               {
@@ -178,7 +178,7 @@ The following migration should be a good starting point, of not provide all the 
               });
           }
       }
-  
+
       public function down()
       {
           $tables = DB::table('information_schema.tables')
@@ -186,7 +186,7 @@ The following migration should be a good starting point, of not provide all the 
               ->where('table_type', 'BASE TABLE')
               ->select(['table_name'])
               ->get();
-  
+
           foreach ($tables as $tableInfo) {
               if (Schema::hasColumn($tableInfo->table_name, 'created_by')) {
                   Schema::table($tableInfo->table_name, function(Blueprint $table) use ($tableInfo)
