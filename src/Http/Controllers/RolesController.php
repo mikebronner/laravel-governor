@@ -71,8 +71,8 @@ class RolesController extends Controller
                 $selectedOwnership = 'no';
 
                 foreach ($role->permissions as $permissioncheck) {
-                    if (($permissioncheck->entity->name == $entity->name) &&
-                        ($permissioncheck->action->name == $action->name)
+                    if (($permissioncheck->entity->name === $entity->name)
+                        && ($permissioncheck->action->name === $action->name)
                     ) {
                         $selectedOwnership = $permissioncheck->ownership->name;
                     }
