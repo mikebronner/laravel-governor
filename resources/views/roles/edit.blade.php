@@ -2,7 +2,8 @@
 
 @section('innerContent')
     <h1 class="page-header">Edit Role</h1>
-    @if ($role->name != 'SuperAdmin' && $role->name != 'Members' && Auth::check() && Auth::user()->can('edit', $role))
+    @can('edit', $role)
+    @if ($role->name != 'SuperAdmin' && $role->name != 'Members' && Auth::check())
         <div class="well">
             {!! Form::model($role, ['route' => ['genealabs.laravel-governor.roles.update', $role->name], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'editForm']) !!}
             <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : '' }}">
@@ -94,15 +95,6 @@
                 </div>
             </div>
         </div>
-    @else
-        <div class="panel panel-danger">
-            <div class="panel-heading">Access Forbidden</div>
-            <div class="panel-body">
-                You don't have access to edit (this, or perhaps any) roles. Please contact your admin to check if you have the necessary permissions.
-            </div>
-            <div class="panel-footer">
-                {!! link_to('/', 'Return to home page.', ['class' => 'btn btn-success']) !!}
-            </div>
-        </div>
     @endif
+    @endcan
 @stop
