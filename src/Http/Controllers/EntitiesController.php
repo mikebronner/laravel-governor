@@ -3,6 +3,7 @@
 use GeneaLabs\LaravelGovernor\Entity;
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateEntityRequest;
 use GeneaLabs\LaravelGovernor\Http\Requests\UpdateEntityRequest;
+use Illuminate\Support\Facades\App;
 
 class EntitiesController extends Controller
 {
@@ -42,7 +43,7 @@ class EntitiesController extends Controller
         Entity::create($request->only('name'));
         $this->resetSuperAdminPermissions();
 
-        return redirect()->route('entities.index');
+        return redirect()->route('genealabs.laravel-governor.entities.index');
     }
 
     /**
@@ -68,7 +69,7 @@ class EntitiesController extends Controller
         $entity->save();
         $this->resetSuperAdminPermissions();
 
-        return redirect()->route('entities.index');
+        return redirect()->route('genealabs.laravel-governor.entities.index');
     }
 
     /**
