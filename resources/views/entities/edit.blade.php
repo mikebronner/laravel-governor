@@ -1,7 +1,7 @@
     @extends('genealabs-laravel-governor::master')
 
     @section('innerContent')
-        <h1 class="page-header">Edit Entities</h1>
+        <h1 class="page-header">Edit Entity</h1>
         @can('edit', $entity)
         <div class="well">
         {!! Form::model($entity, ['route' => ['genealabs.laravel-governor.entities.update', $entity->name], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'editForm']) !!}
