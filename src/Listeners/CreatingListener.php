@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Listeners;
 
+use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 

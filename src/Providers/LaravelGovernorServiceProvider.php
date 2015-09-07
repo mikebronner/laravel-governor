@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
+use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,7 @@ class LaravelGovernorServiceProvider extends ServiceProvider
         }
 
         Event::listen('eloquent.creating: *', CreatingListener::class);
+        Event::listen('eloquent.created: *', CreatedListener::class);
 
         $this->publishes([__DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')], 'genealabs-laravel-governor');
         $this->publishes([__DIR__ . '/../../public' => public_path('genealabs-laravel-governor')], 'genealabs-laravel-governor');
