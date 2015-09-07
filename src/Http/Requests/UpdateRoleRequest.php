@@ -2,7 +2,7 @@
 
 use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Foundation\Http\FormRequest as Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class UpdateRoleRequest extends Request
 {
@@ -13,7 +13,7 @@ class UpdateRoleRequest extends Request
      */
     public function authorize()
     {
-        return Auth::user()->can('edit', (new Role()));
+        return Gate::allows('edit', (new Role()));
     }
 
     /**

@@ -2,7 +2,7 @@
 
 use GeneaLabs\LaravelGovernor\Entity;
 use Illuminate\Foundation\Http\FormRequest as Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class UpdateEntityRequest extends Request
 {
@@ -13,7 +13,7 @@ class UpdateEntityRequest extends Request
      */
     public function authorize()
     {
-        return Auth::user()->can('edit', (new Entity()));
+        return Gate::allows('edit', (new Entity()));
     }
 
     /**

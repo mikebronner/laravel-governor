@@ -2,7 +2,7 @@
 
 use GeneaLabs\LaravelGovernor\Assignment;
 use Illuminate\Foundation\Http\FormRequest as Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CreateAssignmentRequest extends Request
 {
@@ -13,7 +13,7 @@ class CreateAssignmentRequest extends Request
      */
     public function authorize()
     {
-        return Auth::user()->can('create', (new Assignment()));
+        return Gate::allows('create', (new Assignment()));
     }
 
     /**

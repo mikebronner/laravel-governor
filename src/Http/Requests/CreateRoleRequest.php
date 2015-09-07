@@ -2,7 +2,7 @@
 
 use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Foundation\Http\FormRequest as Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CreateRoleRequest extends Request
 {
@@ -13,7 +13,7 @@ class CreateRoleRequest extends Request
      */
     public function authorize()
     {
-        return Auth::user()->can('create', (new Role()));
+        return Gate::allows('create', (new Role()));
     }
 
     /**

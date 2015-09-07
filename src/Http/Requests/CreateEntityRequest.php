@@ -2,7 +2,7 @@
 
 use GeneaLabs\LaravelGovernor\Entity;
 use Illuminate\Foundation\Http\FormRequest as Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CreateEntityRequest extends Request
 {
@@ -13,7 +13,7 @@ class CreateEntityRequest extends Request
      */
     public function authorize()
     {
-        return Auth::user()->can('create', (new Entity()));
+        return Gate::allows('create', (new Entity()));
     }
 
     /**
