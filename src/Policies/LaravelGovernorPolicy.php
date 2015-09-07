@@ -13,16 +13,17 @@ class LaravelGovernorPolicy
 
     public function before($user, $ability)
     {
-        return $user->isSuperAdmin;
+        return $user->isSuperAdmin ? true : null;
     }
 
     protected function validatePermissions($user, $action, $entity, $entityCreatorId)
     {
+        $user->load('roles');
+
         if (! $user->roles) {
             return false;
         }
 
-        $user->load('roles');
         $ownership = 'other';
 
         if ($user->id === $entityCreatorId) {

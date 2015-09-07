@@ -80,7 +80,7 @@ class EntitiesController extends Controller
     {
         $entity = Entity::find($name);
         $this->authorize('remove', $entity);
-        $entity->destroy();
+        $entity->delete();
         $this->resetSuperAdminPermissions();
 
         return redirect()->route('genealabs.laravel-governor.entities.index');

@@ -94,17 +94,17 @@ class RolesController extends Controller
     public function update(UpdateRoleRequest $request, $name)
     {
         $role = Role::find($name);
-
-        $allActions = Action::all();
-        $allOwnerships = Ownership::all();
-        $allEntities = Entity::all();
+        $role->fill($request->only(['name', 'description']));
 
         if ($request->has('permissions')) {
+            $allActions = Action::all();
+            $allOwnerships = Ownership::all();
+            $allEntities = Entity::all();
             $role->permissions()->delete();
 
             foreach ($request->get('permissions') as $entity => $actions) {
                 foreach ($actions as $action => $ownership) {
-                    if ('no' != $ownership) {
+                    if ('no' !== $ownership) {
                         $currentAction = $allActions->find($action);
                         $currentOwnership = $allOwnerships->find($ownership);
                         $currentEntity = $allEntities->find($entity);
@@ -119,7 +119,6 @@ class RolesController extends Controller
             }
         }
 
-        $role->fill($request->only(['name', 'description']));
         $role->save();
 
         return redirect()->route('genealabs.laravel-governor.roles.index');
@@ -133,7 +132,7 @@ class RolesController extends Controller
     {
         $role = Role::find($name);
         $this->authorize('remove', $role);
-        $role->destroy();
+        $role->delete();
 
         return redirect()->route('genealabs.laravel-governor.roles.index');
     }
