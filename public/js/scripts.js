@@ -14,12 +14,10 @@
         if ($(this).text().indexOf(' no') > 0) {
             className = 'text-danger';
         }
-        console.log($(this).text().indexOf(' no'));
-        console.log($(this).text().indexOf(' any'));
+
         if ($(this).text().indexOf(' any') > 0) {
             className = 'text-success';
         }
-        console.log(className);
 
         $('#permissions-' + $(this).data('entity') + '-' + $(this).data('action')).val($(this).text().replace($(this).data('action') + ' ', ''));
         $('#selected-' + $(this).data('entity') + '-' + $(this).data('action')).text($(this).text())
@@ -39,10 +37,11 @@
       hide: true
     });
     $('.collapse').on('show', '.collapse', function() {
-      console.log('test');
       $('.collapse.in').collapse('hide');
+
       return null;
     });
+
     return null;
   };
 
