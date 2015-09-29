@@ -11,7 +11,8 @@
   "require": {
     "php": ">=5.5.9",
     "genealabs/bones-macros": "^0.2.33",
-    "illuminate/support": "^5.1"
+    "illuminate/support": "^5.1",
+    "laravelcollective/html": "^5.1"
   },
   "require-dev": {
     "orchestra/testbench": "~3.1",
