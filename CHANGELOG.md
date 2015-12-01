@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com)
 
+## [0.2.0] - 1 Dec 2015
+### Removed
+- Entities view, as it wasn't conducive to a good workflow.
+
 ## [0.1.8] - 29 Sep 2015
 ### Added
 - "laravelcollective/html" as a package dependency.
