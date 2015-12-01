@@ -11,14 +11,7 @@
   "require": {
     "php": ">=5.5.9",
     "genealabs/bones-macros": "^0.2.33",
-    "illuminate/support": "^5.1",
-    "laravelcollective/html": "^5.1"
-  },
-  "require-dev": {
-    "orchestra/testbench": "~3.1",
-    "fzaninotto/faker": "~1.4",
-    "mockery/mockery": "0.9.*",
-    "phpunit/phpunit": "~4.0"
+    "illuminate/support": "^5.1"
   },
   "autoload": {
     "classmap": [
@@ -26,8 +19,7 @@
       "database/seeds"
     ],
     "psr-4": {
-      "GeneaLabs\\LaravelGovernor\\": "src/",
-      "GeneaLabs\\LaravelGovernor\\Tests\\": "tests/"
+      "GeneaLabs\\LaravelGovernor\\": "src/"
     }
   },
   "config": {

@@ -14,7 +14,6 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li>{!! link_to_route('genealabs.laravel-governor.entities.index', 'Entities') !!}</li>
                 <li>{!! link_to_route('genealabs.laravel-governor.roles.index', 'Roles') !!}</li>
                 <li>{!! link_to_route('genealabs.laravel-governor.assignments.index', 'Assignments') !!}</li>
             </ul>

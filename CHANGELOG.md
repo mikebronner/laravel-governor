@@ -4,6 +4,7 @@
 ## [0.2.0] - 1 Dec 2015
 ### Removed
 - Entities view, as it wasn't conducive to a good workflow.
+- Requirement to manually add `Collective\Html` package.
 
 ## [0.1.8] - 29 Sep 2015
 ### Added

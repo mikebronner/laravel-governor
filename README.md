@@ -13,18 +13,13 @@ Please see https://governor.forlaravel.com for complete documentation.
 
 ## Installation
 ```sh
-composer require genealabs/laravel-governor:^0.1.0
+composer require genealabs/laravel-governor:~0.2.0
 ```
 
 And then add the service providers and aliases to your app.php config file:
 ```php
 	// 'providers' => [
-        Collective\Html\HtmlServiceProvider::class,
 		GeneaLabs\LaravelGovernor\Providers\LaravelGovernorServiceProvider::class,
-    // ],
-    // 'aliases' => [
-        'Form' => Collective\Html\FormFacade::class,
-        'Html' => Collective\Html\HtmlFacade::class,
     // ],
 ```
 
@@ -51,11 +46,40 @@ There are only three aspects to this:
   in the User model (you can also create your own custom attribute getter to concatenate fields, etc.).
 
 ## Implementation
+### Adding Entities
+Entities should be added via DB Seeders at the same time new Policies are created. This puts the ownership on the
+ developer, and not on the user-manager, who should not need to be expected to know the implimentation details.
+
+The following is an example of adding a 'widget' entity by running `php artisan make:seeder WidgetEntitySeeder`:
+
+```php
+<?php
+
+use GeneaLabs\LaravelGovernor\Entity;
+use Illuminate\Database\Seeder;
+
+class WidgetEntitySeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        Entity::create(['name' => 'widget']);
+    }
+}
+```
+
+Once the project is pushed live, the seeder needs to be ran against the live database with something like
+ `artisan db:seed --class=WidgetEntitySeeder`. The widget entity will then be availabe to the user-manager in the Roles
+ view to establish accessibility.
+
 ### Admin Views
 The easiest way to integrate Governor for Laravel into your app is to add the menu items to the relevant section of your
  app's menu (make sure to restrict access appropriately using the Laravel Authorization methods). The following routes
  can be added:
-- Entity Management: `genealabs.laravel-governor.entities`
 - Role Management: `genealabs.laravel-governor.roles`
 - User-Role Assignments: `genealabs.laravel-governor.assignments`
 
