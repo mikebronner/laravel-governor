@@ -8,8 +8,7 @@
             {!! link_to_route('genealabs.laravel-governor.roles.create', 'Add New Role', null, ['class' => 'btn btn-default btn-xs pull-right']) !!}
             @endcan
         </div>
-        <div class="panel-body">
-            @can('view', $roles->first())
+        @can('view', $roles->first())
             <div class="list-group">
                 @foreach($roles as $role)
                     <a {!! ((Auth::user()->can('edit', $role) && ($role->name != 'SuperAdmin')) ? 'href="' . route('genealabs.laravel-governor.roles.edit', $role->name) . '"' : 'disabled') !!} class="list-group-item">
@@ -18,7 +17,6 @@
                     </a>
                 @endforeach
             </div>
-            @endcan
-        </div>
+        @endcan
     </div>
 @stop
