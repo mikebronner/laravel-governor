@@ -85,8 +85,8 @@ Once the project is pushed live, the seeder needs to be ran against the live dat
 The easiest way to integrate Governor for Laravel into your app is to add the menu items to the relevant section of your
  app's menu (make sure to restrict access appropriately using the Laravel Authorization methods). The following routes
  can be added:
-- Role Management: `genealabs.laravel-governor.roles`
-- User-Role Assignments: `genealabs.laravel-governor.assignments`
+- Role Management: `genealabs.laravel-governor.roles.index`
+- User-Role Assignments: `genealabs.laravel-governor.assignments.index`
 
 ### 403 Unauthorized
 We recommend making a custom 403 error page to let the user know they don't have access. Otherwise the user will just
