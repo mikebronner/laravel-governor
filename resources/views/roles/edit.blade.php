@@ -1,10 +1,13 @@
 @extends('genealabs-laravel-governor::master')
 
 @section('innerContent')
-    <h1 class="page-header">Edit Role</h1>
     @can('edit', $role)
     @if ($role->name != 'SuperAdmin' && $role->name != 'Members' && Auth::check())
-        <div class="well">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Roles Management > Edit Role '{{ $role->name }}'
+        </div>
+        <div class="panel-body">
             {!! Form::model($role, ['route' => ['genealabs.laravel-governor.roles.update', $role->name], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'editForm']) !!}
             <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : '' }}">
                 {!! Form::label('name', 'Name', ['class' => 'control-label col-sm-2']) !!}
@@ -71,7 +74,7 @@
                         {!! link_to_route('genealabs.laravel-governor.roles.index', 'Cancel', [], ['class' => 'btn btn-default pull-left']) !!}
                     </div>
                     <div class="col-sm-10">
-                        {!! Form::button('Update Role', ['class' => 'btn btn-success', 'onclick' => 'submitForm($("#editForm"));']) !!}
+                        {!! Form::button('Update Role', ['class' => 'btn btn-primary', 'onclick' => 'submitForm($("#editForm"));']) !!}
                         @if ($role->name != 'Member')
                             {!! Form::button('Delete Role', ['class' => 'btn btn-danger', 'data-toggle' => 'modal', 'data-target' => '#deleteModal']) !!}
                         @endif

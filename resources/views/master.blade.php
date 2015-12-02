@@ -1,6 +1,4 @@
-@if (! View::exists('spark::welcome'))
-    @extends(config('genealabs-laravel-governor.layoutView'))
-@endif
+@extends(config('genealabs-laravel-governor.layoutView'))
 
 @section(config('genealabs-laravel-governor.bladeContentSection'))
     <script>

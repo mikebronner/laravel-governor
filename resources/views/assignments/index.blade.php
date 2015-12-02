@@ -1,13 +1,12 @@
 @extends('genealabs-laravel-governor::master')
 
 @section('innerContent')
-    {!! Form::open(['route' => 'genealabs.laravel-governor.assignments.store']) !!}
-        <div class="page-header">
-            @can('edit', $assignment)
-            {!! Form::submit('Save User Roles', ['class' => 'btn btn-success btn-lg pull-right']) !!}
-            @endcan
-            <h1>User Roles</h1>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Roles Management > Assign Users
         </div>
+        <div class="panel-body">
+    {!! Form::open(['route' => 'genealabs.laravel-governor.assignments.store']) !!}
         @can('view', $assignment)
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         @foreach($roles as $role)
@@ -28,5 +27,10 @@
         @endforeach
         </div>
         @endcan
+        @can('edit', $assignment)
+        {!! Form::submit('Save User Assignments', ['class' => 'btn btn-primary']) !!}
+        @endcan
     {!! Form::close() !!}
+    </div>
+    </div>
 @stop

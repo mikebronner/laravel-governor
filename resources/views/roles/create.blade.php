@@ -1,9 +1,13 @@
 @extends('genealabs-laravel-governor::master')
 
 @section('innerContent')
-        <h1 class="page-header">Add Role</h1>
         @can('create', $role)
-        {!! Form::open(['route' => 'genealabs.laravel-governor.roles.store', 'method' => 'POST', 'class' => 'form-horizontal well']) !!}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Roles Management > Add New Role
+            </div>
+            <div class="panel-body">
+        {!! Form::open(['route' => 'genealabs.laravel-governor.roles.store', 'method' => 'POST', 'class' => 'form-horizontal']) !!}
             <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : '' }}">
                 {!! Form::label('name', 'Name', ['class' => 'control-label col-sm-2']) !!}
                 <div class="col-sm-5">
@@ -29,9 +33,11 @@
                     {!! link_to_route('genealabs.laravel-governor.roles.index', 'Cancel', [], ['class' => 'btn btn-default pull-left']) !!}
                 </div>
                 <div class="col-sm-10">
-                    {!! Form::submit('Add Role', ['class' => 'btn btn-success']) !!}
+                    {!! Form::submit('Add Role', ['class' => 'btn btn-primary']) !!}
                 </div>
             </div>
         {!! Form::close() !!}
+        </div>
+    </div>
     @endcan
 @stop

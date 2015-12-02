@@ -1,14 +1,13 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
+use GeneaLabs\Bones\Macros\BonesMacrosServiceProvider;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\AggregateServiceProvider;
 use Illuminate\Support\Facades\Event;
 
-class LaravelGovernorServiceProvider extends ServiceProvider
+class LaravelGovernorServiceProvider extends AggregateServiceProvider
 {
     protected $defer = false;
     protected $policies = [
@@ -19,6 +18,9 @@ class LaravelGovernorServiceProvider extends ServiceProvider
         'GeneaLabs\LaravelGovernor\Permission' => 'GeneaLabs\LaravelGovernor\Policies\PermissionPolicy',
         'GeneaLabs\LaravelGovernor\Role' => 'GeneaLabs\LaravelGovernor\Policies\RolePolicy',
     ];
+    protected $providers = [
+        BonesMacrosServiceProvider::class,
+    ];
 
     /**
      * Bootstrap the application events.
@@ -27,7 +29,7 @@ class LaravelGovernorServiceProvider extends ServiceProvider
      */
     public function boot(GateContract $gate)
     {
-        parent::registerPolicies($gate);
+        $this->registerPolicies($gate);
 
         if (! $this->app->routesAreCached()) {
             require __DIR__ . '/../Http/routes.php';
@@ -48,6 +50,14 @@ class LaravelGovernorServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        parent::register();
+    }
+
+    public function registerPolicies(GateContract $gate)
+    {
+        foreach ($this->policies as $key => $value) {
+            $gate->policy($key, $value);
+        }
     }
 
     /**
