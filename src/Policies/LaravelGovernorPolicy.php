@@ -26,7 +26,7 @@ class LaravelGovernorPolicy
 
         $ownership = 'other';
 
-        if ($user->id === $entityCreatorId) {
+        if ($user->getKey() === $entityCreatorId) {
             $ownership = 'own';
         }
 
