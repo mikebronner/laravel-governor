@@ -12,6 +12,11 @@ you need to know is Laravel, and you will know how to use Governor for Laravel.
 Please see https://governor.forlaravel.com for complete documentation.
 
 ## Installation
+The user with the lowest primary key will be set up as the SuperAdmin. If you're starting on a new project, be sure to
+ add an initial user now. If you already have users, you can update the role-user entry to point to your intended user,
+ if the first user is not the intended SuperAdmin.
+
+Now let's get the package installed:
 ```sh
 composer require genealabs/laravel-governor:~0.2.0
 ```
