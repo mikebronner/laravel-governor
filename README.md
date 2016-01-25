@@ -23,7 +23,7 @@ composer require genealabs/laravel-governor:~0.3.0
 
 Make sure to add the following to your `/config/auth.php`:
 ```php
-    'model' => LaravelGovernorTests\User::class,
+    'model' => App\User::class,
 ```
 
 This is needed in addition to the existing, in the event of custom user providers:
@@ -31,7 +31,7 @@ This is needed in addition to the existing, in the event of custom user provider
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => LaravelGovernorTests\User::class,
+            'model' => App\User::class,
         ],
 ```
 
