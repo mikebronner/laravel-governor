@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Entity extends Model
 {
+    public $incrementing = false;
+
     protected $primaryKey = 'name';
     protected $rules = [
         'name' => 'required|min:3|unique:entities,name',
