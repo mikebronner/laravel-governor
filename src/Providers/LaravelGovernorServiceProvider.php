@@ -50,9 +50,7 @@ class LaravelGovernorServiceProvider extends AggregateServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('genealabs-laravel-governor', function ($app) {
-			return new LaravelGovernor($app);
-		});
+        parent::register();
     }
 
     public function registerPolicies(GateContract $gate)
