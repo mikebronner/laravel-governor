@@ -14,13 +14,33 @@ Please see https://governor.forlaravel.com for complete documentation.
 ## Installation
 The user with the lowest primary key will be set up as the SuperAdmin. If you're starting on a new project, be sure to
  add an initial user now. If you already have users, you can update the role-user entry to point to your intended user,
- if the first user is not the intended SuperAdmin.
+ if the first user is not the intended SuperAdmin. Now let's get the package installed.
 
-Now let's get the package installed:
+### Laravel 5.2.x Only:
+```sh
+composer require genealabs/laravel-governor:~0.3.0
+```
+
+Make sure to add the following to your `/config/auth.php`:
+```php
+    'model' => LaravelGovernorTests\User::class,
+```
+
+This is needed in addition to the existing, in the event of custom user providers:
+```php
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => LaravelGovernorTests\User::class,
+        ],
+```
+
+### Laravel 5.0.x and 5.1.x Only:
 ```sh
 composer require genealabs/laravel-governor:~0.2.0
 ```
 
+### All Versions
 And then add the service providers and aliases to your app.php config file:
 ```php
 	// 'providers' => [

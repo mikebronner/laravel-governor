@@ -1,6 +1,15 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.3.0] - 24 Jan 2016
+### Added
+- `$incrementing = false;` to classes using `name` as primary key.
+- use statements in migrations.
+
+### Changed
+- added routes to `web` route group.
+- creation of `$user` using helper methods `app()` and `config()`.
+
 ## [0.2.0 - 0.2.1] - 2 Dec 2015
 ### Fixed
 - reference to User model primary key to not use `$user->id`, but instead `$user->getKey()`.
