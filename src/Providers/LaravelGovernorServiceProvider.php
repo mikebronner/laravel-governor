@@ -52,6 +52,8 @@ class LaravelGovernorServiceProvider extends AggregateServiceProvider
     public function register()
     {
         parent::register();
+
+        $this->mergeConfigFrom(__DIR__ . '/../../config/config.php', 'genealabs-laravel-governor');
     }
 
     public function registerPolicies(GateContract $gate)
