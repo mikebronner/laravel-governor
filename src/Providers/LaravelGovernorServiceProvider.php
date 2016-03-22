@@ -1,6 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
-use GeneaLabs\Bones\Macros\BonesMacrosServiceProvider;
+use GeneaLabs\LaravelCasts\Providers\LaravelCastsServiceProvider;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
@@ -19,7 +19,7 @@ class LaravelGovernorServiceProvider extends AggregateServiceProvider
         'GeneaLabs\LaravelGovernor\Role' => 'GeneaLabs\LaravelGovernor\Policies\RolePolicy',
     ];
     protected $providers = [
-        BonesMacrosServiceProvider::class,
+        LaravelCastsServiceProvider::class,
     ];
 
     /**
@@ -38,8 +38,9 @@ class LaravelGovernorServiceProvider extends AggregateServiceProvider
         Event::listen('eloquent.creating: *', CreatingListener::class);
         Event::listen('eloquent.created: *', CreatedListener::class);
 
-        $this->publishes([__DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')], 'genealabs-laravel-governor');
-        $this->publishes([__DIR__ . '/../../public' => public_path('genealabs-laravel-governor')], 'genealabs-laravel-governor');
+        $this->publishes([__DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')], 'config');
+        $this->publishes([__DIR__ . '/../../public' => public_path('genealabs-laravel-governor')], 'assets');
+        $this->publishes([__DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs/laravel-governor')], 'views');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
     }
 

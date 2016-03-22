@@ -10,7 +10,7 @@
   ],
   "require": {
     "php": ">=5.5.9",
-    "genealabs/bones-macros": "~0.3.0",
+    "genealabs/laravel-casts": "*",
     "illuminate/support": "^5.1"
   },
   "autoload": {
