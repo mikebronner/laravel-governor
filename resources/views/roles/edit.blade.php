@@ -8,37 +8,9 @@
             Roles Management > Edit Role '{{ $role->name }}'
         </div>
         <div class="panel-body">
-            {!! Form::model($role, ['route' => ['genealabs.laravel-governor.roles.update', $role->name], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'editForm']) !!}
-            <div class="form-group{{ (count($errors) > 0) ? (($errors->has('name')) ? ' has-feedback has-error' : ' has-feedback has-success') : '' }}">
-                {!! Form::label('name', 'Name', ['class' => 'control-label col-sm-2']) !!}
-                <div class="col-sm-10">
-                    @if ($role->name != 'Member')
-                        {!! Form::text('name', null, ['class' => 'form-control']) !!}
-                    @else
-                        {!! Form::hidden('name', $role->name) !!}
-                        {!! Form::label('name', $role->name, ['class' => 'help-block']) !!}
-                    @endif
-                    @if (count($errors))
-                        <span class="glyphicon {{ ($errors->has('name')) ? ' glyphicon-remove' : ' glyphicon-ok' }} form-control-feedback"></span>
-                    @endif
-                    {!! $errors->first('name', '<span class="help-block col-sm-5">:message</span>') !!}
-                </div>
-            </div>
-            <div class="form-group{{ (count($errors) > 0) ? (($errors->has('description')) ? ' has-feedback has-error' : ' has-feedback has-success') : '' }}">
-                {!! Form::label('description', 'Description', ['class' => 'control-label col-sm-2']) !!}
-                <div class="col-sm-10">
-                    @if ($role->name != 'Member')
-                        {!! Form::textarea('description', null, ['class' => 'form-control']) !!}
-                    @else
-                        {!! Form::hidden('description', $role->description) !!}
-                        {!! Form::label('description', $role->description, ['class' => 'help-block']) !!}
-                    @endif
-                    @if (count($errors))
-                        <span class="glyphicon {{ ($errors->has('description')) ? ' glyphicon-remove' : ' glyphicon-ok' }} form-control-feedback"></span>
-                    @endif
-                    {!! $errors->first('description', '<span class="help-block col-sm-5">:message</span>') !!}
-                </div>
-            </div>
+            {!! Form::model($role, ['route' => ['genealabs.laravel-governor.roles.update', $role->name], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'editForm', 'labelWidth' => 2, 'fieldWidth' => 10]) !!}
+            {!! Form::text('name', null, ['class' => 'form-control', 'label' => 'Name', ($role->name === 'Member' ? 'disabled' : '')]) !!}
+            {!! Form::textarea('description', null, ['class' => 'form-control', 'label' => 'Description', ($role->name === 'Member' ? 'disabled' : '')]) !!}
             <div class="form-group">
                 {!! Form::label('description', 'Permissions', ['class' => 'control-label col-sm-2']) !!}
                 <div class="col-sm-10">
