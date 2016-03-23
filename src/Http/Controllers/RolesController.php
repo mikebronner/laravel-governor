@@ -61,7 +61,7 @@ class RolesController extends Controller
     {
         $role = Role::with('permissions')->find($name);
         $this->authorize($role);
-        $entities = Entity::all();
+        $entities = Entity::whereNotIn('name', ['permission', 'entity'])->get();
         $actions = Action::all();
         $ownerships = Ownership::all();
         $permissionMatrix = [];
