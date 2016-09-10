@@ -1,6 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
-use GeneaLabs\LaravelCasts\Providers\LaravelCastsServiceProvider;
+use GeneaLabs\LaravelCasts\Providers\LaravelCastsService;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
@@ -19,7 +19,7 @@ class LaravelGovernorServiceProvider extends AggregateServiceProvider
         'GeneaLabs\LaravelGovernor\Role' => 'GeneaLabs\LaravelGovernor\Policies\RolePolicy',
     ];
     protected $providers = [
-        LaravelCastsServiceProvider::class,
+        LaravelCastsService::class,
     ];
 
     /**
