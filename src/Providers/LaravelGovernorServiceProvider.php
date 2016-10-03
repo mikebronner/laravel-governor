@@ -42,6 +42,7 @@ class LaravelGovernorServiceProvider extends AggregateServiceProvider
         $this->publishes([__DIR__ . '/../../public' => public_path('genealabs-laravel-governor')], 'assets');
         $this->publishes([__DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs-laravel-governor')], 'views');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
+        $this->publishes([__DIR__ . '/../../resources/views' => resource_path('views/vendor/genealabs-laravel-governor')], 'genealabs-laravel-governor');
     }
 
     /**
