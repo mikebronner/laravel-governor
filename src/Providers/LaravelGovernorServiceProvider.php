@@ -3,9 +3,9 @@
 use GeneaLabs\LaravelCasts\Providers\LaravelCastsService;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
+use GeneaLabs\LaravelGovernor\Http\ViewComposers\Layout;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Support\AggregateServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class LaravelGovernorServiceProvider extends AggregateServiceProvider
 {
@@ -22,33 +22,24 @@ class LaravelGovernorServiceProvider extends AggregateServiceProvider
         LaravelCastsService::class,
     ];
 
-    /**
-     * Bootstrap the application events.
-     *
-     * @return void
-     */
     public function boot(GateContract $gate)
     {
         $this->registerPolicies($gate);
 
         if (! $this->app->routesAreCached()) {
-            require __DIR__ . '/../Http/routes.php';
+            require __DIR__ . '/../../routes/web.php';
         }
 
-        Event::listen('eloquent.creating: *', CreatingListener::class);
-        Event::listen('eloquent.created: *', CreatedListener::class);
+        app('events')->listen('eloquent.creating: *', CreatingListener::class);
+        app('events')->listen('eloquent.created: *', CreatedListener::class);
 
         $this->publishes([__DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')], 'config');
         $this->publishes([__DIR__ . '/../../public' => public_path('genealabs-laravel-governor')], 'assets');
         $this->publishes([__DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs-laravel-governor')], 'views');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
     }
 
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
     public function register()
     {
         parent::register();

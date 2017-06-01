@@ -10,10 +10,6 @@ use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 
-/**
- * Class RolesController
- * @package GeneaLabs\LaravelGovernor\Controllers
- */
 class RolesController extends Controller
 {
     public function __construct()
@@ -82,7 +78,7 @@ class RolesController extends Controller
             }
         }
 
-        $ownershipOptions = array_merge(['no' => 'no'], $ownerships->lists('name', 'name')->toArray());
+        $ownershipOptions = array_merge(['no' => 'no'], $ownerships->pluck('name', 'name')->toArray());
 
         return view('genealabs-laravel-governor::roles.edit', compact('role', 'permissionMatrix', 'ownershipOptions'));
     }

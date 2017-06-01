@@ -9,9 +9,14 @@ class CreatedListener
      *
      * @param Model $event
      */
-    public function handle(Model $model)
+    public function handle($model)
     {
-        if (get_class($model) === config('auth.model')) {
+        if (is_string($model)) {
+            $model = collect(explode(': ', $model))->last();
+            $model = new $model;
+        }
+
+        if (get_class($model) === config('genealabs-laravel-governor.authModel')) {
             $model->roles()->attach('Member');
         }
     }
