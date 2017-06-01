@@ -10,7 +10,7 @@ you need to know is Laravel, and you will know how to use Governor for Laravel.
 
 ## Requirements
 - PHP >=7.0.0
-- Laravel 5.1, 5.3, or 5.4
+- Laravel 5.1, or 5.4
 - Bootstrap 3 (included in your layout file)
 - FontAwesome 4 (included in your layout file)
 
