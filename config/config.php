@@ -1,9 +1,8 @@
 <?php
 
 return [
-    'layoutView' => 'genealabs-laravel-governor::layout',
-    'displayNameField' => 'name',
-    'cssHeaderSection' => 'css',
+    'layoutView' => 'layouts.app',
     'contentSection' => 'content',
-    'jsFooterSection' => 'js',
+    'displayNameField' => 'name',
+    'authModel' => config('auth.model') ?? config('auth.providers.users.model'),
 ];

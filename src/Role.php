@@ -1,6 +1,8 @@
 <?php namespace GeneaLabs\LaravelGovernor;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
@@ -16,18 +18,12 @@ class Role extends Model
         'description',
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function users()
+    public function users() : BelongsToMany
     {
-        return $this->belongsToMany(config('auth.model'), 'role_user', 'role_key', 'user_id');
+        return $this->belongsToMany(config('genealabs-laravel-governor.authModel'), 'role_user', 'role_key', 'user_id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function permissions()
+    public function permissions() : HasMany
     {
         return $this->hasMany(Permission::class, 'role_key');
     }

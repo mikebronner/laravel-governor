@@ -3,7 +3,6 @@
 use GeneaLabs\LaravelGovernor\Assignment;
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateAssignmentRequest;
 use GeneaLabs\LaravelGovernor\Role;
-use Illuminate\Support\Facades\App;
 
 class AssignmentsController extends Controller
 {
@@ -14,7 +13,7 @@ class AssignmentsController extends Controller
     {
         $this->middleware('auth');
         $this->displayNameField = config('genealabs-laravel-governor.displayNameField');
-        $this->user = App::make(config('auth.model'));
+        $this->user = app(config('genealabs-laravel-governor.authModel'));
     }
 
     /**
