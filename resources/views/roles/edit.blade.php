@@ -1,6 +1,6 @@
-@extends('genealabs-laravel-governor::master')
+@extends('genealabs-laravel-governor::layout')
 
-@section('innerContent')
+@section('governorContent')
     @can('edit', $role)
     @if ($role->name != 'SuperAdmin' && $role->name != 'Members' && Auth::check())
     <div class="panel panel-default">

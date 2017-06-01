@@ -1,6 +1,6 @@
-@extends('genealabs-laravel-governor::master')
+@extends('genealabs-laravel-governor::layout')
 
-@section('innerContent')
+@section('governorContent')
     @can('create', $role)
         <div class="panel panel-default">
             <div class="panel-heading">
