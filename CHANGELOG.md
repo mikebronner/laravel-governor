@@ -1,6 +1,17 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.4.0] - 1 Jul 2017
+### Added
+- Laravel 5.4 compatibility.
+
+### Updated
+- views to use the projects master layout file and be easier to publish.
+- config settings to be more appropriate.
+- controllers and models with PHP7 stuff and general clean up.
+- routes to use dedicated folder.
+- traits to use dedicated folder.
+
 ## [0.3.0] - 24 Jan 2016
 ### Added
 - `$incrementing = false;` to classes using `name` as primary key.

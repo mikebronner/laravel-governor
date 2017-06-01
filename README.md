@@ -8,8 +8,11 @@ Provide a simple method of managing ACL in a Laravel application built on the La
 By leveraging Laravel's native Authorization functionality there is no additional learning or implementation curve. All
 you need to know is Laravel, and you will know how to use Governor for Laravel.
 
-## Documentation
-Please see https://governor.forlaravel.com for complete documentation.
+## Requirements
+- PHP >=7.0.0
+- Laravel 5.1, 5.3, or 5.4
+- Bootstrap 3 (included in your layout file)
+- FontAwesome 4 (included in your layout file)
 
 ## Installation
 The user with the lowest primary key will be set up as the SuperAdmin. If you're starting on a new project, be sure to
@@ -59,6 +62,18 @@ Now we need to make the assets and configuration available:
 php artisan vendor:publish --tag=genealabs-laravel-governor --force
 ```
 
+Lastly, add the Governable trait to the User model of your app:
+```php
+use GeneaLabs\LaravelGovernor\Traits\Governable;
+//use GeneaLabs\LaravelImpersonator\Traits\Impersonatable;
+//use Illuminate\Notifications\Notifiable;
+//use Illuminate\Foundation\Auth\User as Authenticatable;
+
+//class User extends Authenticatable
+//{
+    use Governable;
+```
+
 ## Configuration
 Once you have published the assets, you will be able to customize the configuration of Governor for Laravel in
 `/app/config/genealabs-laravel-governor.php`. (See the Examples section for what the default config file looks like.)
@@ -73,7 +88,7 @@ There are only three aspects to this:
 ## Implementation
 ### Adding Entities
 Entities should be added via DB Seeders at the same time new Policies are created. This puts the ownership on the
- developer, and not on the user-manager, who should not need to be expected to know the implimentation details.
+ developer, and not on the user-manager, who should not need to be expected to know the implementation details.
 
 The following is an example of adding a 'widget' entity by running `php artisan make:seeder WidgetEntitySeeder`:
 
@@ -124,7 +139,7 @@ The following migration should be a good starting point, if not provide all the 
   {
       public function up()
       {
-          $user = app(config('auth.model'));
+          $user = app(config('genealabs-laravel-governor.authModel'));
           $userIdFieldName = $user->getKeyName();
           $userTableName = $user->getTable();
           $tables = DB::table('information_schema.tables')
