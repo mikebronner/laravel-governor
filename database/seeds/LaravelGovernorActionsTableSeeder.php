@@ -3,13 +3,15 @@
 use GeneaLabs\LaravelGovernor\Action;
 use Illuminate\Database\Seeder;
 
-class LaravelGovernorActionsTableSeeder extends Seeder {
+class LaravelGovernorActionsTableSeeder extends Seeder
+{
     public function run()
     {
-        Action::create(['name' => 'create']);
-        Action::create(['name' => 'view']);
-        Action::create(['name' => 'inspect']);
-        Action::create(['name' => 'edit']);
-        Action::create(['name' => 'remove']);
+        $action = new Action;
+        $action->firstOrCreate(['name' => 'create']);
+        $action->firstOrCreate(['name' => 'view']);
+        $action->firstOrCreate(['name' => 'inspect']);
+        $action->firstOrCreate(['name' => 'edit']);
+        $action->firstOrCreate(['name' => 'remove']);
     }
 }

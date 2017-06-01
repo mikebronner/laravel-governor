@@ -3,11 +3,12 @@
 use GeneaLabs\LaravelGovernor\Ownership;
 use Illuminate\Database\Seeder;
 
-class LaravelGovernorOwnershipsTableSeeder extends Seeder {
+class LaravelGovernorOwnershipsTableSeeder extends Seeder
+{
     public function run()
     {
-        Ownership::create(['name' => 'any']);
-        Ownership::create(['name' => 'own']);
-        Ownership::create(['name' => 'other']);
+        (new Ownership)->firstOrCreate(['name' => 'any']);
+        (new Ownership)->firstOrCreate(['name' => 'own']);
+        (new Ownership)->firstOrCreate(['name' => 'other']);
     }
 }

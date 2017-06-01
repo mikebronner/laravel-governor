@@ -1,6 +1,7 @@
 <?php namespace GeneaLabs\LaravelGovernor;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Permission extends Model
 {
@@ -17,34 +18,22 @@ class Permission extends Model
         'ownership_key',
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function role()
-	{
-		return $this->belongsTo(Role::class, 'role_key', 'name');
-	}
+    public function role() : BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'role_key', 'name');
+    }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function entity()
+    public function entity() : BelongsTo
     {
         return $this->belongsTo(Entity::class, 'entity_key', 'name');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function action()
+    public function action() : BelongsTo
     {
         return $this->belongsTo(Action::class, 'action_key', 'name');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function ownership()
+    public function ownership() : BelongsTo
     {
         return $this->belongsTo(Ownership::class, 'ownership_key', 'name');
     }

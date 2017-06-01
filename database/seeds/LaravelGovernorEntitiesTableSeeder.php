@@ -3,12 +3,13 @@
 use GeneaLabs\LaravelGovernor\Entity;
 use Illuminate\Database\Seeder;
 
-class LaravelGovernorEntitiesTableSeeder extends Seeder {
+class LaravelGovernorEntitiesTableSeeder extends Seeder
+{
     public function run()
     {
-        Entity::create(['name' => 'role']);
-        Entity::create(['name' => 'entity']);
-        Entity::create(['name' => 'permission']);
-        Entity::create(['name' => 'assignment']);
+        (new Entity)->firstOrCreate(['name' => 'role']);
+        (new Entity)->firstOrCreate(['name' => 'entity']);
+        (new Entity)->firstOrCreate(['name' => 'permission']);
+        (new Entity)->firstOrCreate(['name' => 'assignment']);
     }
 }
