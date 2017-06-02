@@ -6,12 +6,12 @@ use \Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web'], 'as' => 'genealabs.laravel-governor.'], function () {
     Route::resource(
-        'genealabs/laravel-governor/roles',
+        config('genealabs-laravel-governor.url-prefix') . 'roles',
         RolesController::class,
         ['except' => ['show']]
     );
     Route::resource(
-        'genealabs/laravel-governor/assignments',
+        config('genealabs-laravel-governor.url-prefix') . 'assignments',
         AssignmentsController::class,
         ['only' => ['index', 'store']]
     );
