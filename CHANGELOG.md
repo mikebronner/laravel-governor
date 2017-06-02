@@ -1,11 +1,15 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
-## [0.4.0] - 1 Jul 2017
+## [0.4.0] - 2 Jul 2017
 ### Added
 - Laravel 5.4 compatibility.
 - automatic policy detection, making Entity seeding unnecessary.
 - automatic adding of `created_by` column in tables, regardless of models.
+- PHPCI integration.
+
+### Fixed
+- role editing form.
 
 ### Updated
 - views to use the projects master layout file and be easier to publish.

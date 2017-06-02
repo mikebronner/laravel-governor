@@ -49,20 +49,20 @@ composer require genealabs/laravel-governor:~0.2.0
 ### All Versions
 And then add the service providers and aliases to your app.php config file:
 ```php
-	// 'providers' => [
-		GeneaLabs\LaravelGovernor\Providers\LaravelGovernorServiceProvider::class,
+    // 'providers' => [
+		GeneaLabs\LaravelGovernor\Providers\LaravelGovernorService::class,
     // ],
 ```
 
 Before we can get started, we need to update the database by running the migrations and data seeders:
 ```sh
-php artisan migrate --path=vendor/genealabs/laravel-governor/database/migrations
+php artisan migrate
 php artisan db:seed --class=LaravelGovernorDatabaseSeeder
 ```
 
-Now we need to make the assets and configuration available:
+Now we need to make the assets available:
 ```sh
-php artisan vendor:publish --tag=genealabs-laravel-governor --force
+php artisan governor:publish --assets
 ```
 
 Lastly, add the Governable trait to the User model of your app:
@@ -78,15 +78,6 @@ use GeneaLabs\LaravelGovernor\Traits\Governable;
 ```
 
 ## Implementation
-### Assets
-Assets will need to be published for the forms to work correctly:
-
-```sh
-php artisan governor:publish --assets
-```
-
-__TBD: how to implement assets in layout view.__
-
 ### Configuration
 The default configuration is as follows:
 
