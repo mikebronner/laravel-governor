@@ -74,18 +74,44 @@ use GeneaLabs\LaravelGovernor\Traits\Governable;
     use Governable;
 ```
 
-## Configuration
-Once you have published the assets, you will be able to customize the configuration of Governor for Laravel in
-`/app/config/genealabs-laravel-governor.php`. (See the Examples section for what the default config file looks like.)
-There are only three aspects to this:
-- The master layout view (Blade template), by default it includes a bare-bones layout. Customizing this to your own view
-  lets it adopt your site's theme (as long as it is a Bootstrap theme).
-- The blade section used to display body content in your layout template. Change this to what your blade layout template
-  uses.
-- The field you want to use as a display name field. This defaults to `name`, but you can use email, or any other field
-  in the User model (you can also create your own custom attribute getter to concatenate fields, etc.).
-
 ## Implementation
+### Assets
+Assets will need to be published for the forms to work correctly:
+
+```sh
+php artisan governor:publish --assets
+```
+
+__TBD: how to implement assets in layout view.__
+
+### Configuration
+The default configuration is as follows:
+
+```php
+'layoutView' => 'layouts.app',
+'contentSection' => 'content',
+'displayNameField' => 'name',
+'authModel' => config('auth.model') ?? config('auth.providers.users.model'),
+```
+
+If you need to make any changes to this, publish the configuration file
+
+```sh
+php artisan governor:publish --config
+```
+
+and make any necessary changes. (We don't recommend publishing the config file
+if you don't need to make any changes.)
+
+### Views
+If you would like to customize the views, publish them first:
+
+```sh
+php artisan governor:publish --views
+```
+
+After that you can edit them in `resources\views\vendor\genealabs\laravel-governor`.
+
 ### Policies
 Policies are now auto-detected and automatically added to the entities list. You
  will no longer need to manage Entities manually. New policies will be available
