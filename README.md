@@ -85,7 +85,7 @@ The default configuration is as follows:
 'layoutView' => 'layouts.app',
 'contentSection' => 'content',
 'displayNameField' => 'name',
-'authModel' => config('auth.model') ?? config('auth.providers.users.model'),
+'auth-model' => config('auth.model') ?? config('auth.providers.users.model'),
 ```
 
 If you need to make any changes to this, publish the configuration file

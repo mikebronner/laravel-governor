@@ -11,7 +11,7 @@ class LaravelGovernorPolicy
         $this->permissions = Permission::with('role')->get();
     }
 
-    public function before($user) : bool
+    public function before($user)
     {
         return $user->isSuperAdmin ? true : null;
     }

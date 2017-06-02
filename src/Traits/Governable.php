@@ -18,6 +18,10 @@ trait Governable
         $superAdminRole = (new Role)->where('name', 'SuperAdmin')->first();
         $this->load('roles');
 
+        if ($this->roles->isEmpty()) {
+            return false;
+        }
+
         return $this->roles->contains($superAdminRole->name);
     }
 }

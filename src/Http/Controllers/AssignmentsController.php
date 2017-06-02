@@ -13,7 +13,7 @@ class AssignmentsController extends Controller
     {
         $this->middleware('auth');
         $this->displayNameField = config('genealabs-laravel-governor.displayNameField');
-        $this->user = app(config('genealabs-laravel-governor.authModel'));
+        $this->user = app(config('genealabs-laravel-governor.auth-model'));
     }
 
     /**
@@ -26,6 +26,7 @@ class AssignmentsController extends Controller
         $displayNameField = $this->displayNameField;
         $users = $this->user->all();
         $roles = Role::with('users')->get();
+
 
         return view('genealabs-laravel-governor::assignments.index')->with(
             compact('users', 'roles', 'displayNameField', 'assignment')

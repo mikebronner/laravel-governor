@@ -10,7 +10,7 @@ class CreatedListener
     public function handle(string $event, array $models)
     {
         foreach ($models as $model) {
-            if (get_class($model) === config('genealabs-laravel-governor.authModel')) {
+            if (get_class($model) === config('genealabs-laravel-governor.auth-model')) {
                 $model->roles()->attach('Member');
             }
         }

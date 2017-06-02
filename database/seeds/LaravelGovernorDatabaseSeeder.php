@@ -2,13 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
-class LaravelGovernorDatabaseSeeder extends Seeder {
-
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+class LaravelGovernorDatabaseSeeder extends Seeder
+{
     public function run()
     {
         Eloquent::unguard();
@@ -18,6 +13,7 @@ class LaravelGovernorDatabaseSeeder extends Seeder {
         $this->call('LaravelGovernorOwnershipsTableSeeder');
         $this->call('LaravelGovernorRolesTableSeeder');
         $this->call('LaravelGovernorPermissionsTableSeeder');
-    }
 
+        Eloquent::reguard();
+    }
 }

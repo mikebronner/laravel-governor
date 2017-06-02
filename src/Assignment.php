@@ -10,7 +10,7 @@ class Assignment extends Model
     {
         parent::__construct();
 
-        $this->user = app(config('genealabs-laravel-governor.authModel'));
+        $this->user = app(config('genealabs-laravel-governor.auth-model'));
     }
 
     public function addAllUsersToMemberRole()

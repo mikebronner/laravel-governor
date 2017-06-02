@@ -11,8 +11,8 @@
                     @foreach($roles as $role)
                         @combobox(
                             'users[' . $role->name . '][]',
-                            $users->pluck($displayNameField, $users->first()->getKeyName())->toArray(),
-                            $role->users->pluck($users->first()->getKeyName())->toArray(),
+                            $users->pluck($displayNameField, auth()->user()->getKeyName())->toArray(),
+                            $role->users->pluck(auth()->user()->getKeyName())->toArray(),
                             [
                                 'label' => $role->users()->count() . ' ' . (($role->users()->count() != 1) ? str_plural($role->name) : str_singular($role->name)),
                                 'multiple' => 'multiple',

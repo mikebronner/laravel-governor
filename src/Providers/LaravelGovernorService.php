@@ -12,8 +12,9 @@ use GeneaLabs\LaravelGovernor\Ownership;
 use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
-use Illuminate\Support\Collection;
 use Illuminate\Support\AggregateServiceProvider;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 use ReflectionClass;
 
 class LaravelGovernorService extends AggregateServiceProvider
@@ -54,7 +55,9 @@ class LaravelGovernorService extends AggregateServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
-        $this->parsePolicies($gate);
+        if (Schema::hasTable('entities')) {
+            $this->parsePolicies($gate);
+        }
     }
 
     public function register()
