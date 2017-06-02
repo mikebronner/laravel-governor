@@ -5,6 +5,7 @@
 ### Added
 - Laravel 5.4 compatibility.
 - automatic policy detection, making Entity seeding unnecessary.
+- automatic adding of `created_by` column in tables, regardless of models.
 
 ### Updated
 - views to use the projects master layout file and be easier to publish.

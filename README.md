@@ -91,6 +91,12 @@ Policies are now auto-detected and automatically added to the entities list. You
  will no longer need to manage Entities manually. New policies will be available
  for role assignment when editing roles.
 
+### Tables
+Tables will automatically be updated with a `created_by` column that references
+ the user that created the entry. There is no more need to run separate
+ migrations or work around packages that have models without a created_by
+ property.
+
 ### Admin Views
 The easiest way to integrate Governor for Laravel into your app is to add the menu items to the relevant section of your
  app's menu (make sure to restrict access appropriately using the Laravel Authorization methods). The following routes
@@ -103,62 +109,6 @@ We recommend making a custom 403 error page to let the user know they don't have
 see the Symfony Whoops error message.
 
 ## Examples
-### Migration
-The following migration should be a good starting point, if not provide all the functionality you need to add a
-`created_by` column to all your tables. Customize as necessary.
-```php
-  use Illuminate\Database\Schema\Blueprint;
-  use Illuminate\Database\Migrations\Migration;
-
-  class AddCreatedByToAllTables extends Migration
-  {
-      public function up()
-      {
-          $user = app(config('genealabs-laravel-governor.authModel'));
-          $userIdFieldName = $user->getKeyName();
-          $userTableName = $user->getTable();
-          $tables = DB::table('information_schema.tables')
-              ->where('table_schema', env('DB_DATABASE'))
-              ->where('table_type', 'BASE TABLE')
-              ->select(['table_name'])
-              ->get();
-
-          foreach ($tables as $tableInfo) {
-              if (Schema::hasColumn($tableInfo->table_name, 'created_by')) {
-                  throw new Exception('The `created_by` column already exists in one of your tables. Please fix the conflict and try again. This migration has not been run.');
-              }
-          }
-
-          foreach ($tables as $tableInfo) {
-              Schema::table($tableInfo->table_name, function(Blueprint $table) use ($userIdFieldName, $userTableName)
-              {
-                  $table->integer('created_by')->unsigned()->nullable();
-                  $table->foreign('created_by')->references($userIdFieldName)->on($userTableName)->onDelete('cascade');
-              });
-          }
-      }
-
-      public function down()
-      {
-          $tables = DB::table('information_schema.tables')
-              ->where('table_schema', env('DB_DATABASE'))
-              ->where('table_type', 'BASE TABLE')
-              ->select(['table_name'])
-              ->get();
-
-          foreach ($tables as $tableInfo) {
-              if (Schema::hasColumn($tableInfo->table_name, 'created_by')) {
-                  Schema::table($tableInfo->table_name, function(Blueprint $table) use ($tableInfo)
-                  {
-                      $table->dropForeign($tableInfo->table_name . '_created_by_foreign');
-                      $table->dropColumn('created_by');
-                  });
-              }
-          }
-      }
-  }
-```
-
 ### Policy
 ```php
 <?php namespace App\Policies;

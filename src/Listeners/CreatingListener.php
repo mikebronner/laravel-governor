@@ -1,16 +1,23 @@
 <?php namespace GeneaLabs\LaravelGovernor\Listeners;
 
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
 class CreatingListener
 {
-    public function handle($model)
+    public function handle(string $event, array $models)
     {
-        if (is_string($model)) {
-            $model = collect(explode(': ', $model))->last();
-            $model = new $model;
-        }
+        foreach ($models as $model) {
+            if (auth()->check() && ! (property_exists($model, 'isGoverned') && $model['isGoverned'] === false)) {
+                $model->created_by = auth()->user()->getKey();
+                $table = $model->getTable();
 
-        if (auth()->check() && ! (property_exists($model, 'isGoverned') && $model['isGoverned'] === false)) {
-            $model->setAttribute('created_by', auth()->user()->getKey());
+                if (! Schema::hasColumn($table, 'created_by')) {
+                    Schema::table($table, function (Blueprint $table) {
+                        $table->integer('created_by')->unsigned()->nullable();
+                    });
+                }
+            }
         }
     }
 }
