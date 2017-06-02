@@ -86,35 +86,10 @@ There are only three aspects to this:
   in the User model (you can also create your own custom attribute getter to concatenate fields, etc.).
 
 ## Implementation
-### Adding Entities
-Entities should be added via DB Seeders at the same time new Policies are created. This puts the ownership on the
- developer, and not on the user-manager, who should not need to be expected to know the implementation details.
-
-The following is an example of adding a 'widget' entity by running `php artisan make:seeder WidgetEntitySeeder`:
-
-```php
-<?php
-
-use GeneaLabs\LaravelGovernor\Entity;
-use Illuminate\Database\Seeder;
-
-class WidgetEntitySeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        Entity::create(['name' => 'widget']);
-    }
-}
-```
-
-Once the project is pushed live, the seeder needs to be ran against the live database with something like
- `artisan db:seed --class=WidgetEntitySeeder`. The widget entity will then be availabe to the user-manager in the Roles
- view to establish accessibility.
+### Policies
+Policies are now auto-detected and automatically added to the entities list. You
+ will no longer need to manage Entities manually. New policies will be available
+ for role assignment when editing roles.
 
 ### Admin Views
 The easiest way to integrate Governor for Laravel into your app is to add the menu items to the relevant section of your

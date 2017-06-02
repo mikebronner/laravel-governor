@@ -4,8 +4,16 @@ use GeneaLabs\LaravelCasts\Providers\LaravelCastsService;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use GeneaLabs\LaravelGovernor\Http\ViewComposers\Layout;
+use GeneaLabs\LaravelGovernor\Action;
+use GeneaLabs\LaravelGovernor\Assignment;
+use GeneaLabs\LaravelGovernor\Entity;
+use GeneaLabs\LaravelGovernor\Ownership;
+use GeneaLabs\LaravelGovernor\Permission;
+use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Support\Collection;
 use Illuminate\Support\AggregateServiceProvider;
+use ReflectionClass;
 
 class LaravelGovernorServiceProvider extends AggregateServiceProvider
 {
@@ -38,6 +46,8 @@ class LaravelGovernorServiceProvider extends AggregateServiceProvider
         $this->publishes([__DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs-laravel-governor')], 'views');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+
+        $this->parsePolicies($gate);
     }
 
     public function register()
@@ -54,13 +64,48 @@ class LaravelGovernorServiceProvider extends AggregateServiceProvider
         }
     }
 
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
+    public function provides() : array
     {
         return ['genealabs-laravel-governor'];
+    }
+
+    protected function parsePolicies(GateContract $gate)
+    {
+        $reflection = new ReflectionClass($gate);
+        $property = $reflection->getProperty('policies');
+        $property->setAccessible(true);
+        collect($property->getValue($gate))
+            ->transform(function ($policyClass) {
+                return $this->newEntity($policyClass);
+            })
+            ->values()
+            ->filter()
+            ->each(function ($entity) {
+                (new Entity)->firstOrCreate(['name' => $entity]);
+                $superadmin = (new Role)->whereName('SuperAdmin')->first();
+                $ownership = (new Ownership)->whereName('any')->first();
+                (new Action)->all()->each(function ($action) use ($entity, $superadmin, $ownership) {
+                    $permission = new Permission();
+                    $permission->role()->associate($superadmin);
+                    $permission->action()->associate($action);
+                    $permission->ownership()->associate($ownership);
+                    $permission->entity()->associate($entity);
+                    $permission->save();
+                });
+            });
+    }
+
+    protected function newEntity(string $policyClass)
+    {
+        $policyClass = collect(explode('\\', $policyClass))->last();
+        $entity = str_replace('policy', '', strtolower($policyClass));
+
+        if (in_array($entity, ['assignment', 'entity', 'permission', 'role', 'action', 'ownership'])) {
+            return;
+        }
+
+        if (! app('db')->table('entities')->where('name', $entity)->exists()) {
+            return $entity;
+        }
     }
 }

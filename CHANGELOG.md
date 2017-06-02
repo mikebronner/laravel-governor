@@ -4,6 +4,7 @@
 ## [0.4.0] - 1 Jul 2017
 ### Added
 - Laravel 5.4 compatibility.
+- automatic policy detection, making Entity seeding unnecessary.
 
 ### Updated
 - views to use the projects master layout file and be easier to publish.
