@@ -11,8 +11,8 @@
     bootstrap="vendor/autoload.php"
 >
     <testsuites>
-        <!-- <testsuite name="Geocoder library for Laravel Test Suite">
-            <directory suffix="Test.php">./tests/Laravel5_3</directory>
+        <testsuite name="Governor for Laravel Test Suite">
+            <directory suffix="Test.php">./tests</directory>
         </testsuite> -->
     </testsuites>
     <filter>
