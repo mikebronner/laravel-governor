@@ -1,23 +1,19 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
 use GeneaLabs\LaravelGovernor\Role;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait Governable
 {
-    /**
-     * @return Collection
-     */
-    public function roles()
+    public function roles() : BelongsTo
     {
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_key');
     }
 
     /**
-     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    public function getIsSuperAdminAttribute()
+    public function getIsSuperAdminAttribute() : bool
     {
         $superAdminRole = (new Role)->where('name', 'SuperAdmin')->first();
         $this->load('roles');
