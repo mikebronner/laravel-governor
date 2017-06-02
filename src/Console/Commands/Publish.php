@@ -11,7 +11,7 @@ class Publish extends Command
     public function handle()
     {
         if ($this->option('assets')) {
-            $result = $this->call('casts:publish', ['--assets' => true]);
+            $this->call('casts:publish', ['--assets' => true]);
         }
 
         if ($this->option('config')) {

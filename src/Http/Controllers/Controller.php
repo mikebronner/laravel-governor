@@ -14,12 +14,13 @@ abstract class Controller extends BaseController
 
     protected function resetSuperAdminPermissions()
     {
-        Permission::where('role_key', 'SuperAdmin')->delete();
-        $entities = Entity::all();
-        $actions = Action::all();
+        (new Permission)->where('role_key', 'SuperAdmin')->delete();
+        $entities = (new Entity)->all();
+        $actions = (new Action)->all();
+
         foreach ($entities as $entity) {
             foreach ($actions as $action) {
-                Permission::updateOrCreate([
+                (new Permission)->updateOrCreate([
                     'role_key' => 'SuperAdmin',
                     'entity_key' => $entity->name,
                     'action_key' => $action->name,

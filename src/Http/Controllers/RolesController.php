@@ -7,8 +7,8 @@ use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
 use GeneaLabs\LaravelGovernor\Ownership;
 use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Role;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class RolesController extends Controller
 {
@@ -17,21 +17,15 @@ class RolesController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * @return mixed
-     */
-    public function index()
+    public function index() : View
     {
         $this->authorize('view', (new Role()));
-        $roles = Role::orderBy('name')->get();
+        $roles = (new Role)->orderBy('name')->get();
 
         return view('genealabs-laravel-governor::roles.index', compact('roles'));
     }
 
-    /**
-     * @return mixed
-     */
-    public function create()
+    public function create() : View
     {
         $role = new Role();
         $this->authorize('create', $role);
@@ -39,27 +33,20 @@ class RolesController extends Controller
         return view('genealabs-laravel-governor::roles.create', compact('role'));
     }
 
-    /**
-     * @return mixed
-     */
-    public function store(CreateRoleRequest $request)
+    public function store(CreateRoleRequest $request) : RedirectResponse
     {
-        Role::create($request->except(['_token']));
+        (new Role)->create($request->except(['_token']));
 
         return redirect()->route('genealabs.laravel-governor.roles.index');
     }
 
-    /**
-     * @param $name
-     * @return mixed
-     */
-    public function edit($name)
+    public function edit($name) : View
     {
-        $role = Role::with('permissions')->find($name);
+        $role = (new Role)->with('permissions')->find($name);
         $this->authorize($role);
-        $entities = Entity::whereNotIn('name', ['permission', 'entity'])->get();
-        $actions = Action::all();
-        $ownerships = Ownership::all();
+        $entities = (new Entity)->whereNotIn('name', ['permission', 'entity'])->get();
+        $actions = (new Action)->all();
+        $ownerships = (new Ownership)->all();
         $permissionMatrix = [];
 
         foreach ($entities as $entity) {
@@ -83,19 +70,15 @@ class RolesController extends Controller
         return view('genealabs-laravel-governor::roles.edit', compact('role', 'permissionMatrix', 'ownershipOptions'));
     }
 
-    /**
-     * @param $name
-     * @return mixed
-     */
-    public function update(UpdateRoleRequest $request, $name)
+    public function update(UpdateRoleRequest $request, $name) : RedirectResponse
     {
-        $role = Role::find($name);
+        $role = (new Role)->find($name);
         $role->fill($request->only(['name', 'description']));
 
         if ($request->has('permissions')) {
-            $allActions = Action::all();
-            $allOwnerships = Ownership::all();
-            $allEntities = Entity::all();
+            $allActions = (new Action)->all();
+            $allOwnerships = (new Ownership)->all();
+            $allEntities = (new Entity)->all();
             $role->permissions()->delete();
 
             foreach ($request->get('permissions') as $entity => $actions) {
@@ -120,13 +103,9 @@ class RolesController extends Controller
         return redirect()->route('genealabs.laravel-governor.roles.index');
     }
 
-    /**
-     * @param $name
-     * @return mixed
-     */
-    public function destroy($name)
+    public function destroy($name) : RedirectResponse
     {
-        $role = Role::find($name);
+        $role = (new Role)->find($name);
         $this->authorize('remove', $role);
         $role->delete();
 

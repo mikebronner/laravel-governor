@@ -42,9 +42,15 @@ class LaravelGovernorService extends AggregateServiceProvider
         app('events')->listen('eloquent.creating: *', CreatingListener::class);
         app('events')->listen('eloquent.created: *', CreatedListener::class);
 
-        $this->publishes([__DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')], 'config');
-        $this->publishes([__DIR__ . '/../../public' => public_path('genealabs-laravel-governor')], 'assets');
-        $this->publishes([__DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs/laravel-governor')], 'views');
+        $this->publishes([
+            __DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')
+        ], 'config');
+        $this->publishes([
+            __DIR__ . '/../../public' => public_path('genealabs-laravel-governor')
+        ], 'assets');
+        $this->publishes([
+            __DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs/laravel-governor')
+        ], 'views');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 

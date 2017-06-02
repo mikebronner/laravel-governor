@@ -27,8 +27,9 @@ class AssignmentsController extends Controller
         $users = $this->user->all();
         $roles = Role::with('users')->get();
 
-        return view('genealabs-laravel-governor::assignments.index',
-            compact('users', 'roles', 'displayNameField', 'userList', 'assignment'));
+        return view('genealabs-laravel-governor::assignments.index')->with(
+            compact('users', 'roles', 'displayNameField', 'assignment')
+        );
     }
 
     /**

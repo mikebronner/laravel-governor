@@ -2,26 +2,15 @@
 
 use GeneaLabs\LaravelGovernor\Assignment;
 use Illuminate\Foundation\Http\FormRequest as Request;
-use Illuminate\Support\Facades\Gate;
 
 class CreateAssignmentRequest extends Request
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize() : bool
     {
-        return Gate::allows('create', (new Assignment()));
+        return app('Illuminate\Contracts\Auth\Access\Gate')->allows('create', (new Assignment()));
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules() : array
     {
         return [
             'users' => 'required',
