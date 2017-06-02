@@ -16,7 +16,7 @@
                 </div>
                 <div class="panel-body">
 
-                    @model($role, ['route' => ['genealabs.laravel-governor.roles.update', $role->name], 'method' => 'PUT', 'framework' => 'bootstrap3', 'class' => 'form-horizontal', 'id' => 'editForm', 'labelWidth' => 2, 'fieldWidth' => 10])
+                    @model($role, ['route' => ['genealabs.laravel-governor.roles.update', $role->name], 'method' => 'PUT', 'framework' => 'bootstrap3', 'class' => 'form-horizontal', 'id' => 'editForm', 'labelWidth' => 2, 'fieldWidth' => 10, 'onsubmit' => 'enableFields();'])
                         @text('name', null, ['disabled' => ($role->name === 'Member' ? 'disabled' : '')])
                         @textarea('description', null, ['disabled' => ($role->name === 'Member' ? 'disabled' : '')])
                         <div class="form-group">
@@ -81,6 +81,11 @@
                         </div>
                         <script>
                             window.onload = function () {
+                                window.enableFields = function () {
+                                    $('[name=name]').prop('disabled', false);
+                                    $('[name=description]').prop('disabled', false);
+                                };
+
                                 $('.ownershipDropDown a').click(function() {
                                     var className = 'text-info';
 

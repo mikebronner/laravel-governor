@@ -11,7 +11,7 @@
 ### Fixed
 - role editing form.
 
-### Updated
+### Changed
 - views to use the projects master layout file and be easier to publish.
 - config settings to be more appropriate.
 - controllers and models with PHP7 stuff and general clean up.

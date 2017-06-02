@@ -1,11 +1,11 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
 use GeneaLabs\LaravelGovernor\Role;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 trait Governable
 {
-    public function roles() : BelongsTo
+    public function roles() : BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_key');
     }
