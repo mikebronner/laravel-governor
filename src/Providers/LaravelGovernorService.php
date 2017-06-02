@@ -32,6 +32,9 @@ class LaravelGovernorService extends AggregateServiceProvider
         LaravelCastsService::class,
     ];
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function boot(GateContract $gate)
     {
         $this->registerPolicies($gate);

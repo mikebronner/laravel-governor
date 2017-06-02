@@ -20,7 +20,12 @@ class Role extends Model
 
     public function users() : BelongsToMany
     {
-        return $this->belongsToMany(config('genealabs-laravel-governor.auth-model'), 'role_user', 'role_key', 'user_id');
+        return $this->belongsToMany(
+            config('genealabs-laravel-governor.auth-model'),
+            'role_user',
+            'role_key',
+            'user_id'
+        );
     }
 
     public function permissions() : HasMany
