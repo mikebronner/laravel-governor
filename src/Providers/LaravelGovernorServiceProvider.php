@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
+use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
 use GeneaLabs\LaravelCasts\Providers\LaravelCastsService;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
@@ -15,7 +16,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\AggregateServiceProvider;
 use ReflectionClass;
 
-class LaravelGovernorServiceProvider extends AggregateServiceProvider
+class LaravelGovernorService extends AggregateServiceProvider
 {
     protected $defer = false;
     protected $policies = [
@@ -43,7 +44,7 @@ class LaravelGovernorServiceProvider extends AggregateServiceProvider
 
         $this->publishes([__DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')], 'config');
         $this->publishes([__DIR__ . '/../../public' => public_path('genealabs-laravel-governor')], 'assets');
-        $this->publishes([__DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs-laravel-governor')], 'views');
+        $this->publishes([__DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs/laravel-governor')], 'views');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
@@ -55,6 +56,7 @@ class LaravelGovernorServiceProvider extends AggregateServiceProvider
         parent::register();
 
         $this->mergeConfigFrom(__DIR__ . '/../../config/config.php', 'genealabs-laravel-governor');
+        $this->commands(Publish::class);
     }
 
     public function registerPolicies(GateContract $gate)
