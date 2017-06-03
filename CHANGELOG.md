@@ -7,6 +7,7 @@
 - automatic policy detection, making Entity seeding unnecessary.
 - automatic adding of `created_by` column in tables, regardless of models.
 - PHPCI integration.
+- initial set of tests, with more to come.
 
 ### Fixed
 - role editing form.
