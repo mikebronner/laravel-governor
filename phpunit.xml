@@ -7,11 +7,15 @@
     convertWarningsToExceptions="true"
     processIsolation="false"
     stopOnFailure="false"
-    syntaxCheck="false"
+    syntaxCheck="true"
     bootstrap="vendor/autoload.php"
 >
     <testsuites>
-        <testsuite name="Governor for Laravel Test Suite">
+        <testsuite name="Governor for Laravel Test Suite"
+            assertions="1"
+             failures="1"
+             errors="1"
+            >
             <directory suffix="Test.php">./tests</directory>
         </testsuite> -->
     </testsuites>
