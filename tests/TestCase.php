@@ -17,20 +17,12 @@ abstract class TestCase extends BaseTestCase
     protected function setUp()
     {
         parent::setUp();
+
         $this->artisan('make:auth', ['--no-interaction' => true]);
         $this->artisan('db:seed', [
             '--class' => 'LaravelGovernorDatabaseSeeder',
             '--no-interaction' => true
         ]);
-
-        // auth()->routes();
-        // $app['router']->auth();
-        // app('router')->get('/login', function () {})->name('login');
-        // app('router')->post('/logout', function () {})->name('logout');
-
-        ini_set('error_reporting', E_ALL);
-        ini_set('display_errors', true);
-        ini_set('display_startup_errors', true);
         $this->withoutExceptionHandling();
     }
 
