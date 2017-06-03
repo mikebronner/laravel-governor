@@ -17,6 +17,10 @@ abstract class TestCase extends BaseTestCase
     protected function setUp()
     {
         parent::setUp();
+        // auth()->routes();
+        // $app['router']->auth();
+        app('router')->get('/login', function () {})->name('login');
+        app('router')->post('/logout', function () {})->name('logout');
 
         ini_set('error_reporting', E_ALL);
         ini_set('display_errors', true);
