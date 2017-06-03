@@ -21,8 +21,10 @@
         </whitelist>
     </filter>
     <php>
-        <env name="APP_KEY" value="base64:Xgs1LQt1GdVHhD6qyYCXnyq61DE3UKqJ5k2SJc+Nw2g="/>
         <env name="APP_ENV" value="testing"/>
+        <env name="APP_KEY" value="base64:Xgs1LQt1GdVHhD6qyYCXnyq61DE3UKqJ5k2SJc+Nw2g="/>
+        <env name="APP_DEBUG" value="true"/>
+        <env name="APP_LOG_LEVEL" value="debug"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="file"/>
         <env name="QUEUE_DRIVER" value="sync"/>
