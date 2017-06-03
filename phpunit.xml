@@ -11,11 +11,7 @@
     bootstrap="vendor/autoload.php"
 >
     <testsuites>
-        <testsuite name="Governor for Laravel Test Suite"
-            assertions="1"
-             failures="1"
-             errors="1"
-            >
+        <testsuite name="Governor for Laravel Test Suite">
             <directory suffix="Test.php">./tests</directory>
         </testsuite> -->
     </testsuites>

@@ -15,6 +15,8 @@ trait CreatesApplication
         $app = require(__DIR__ . '/../vendor/laravel/laravel/bootstrap/app.php');
         $app->make(Kernel::class)->bootstrap();
         $app->register(LaravelGovernorService::class);
+        $app('router')->get('/logout', function () {})->name('logout');
+        // $app('router')->get('/login', function () {})->name('login');
 
         return $app;
     }
