@@ -32,9 +32,11 @@ composer require genealabs/laravel-governor
 
 Add the service provider to your app.php config file:
 ```php
-    // 'providers' => [
-		GeneaLabs\LaravelGovernor\Providers\LaravelGovernorService::class,
-    // ],
+'providers' => [
+// [...]
+    GeneaLabs\LaravelGovernor\Providers\LaravelGovernorService::class,
+// [...]
+],
 ```
 
 Before we can get started, we need to update the database by running the migrations and data seeders:
