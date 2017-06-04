@@ -186,6 +186,9 @@ return [
 
 ### Policy
 #### No Methods Required For Default Policies
+Adding policies is crazily simple! All the work has been refactored out so all
+ you need to worry about now is creating a policy class, and that's it!
+
 ```php
 <?php namespace GeneaLabs\LaravelGovernor\Policies;
 
@@ -198,6 +201,9 @@ class MyPolicy extends LaravelGovernorPolicy
 ```
 
 #### Default Methods In A Policy Class
+Adding any of the `before`, `create`, `edit`, `view`, `inspect`, and `remove`
+ methods to your policy is only required if you want to customize a given method.
+
 ```php
 <?php namespace App\Policies;
 
