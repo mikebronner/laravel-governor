@@ -6,7 +6,7 @@
 # Governor For Laravel
 **Manage authorization with granular role-based permissions in your Laravel apps.**
 
-![governor for laravel](http://share.genealabs.com/3xtiySH+)
+![governor for laravel](https://storage.jumpshare.com/dl/uDl-gP03BKHY4j4ZpI8Zm24nDf7Jk7dlfkCjhXXmbRybWY8me6YeJsPxp7GrsLSoVJhz8o07upSlEfcRW2Bu-A?s=d1f086755e7410021a3465a736796a1c1c338d57&dl=0)
 
 ## Goal
 Provide a simple method of managing ACL in a Laravel application built on the
