@@ -24,6 +24,11 @@ The user with the lowest primary key will be set up as the SuperAdmin. If you're
  have users, you can update the role-user entry to point to your intended user,
  if the first user is not the intended SuperAdmin. Now let's get the package
  installed.
+ 
+Install via composer:
+```sh
+composer require genealabs/laravel-governor
+```
 
 Add the service provider to your app.php config file:
 ```php
