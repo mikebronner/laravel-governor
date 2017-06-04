@@ -1,13 +1,14 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
-## [0.4.0] - 2 Jul 2017
+## [0.4.0] - 4 Jul 2017
 ### Added
 - Laravel 5.4 compatibility.
 - automatic policy detection, making Entity seeding unnecessary.
 - automatic adding of `created_by` column in tables, regardless of models.
 - PHPCI integration.
 - initial set of tests, with more to come.
+- config file documentation.
 
 ### Fixed
 - role editing form.
@@ -18,6 +19,9 @@
 - controllers and models with PHP7 stuff and general clean up.
 - routes to use dedicated folder.
 - traits to use dedicated folder.
+- policies to be much more concise, no methods needed.
+- config variables to be more consistent.
+- updated README documentation.
 
 ## [0.3.0] - 24 Jan 2016
 ### Added
