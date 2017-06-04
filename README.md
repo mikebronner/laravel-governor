@@ -107,7 +107,7 @@ To validate a user against a given policy, use one of the keywords that Governor
  or `$user->can('edit', $blogPost)`.
 
 ### Tables
-Tables will automatically be updated with a `created_by` column that references
+Tables will automatically be updated with a `governor_created_by` column that references
  the user that created the entry. There is no more need to run separate
  migrations or work around packages that have models without a created_by
  property.
