@@ -50,14 +50,13 @@ php artisan governor:publish --assets
 
 Lastly, add the Governable trait to the User model of your app:
 ```php
+// [...]
 use GeneaLabs\LaravelGovernor\Traits\Governable;
-//use GeneaLabs\LaravelImpersonator\Traits\Impersonatable;
-//use Illuminate\Notifications\Notifiable;
-//use Illuminate\Foundation\Auth\User as Authenticatable;
 
-//class User extends Authenticatable
-//{
+class User extends Authenticatable
+{
     use Governable;
+// [...]
 ```
 
 ## Implementation
