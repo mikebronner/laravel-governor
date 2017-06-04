@@ -1,13 +1,17 @@
 <?php namespace GeneaLabs\LaravelGovernor\Policies;
 
 use GeneaLabs\LaravelGovernor\Permission;
+use Illuminate\Database\Eloquent\Model;
 
-class LaravelGovernorPolicy
+abstract class LaravelGovernorPolicy
 {
+    protected $entity;
     protected $permissions;
 
     public function __construct()
     {
+        $policyClass = collect(explode('\\', get_class($this)))->last();
+        $this->entity = str_replace('policy', '', strtolower($policyClass));
         $this->permissions = Permission::with('role')->get();
     }
 
@@ -16,7 +20,57 @@ class LaravelGovernorPolicy
         return $user->isSuperAdmin ? true : null;
     }
 
-    protected function validatePermissions($user, $action, $entity, $entityCreatorId)
+    public function create(Model $user, Model $model) : bool
+    {
+        return $this->validatePermissions(
+            $user,
+            'create',
+            $this->entity,
+            $model->governor_created_by
+        );
+    }
+
+    public function edit(Model $user, Model $model) : bool
+    {
+        return $this->validatePermissions(
+            $user,
+            'edit',
+            $this->entity,
+            $model->governor_created_by
+        );
+    }
+
+    public function view(Model $user, Model $model) : bool
+    {
+        return $this->validatePermissions(
+            $user,
+            'view',
+            $this->entity,
+            $model->governor_created_by
+        );
+    }
+
+    public function inspect(Model $user, Model $model) : bool
+    {
+        return $this->validatePermissions(
+            $user,
+            'inspect',
+            $this->entity,
+            $model->governor_created_by
+        );
+    }
+
+    public function remove(Model $user, Model $model) : bool
+    {
+        return $this->validatePermissions(
+            $user,
+            'remove',
+            $this->entity,
+            $model->governor_created_by
+        );
+    }
+
+    protected function validatePermissions($user, $action, $entity, $entityCreatorId) : bool
     {
         $user->load('roles');
 
