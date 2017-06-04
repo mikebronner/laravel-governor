@@ -12,7 +12,7 @@ class AssignmentsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->displayNameField = config('genealabs-laravel-governor.displayNameField');
+        $this->displayNameField = config('genealabs-laravel-governor.user-name-property');
         $this->user = app(config('genealabs-laravel-governor.auth-model'));
     }
 
