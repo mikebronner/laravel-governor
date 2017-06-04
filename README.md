@@ -103,7 +103,8 @@ Policies are now auto-detected and automatically added to the entities list. You
 To validate a user against a given policy, use one of the keywords that Governor
  validates against: `before`, `create`, `edit`, `view`, `inspect`, and `remove`.
  For example, if the desired policy to check has a class name of `BlogPostPolicy`,
- you would authorize your user with something like `$user->can('create', $blogPost)`.
+ you would authorize your user with something like `$user->can('create', (new BlogPost))`
+ or `$user->can('edit', $blogPost)`.
 
 ### Tables
 Tables will automatically be updated with a `created_by` column that references
