@@ -203,10 +203,11 @@ Adding policies is crazily simple! All the work has been refactored out so all
 <?php namespace GeneaLabs\LaravelGovernor\Policies;
 
 use GeneaLabs\LaravelGovernor\Interfaces\GovernablePolicy;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MyPolicy extends LaravelGovernorPolicy
 {
-    // use default methods
+    use HandlesAuthorization;
 }
 ```
 
