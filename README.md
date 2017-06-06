@@ -221,10 +221,13 @@ Adding any of the `before`, `create`, `edit`, `view`, `inspect`, and `remove`
 use App\MyModel;
 use App\User;
 use GeneaLabs\LaravelGovernor\Policies\LaravelGovernorPolicy;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MyModelPolicy extends LaravelGovernorPolicy
 {
-    public function before($user)
+    use HandlesAuthorization;
+
+    public function before(User $user)
     {
         return $user->isSuperAdmin ? true : null;
     }
