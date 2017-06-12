@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
+use GeneaLabs\LaravelGovernor\Permissions;
 use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
