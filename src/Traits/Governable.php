@@ -24,4 +24,11 @@ trait Governable
 
         return $this->roles->contains($superAdminRole->name);
     }
+
+    public function getPermissionsAttribute() : Collection
+    {
+        $roleNames = $this->roles->pluck('name');
+
+        return (new Permission)->whereIn('role_key', $roleNames)->get();
+    }
 }
