@@ -1,8 +1,9 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
-use GeneaLabs\LaravelGovernor\Permissions;
+use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 
 trait Governable
 {
