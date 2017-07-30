@@ -20,13 +20,12 @@ abstract class LaravelGovernorPolicy
         return $user->isSuperAdmin ? true : null;
     }
 
-    public function create(Model $user, Model $model) : bool
+    public function create(Model $user) : bool
     {
         return $this->validatePermissions(
             $user,
             'create',
-            $this->entity,
-            $model->governor_created_by
+            $this->entity
         );
     }
 
@@ -70,7 +69,7 @@ abstract class LaravelGovernorPolicy
         );
     }
 
-    protected function validatePermissions($user, $action, $entity, $entityCreatorId) : bool
+    protected function validatePermissions($user, $action, $entity, $entityCreatorId = null) : bool
     {
         $user->load('roles');
 
