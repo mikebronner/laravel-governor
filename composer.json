@@ -11,7 +11,7 @@
   "require": {
     "php": ">=7.0.0",
     "genealabs/laravel-casts": "*",
-    "illuminate/support": "5.4.*"
+    "illuminate/support": "5.*"
   },
   "require-dev": {
       "doctrine/dbal": "^2.5",
@@ -37,6 +37,13 @@
       "GeneaLabs\\LaravelGovernor\\": "src/",
       "GeneaLabs\\LaravelGovernor\\Tests\\": "tests/"
     }
+  },
+  "extra": {
+      "laravel": {
+          "providers": [
+              "GeneaLabs\\LaravelGovernor\\Providers\\LaravelGovernorService"
+          ]
+      }
   },
   "config": {
     "preferred-install": "dist"
