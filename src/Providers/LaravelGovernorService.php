@@ -56,7 +56,6 @@ class LaravelGovernorService extends AggregateServiceProvider
             __DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs/laravel-governor')
         ], 'views');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
         if (Schema::hasTable('entities')) {
             $this->parsePolicies($gate);
