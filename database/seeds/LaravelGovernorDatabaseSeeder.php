@@ -12,7 +12,6 @@ class LaravelGovernorDatabaseSeeder extends Seeder
         $this->call('LaravelGovernorActionsTableSeeder');
         $this->call('LaravelGovernorOwnershipsTableSeeder');
         $this->call('LaravelGovernorRolesTableSeeder');
-        $this->call('LaravelGovernorPermissionsTableSeeder');
 
         Eloquent::reguard();
     }
