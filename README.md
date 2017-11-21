@@ -28,13 +28,13 @@ The user with the lowest primary key will be set up as the SuperAdmin. If you're
  have users, you can update the role-user entry to point to your intended user,
  if the first user is not the intended SuperAdmin. Now let's get the package
  installed.
- 
+
 Install via composer:
 ```sh
 composer require genealabs/laravel-governor
 ```
 
-Add the service provider to your app.php config file:
+**ONLY FOR LARVEL 5.4 AND LOWER:** Add the service provider to your app.php config file:
 ```php
 'providers' => [
 // [...]
@@ -43,29 +43,39 @@ Add the service provider to your app.php config file:
 ],
 ```
 
-Before we can get started, we need to update the database by running the migrations and data seeders:
-```sh
-php artisan migrate
-php artisan db:seed --class=LaravelGovernorDatabaseSeeder
-```
-
-Now we need to make the assets available:
-```sh
-php artisan governor:publish --assets
-```
-
-Lastly, add the Governable trait to the User model of your app:
-```php
-// [...]
-use GeneaLabs\LaravelGovernor\Traits\Governable;
-
-class User extends Authenticatable
-{
-    use Governable;
-// [...]
-```
-
 ## Implementation
+1. First we need to update the database by running the migrations and data seeders:
+    ```sh
+    php artisan migrate
+    php artisan db:seed --class=LaravelGovernorDatabaseSeeder
+    ```
+
+2. If you are starting out with an empty database, run your seeders now:
+    ```sh
+    php artisan db:seed
+    ```
+
+3. Next, assign permissions (this requires you have users already populated):
+    ```sh
+    php artisan db:seed --class=LaravelGovernorPermissionsTableSeeder
+    ```
+
+4. Now we need to make the assets available:
+    ```sh
+    php artisan governor:publish --assets
+    ```
+
+5. Lastly, add the Governable trait to the User model of your app:
+    ```php
+    // [...]
+    use GeneaLabs\LaravelGovernor\Traits\Governable;
+
+    class User extends Authenticatable
+    {
+        use Governable;
+    // [...]
+    ```
+
 ### Configuration
 If you need to make any changes (see Example selection below for the default
  config file) to the default configuration, publish the configuration file:
