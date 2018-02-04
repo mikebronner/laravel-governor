@@ -43,7 +43,7 @@ class RolesController extends Controller
     public function edit($name) : View
     {
         $role = (new Role)->with('permissions')->find($name);
-        $this->authorize($role);
+        $this->authorize('edit', $role);
         $entities = (new Entity)->whereNotIn('name', ['permission', 'entity'])->get();
         $actions = (new Action)->all();
         $ownerships = (new Ownership)->all();
@@ -73,6 +73,7 @@ class RolesController extends Controller
     public function update(UpdateRoleRequest $request, $name) : RedirectResponse
     {
         $role = (new Role)->find($name);
+        $this->authorize('edit', $role);
         $role->fill($request->only(['name', 'description']));
 
         if ($request->has('permissions')) {
