@@ -44,8 +44,20 @@ class RolesController extends Controller
     {
         $role = (new Role)->with('permissions')->find($name);
         $this->authorize('edit', $role);
-        $entities = (new Entity)->whereNotIn('name', ['permission', 'entity'])->get();
         $actions = (new Action)->all();
+        $entities = collect(array_keys(app('Illuminate\Contracts\Auth\Access\Gate')->policies()))
+            ->map(function ($entity) {
+                return strtolower(collect(explode('\\', $entity))->last());
+            })
+            ->filter(function ($entity) {
+                return ! in_array($entity, ['permission', 'entity']);
+            })
+            ->map(function ($entity) {
+                return (new Entity)
+                    ->firstOrCreate([
+                        'name' => $entity,
+                    ]);
+            });
         $ownerships = (new Ownership)->all();
         $permissionMatrix = [];
 
