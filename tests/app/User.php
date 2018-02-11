@@ -1,4 +1,4 @@
-<?php namespace GeneaLabs\LaravelGovernor\Tests\Models;
+<?php namespace GeneaLabs\LaravelGovernor\Tests\App;
 
 use GeneaLabs\LaravelGovernor\Traits\Governable;
 use Illuminate\Notifications\Notifiable;

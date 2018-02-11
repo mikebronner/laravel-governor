@@ -1,29 +1,48 @@
 <?php namespace GeneaLabs\LaravelGovernor\Tests;
 
-use Illuminate\Contracts\Console\Kernel;
-use GeneaLabs\LaravelGovernor\Providers\LaravelGovernorService;
+use GeneaLabs\LaravelGovernor\Providers\Service as LaravelGovernorService;
+use GeneaLabs\LaravelGovernor\Tests\App\User;
+use Orchestra\Database\ConsoleServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 trait CreatesApplication
 {
-    /**
-     * Creates the application.
-     *
-     * @return \Illuminate\Foundation\Application
-     */
-    public function createApplication()
+    public function setUp()
     {
-        $this->addAuthRoutes();
-        $app = require(__DIR__ . '/../vendor/laravel/laravel/bootstrap/app.php');
-        $app->make(Kernel::class)->bootstrap();
-        $app->register(LaravelGovernorService::class);
+        parent::setUp();
 
-        return $app;
+        $this->withFactories(__DIR__ . '/database/factories');
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '../database/migrations');
+        // $this->loadViewsFrom(__DIR__ . '/resources/views');
+
+// dd(config('views.paths'));
+        // dd(app('router')->getRoutes());
     }
 
-    protected function addAuthRoutes()
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function getPackageProviders($app)
     {
-        $routes = file_get_contents(__DIR__ . '/../vendor/laravel/laravel/routes/web.php');
-        $routes .= "\r\nAuth::routes();\r\n";
-        file_put_contents(__DIR__ . '/../vendor/laravel/laravel/routes/web.php', $routes);
+        config(['genealabs-laravel-governor.auth-model' => User::class]);
+        config(['session.expire_on_close' => true]);
+        config(['view.paths' => [__DIR__ . '/resources/views']]);
+
+        Route::get('login', ["as" => "login", "uses" => "\GeneaLabs\LaravelGovernor\Tests\App\Http\Controllers\Auth\LoginController@showLoginForm"]);
+        Route::post('login', ["as" => "login", "uses" => "\GeneaLabs\LaravelGovernor\Tests\App\Http\Controllers\Auth\LoginController@login"]);
+        Route::post('logout', ["as" => "logout", "uses" => "\GeneaLabs\LaravelGovernor\Tests\App\Http\Controllers\Auth\LoginController@logout"]);
+        Route::get('register', ["as" => "register", "uses" => "\GeneaLabs\LaravelGovernor\Tests\App\Http\Controllers\Auth\RegisterController@showRegistrationForm"]);
+        Route::post('register', ["as" => "register", "uses" => "\GeneaLabs\LaravelGovernor\Tests\App\Http\Controllers\Auth\RegisterController@register"]);
+        Route::get('password/reset', ["as" => "password.request", "uses" => "\GeneaLabs\LaravelGovernor\Tests\App\Http\Controllers\Auth\ForgotPasswordController@showLinkRequestForm"]);
+        Route::post('password/email', ["as" => "password.email", "uses" => "\GeneaLabs\LaravelGovernor\Tests\App\Http\Controllers\Auth\ForgotPasswordController@sendResetLinkEmail"]);
+        Route::get('password/reset/{token}', ["as" => "password.reset", "uses" => "\GeneaLabs\LaravelGovernor\Tests\App\Http\Controllers\Auth\ResetPasswordController@showResetForm"]);
+        Route::post('password/reset', ["as" => "password.reset", "uses" => "\GeneaLabs\LaravelGovernor\Tests\App\Http\Controllers\Auth\ResetPasswordController@reset"]);
+
+        return [
+            LaravelGovernorService::class,
+            ConsoleServiceProvider::class,
+        ];
     }
 }

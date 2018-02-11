@@ -2,13 +2,13 @@
 
 use GeneaLabs\LaravelGovernor\Role;
 use GeneaLabs\LaravelGovernor\Tests\Models\User;
-use GeneaLabs\LaravelGovernor\Tests\TestCase;
+use GeneaLabs\LaravelGovernor\Tests\FeatureTestCase;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class RulesPageTest extends TestCase
+class RulesPageTest extends FeatureTestCase
 {
     public function testThatRulesPageIsAccessibleWhenAuthenticated()
     {
@@ -20,14 +20,14 @@ class RulesPageTest extends TestCase
         auth()->login($user);
         $response = $this->get(route('genealabs.laravel-governor.roles.index'));
 
-        $response->assertStatus(200);
+        $response->assertResponseStatus(200);
     }
 
     public function testThatRulesPageIsNotAccessibleWhenNotAuthenticated()
     {
         $this->expectException(AuthenticationException::class);
 
-        $this->get(route('genealabs.laravel-governor.roles.index'));
+        $this->visit(route('genealabs.laravel-governor.roles.index'));
     }
 
     public function testAuthenticatedUserCanSeeInitialRoles()
@@ -40,7 +40,7 @@ class RulesPageTest extends TestCase
         auth()->login($user);
         $response = $this->get(route('genealabs.laravel-governor.roles.index'));
 
-        $response->assertSee('Member');
-        $response->assertSee('SuperAdmin');
+        $response->see('Member');
+        $response->see('SuperAdmin');
     }
 }

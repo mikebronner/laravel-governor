@@ -1,0 +1,50 @@
+[
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/localhost:8000\/genealabs-laravel-casts\/bootstrap4.js - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1518312638988
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/localhost:8000\/genealabs-laravel-casts\/bootstrap4.css - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1518312639120
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/localhost:8000\/genealabs-laravel-casts\/bootstrap-switch.js - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1518312639277
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/localhost:8000\/genealabs-laravel-casts\/bootstrap3-datetimepicker.js - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1518312639428
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/localhost:8000\/genealabs-laravel-casts\/bootstrap3-datetimepicker.css - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1518312639589
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/localhost:8000\/genealabs-laravel-casts\/bootstrap4-datetimepicker.js - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1518312639744
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/localhost:8000\/genealabs-laravel-casts\/bootstrap4-datetimepicker.css - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1518312639891
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/localhost:8000\/genealabs\/laravel-governor\/assignments - Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "source": "network",
+        "timestamp": 1518312640053
+    }
+]
