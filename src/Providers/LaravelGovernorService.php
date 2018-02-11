@@ -1,7 +1,7 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
 use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
-use GeneaLabs\LaravelCasts\Providers\LaravelCastsService;
+use GeneaLabs\LaravelCasts\Providers\Service as LaravelCastsService;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use GeneaLabs\LaravelGovernor\Http\ViewComposers\Layout;

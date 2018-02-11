@@ -17,8 +17,8 @@ Provide a simple method of managing ACL in a Laravel application built on the
  for Laravel.
 
 ## Requirements
-- PHP >=7.0.0
-- Laravel 5.4
+- PHP >=7.1.3
+- Laravel >= 5.4
 - Bootstrap 3 (needs to be included in your layout file)
 - FontAwesome 4 (needs to be included in your layout file)
 
@@ -38,7 +38,7 @@ composer require genealabs/laravel-governor
 ```php
 'providers' => [
 // [...]
-    GeneaLabs\LaravelGovernor\Providers\LaravelGovernorService::class,
+    GeneaLabs\LaravelGovernor\Providers\Service::class,
 // [...]
 ],
 ```

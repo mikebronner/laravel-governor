@@ -25,34 +25,4 @@ abstract class TestCase extends BaseTestCase
         ]);
         $this->withoutExceptionHandling();
     }
-
-    protected function withoutExceptionHandling()
-    {
-        $this->oldExceptionHandler = $this->app->make(ExceptionHandler::class);
-        $this->app->instance(ExceptionHandler::class, new class extends Handler {
-            public function __construct()
-            {
-                //
-            }
-
-            public function report(Exception $exception)
-            {
-                //
-            }
-
-            public function render($request, Exception $exception)
-            {
-                throw $exception;
-            }
-        });
-
-        return $this;
-    }
-
-    protected function withExceptionHandling()
-    {
-        $this->app->instance(ExceptionHandler::class, $this->oldExceptionHandler);
-
-        return $this;
-    }
 }
