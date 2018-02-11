@@ -17,7 +17,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use ReflectionClass;
 
-class LaravelGovernorService extends AggregateServiceProvider
+class Service extends AggregateServiceProvider
 {
     protected $defer = false;
     protected $policies = [
