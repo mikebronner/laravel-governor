@@ -15,14 +15,15 @@ class LaravelGovernorPermissionsTableSeeder extends Seeder
         $actions = (new Action)->all();
         $ownership = (new Ownership)->whereName('any')->get()->first();
         $entities = (new Entity)->all();
+
         foreach ($entities as $entity) {
             foreach ($actions as $action) {
-                $permission = new Permission();
-                $permission->role()->associate($superadmin);
-                $permission->action()->associate($action);
-                $permission->ownership()->associate($ownership);
-                $permission->entity()->associate($entity);
-                $permission->save();
+                (new Permission)->firstOrCreate([
+                    "role_key" => $superadmin->name,
+                    "action_key" => $action->name,
+                    "ownership_key" => $ownership->name,
+                    "entity_key" => $entity->name,
+                ]);
             }
         }
     }
