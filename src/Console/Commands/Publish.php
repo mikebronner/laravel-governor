@@ -1,6 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Console\Commands;
 
-use GeneaLabs\LaravelGovernor\Providers\LaravelGovernorService;
+use GeneaLabs\LaravelGovernor\Providers\Service as LaravelGovernorService;
 use Illuminate\Console\Command;
 
 class Publish extends Command
