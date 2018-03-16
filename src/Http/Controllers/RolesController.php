@@ -12,17 +12,15 @@ use Illuminate\View\View;
 
 class RolesController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index() : View
     {
         $this->authorize('view', (new Role()));
         $roles = (new Role)->orderBy('name')->get();
 
-        return view('genealabs-laravel-governor::roles.index', compact('roles'));
+        return view("genealabs-laravel-governor::roles.{$this->framework}-index")
+            ->with(compact(
+                "roles"
+            ));
     }
 
     public function create() : View

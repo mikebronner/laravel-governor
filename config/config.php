@@ -55,4 +55,15 @@ return [
     | existing URLs of your app when doing so.
     */
     'url-prefix' => '/genealabs/laravel-governor/',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Framework
+    |--------------------------------------------------------------------------
+    |
+    | Specify the framework that should be implemented. Possible options are:
+    | bootstrap3, bootstrap4, vanilla (use this is none of the other frameworks
+    | apply).
+    */
+    'framework' => 'bootstrap4',
 ];
