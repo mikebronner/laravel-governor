@@ -1,15 +1,17 @@
 @extends ('genealabs-laravel-governor::layout')
 
 @section ('governorContent')
-    <h1>Roles Management</h1>
+    <h1 style="display: inline-block; float: left;">Roles Management</h1>
 
     @can ('create', $roles->first())
         <a href="{{ route("genealabs.laravel-governor.roles.create") }}"
-            style="float: right;"
+            style="display: inline-block; float: right;"
         >
             Add New Role
         </a>
     @endcan
+
+    <hr style="clear: both;">
 
     @can ('view', $roles->first())
         @foreach ($roles as $role)

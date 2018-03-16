@@ -14,7 +14,7 @@ abstract class Controller extends BaseController
 
     protected $framework;
 
-    protected function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
         $this->framework = config("genealabs-laravel-governor.framework");

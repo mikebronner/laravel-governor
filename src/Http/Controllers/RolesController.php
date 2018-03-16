@@ -14,11 +14,13 @@ class RolesController extends Controller
 {
     public function index() : View
     {
+        $framework = $this->framework;
         $this->authorize('view', (new Role()));
         $roles = (new Role)->orderBy('name')->get();
 
-        return view("genealabs-laravel-governor::roles.{$this->framework}-index")
+        return view("genealabs-laravel-governor::roles.{$framework}-index")
             ->with(compact(
+                "framework",
                 "roles"
             ));
     }

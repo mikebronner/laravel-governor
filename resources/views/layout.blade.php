@@ -5,7 +5,7 @@
         <div class="container">
     @endif
 
-        @include('genealabs-laravel-governor::menu')
+        @include ("genealabs-laravel-governor::" . config("genealabs-laravel-governor.framework") . "-menu")
 
         @yield('governorContent')
 
