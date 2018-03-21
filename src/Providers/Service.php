@@ -53,7 +53,7 @@ class Service extends AggregateServiceProvider
             __DIR__ . '/../../public' => public_path('genealabs-laravel-governor')
         ], 'assets');
         $this->publishes([
-            __DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs/laravel-governor')
+            __DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs-laravel-governor')
         ], 'views');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
