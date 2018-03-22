@@ -12,17 +12,17 @@ use Illuminate\View\View;
 
 class RolesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index() : View
     {
-        $framework = $this->framework;
         $this->authorize('view', (new Role()));
         $roles = (new Role)->orderBy('name')->get();
 
-        return view("genealabs-laravel-governor::roles.{$framework}-index")
-            ->with(compact(
-                "framework",
-                "roles"
-            ));
+        return view('genealabs-laravel-governor::roles.index', compact('roles'));
     }
 
     public function create() : View
@@ -44,7 +44,14 @@ class RolesController extends Controller
     {
         $role = (new Role)->with('permissions')->find($name);
         $this->authorize('edit', $role);
-        collect(array_keys(app('Illuminate\Contracts\Auth\Access\Gate')->policies()))
+
+        $gate = app('Illuminate\Contracts\Auth\Access\Gate');
+        $reflectedGate = new \ReflectionObject($gate);
+        $policies = $reflectedGate->getProperty("policies");
+        $policies->setAccessible(true);
+        $policies = $policies->getValue($gate);
+
+        collect(array_keys($policies))
             ->each(function ($entity) {
                 $entity = strtolower(collect(explode('\\', $entity))->last());
 
@@ -79,9 +86,36 @@ class RolesController extends Controller
         return view('genealabs-laravel-governor::roles.edit', compact('role', 'permissionMatrix', 'ownershipOptions'));
     }
 
-    public function update(UpdateRoleRequest $request) : RedirectResponse
+    public function update(UpdateRoleRequest $request, $name) : RedirectResponse
     {
-        $request->process();
+        $role = (new Role)->find($name);
+        $this->authorize('edit', $role);
+        $role->fill($request->only(['name', 'description']));
+
+        if ($request->has('permissions')) {
+            $allActions = (new Action)->all();
+            $allOwnerships = (new Ownership)->all();
+            $allEntities = (new Entity)->all();
+            $role->permissions()->delete();
+
+            foreach ($request->get('permissions') as $entity => $actions) {
+                foreach ($actions as $action => $ownership) {
+                    if ('no' !== $ownership) {
+                        $currentAction = $allActions->find($action);
+                        $currentOwnership = $allOwnerships->find($ownership);
+                        $currentEntity = $allEntities->find($entity);
+                        $currentPermission = new Permission();
+                        $currentPermission->ownership()->associate($currentOwnership);
+                        $currentPermission->action()->associate($currentAction);
+                        $currentPermission->role()->associate($role);
+                        $currentPermission->entity()->associate($currentEntity);
+                        $currentPermission->save();
+                    }
+                }
+            }
+        }
+
+        $role->save();
 
         return redirect()->route('genealabs.laravel-governor.roles.index');
     }
