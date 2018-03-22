@@ -13,6 +13,6 @@ Route::group(['middleware' => ['web'], 'as' => 'genealabs.laravel-governor.'], f
     Route::resource(
         config('genealabs-laravel-governor.url-prefix') . 'assignments',
         AssignmentsController::class,
-        ['only' => ['index', 'store']]
+        ['only' => ['edit', 'update']]
     );
 });

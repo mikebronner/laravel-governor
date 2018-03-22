@@ -6,7 +6,7 @@
             Roles Management > Assign Users
         </div>
         <div class="panel-body">
-            @form(['route' => 'genealabs.laravel-governor.assignments.store', 'framework' => 'bootstrap3'])
+            @form(['route' => ['genealabs.laravel-governor.assignments.update', 0], 'framework' => 'bootstrap3'])
                 @can('view', $assignment)
                     @foreach($roles as $role)
                         @combobox(

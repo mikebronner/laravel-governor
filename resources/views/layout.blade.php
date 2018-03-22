@@ -1,15 +1,11 @@
 @extends(config('genealabs-laravel-governor.layout-view'))
 
 @section(config('genealabs-laravel-governor.content-section'))
-    @if (str_contains("bootstrap", config("genealabs-laravel-governor.framework")))
-        <div class="container">
-    @endif
+    <div class="container">
 
-        @include ("genealabs-laravel-governor::" . config("genealabs-laravel-governor.framework") . "-menu")
+        @include ("genealabs-laravel-governor::menu")
 
         @yield('governorContent')
 
-    @if (str_contains("bootstrap", config("genealabs-laravel-governor.framework")))
-        </div>
-    @endif
+    </div>
 @endsection

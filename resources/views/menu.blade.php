@@ -17,7 +17,7 @@
                     </a>
                 </li>
                 <li class="{{ str_contains(request()->route()->getName(), 'genealabs.laravel-governor.assignments.') ? 'active' : '' }}">
-                    <a href="{{ route('genealabs.laravel-governor.assignments.index') }}">
+                    <a href="{{ route('genealabs.laravel-governor.assignments.edit', 0) }}">
                         Assignments
                     </a>
                 </li>

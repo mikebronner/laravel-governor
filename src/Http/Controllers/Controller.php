@@ -12,12 +12,9 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $framework;
-
     public function __construct()
     {
         $this->middleware('auth');
-        $this->framework = config("genealabs-laravel-governor.framework");
     }
 
     protected function resetSuperAdminPermissions()

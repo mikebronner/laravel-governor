@@ -20,7 +20,7 @@ class AssignmentsController extends Controller
     /**
      * @return mixed
      */
-    public function index()
+    public function edit()
     {
         $assignment = new Assignment();
         $this->authorize('view', $assignment);
@@ -29,7 +29,7 @@ class AssignmentsController extends Controller
         $roles = Role::with('users')->get();
 
 
-        return view('genealabs-laravel-governor::assignments.index')->with(
+        return view('genealabs-laravel-governor::assignments.edit')->with(
             compact('users', 'roles', 'displayNameField', 'assignment')
         );
     }
@@ -37,7 +37,7 @@ class AssignmentsController extends Controller
     /**
      * @return mixed
      */
-    public function store(CreateAssignmentRequest $request)
+    public function update(CreateAssignmentRequest $request)
     {
         $assignment = new Assignment();
         $assignment->removeAllUsersFromRoles();
@@ -46,6 +46,7 @@ class AssignmentsController extends Controller
         $assignment->addAllUsersToMemberRole();
         $assignment->removeAllSuperAdminUsersFromOtherRoles($assignedUsers);
 
-        return redirect()->route('genealabs.laravel-governor.assignments.index');
+        return redirect()
+            ->route('genealabs.laravel-governor.assignments.edit', 0);
     }
 }
