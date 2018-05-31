@@ -1,7 +1,7 @@
 <?php namespace GeneaLabs\LaravelGovernor\Tests\Feature;
 
 use GeneaLabs\LaravelGovernor\Role;
-use GeneaLabs\LaravelGovernor\Tests\Models\User;
+use GeneaLabs\LaravelGovernor\Tests\Models\SuperAdminUser;
 use GeneaLabs\LaravelGovernor\Tests\TestCase;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -12,7 +12,7 @@ class RulesPageTest extends TestCase
 {
     public function testThatRulesPageIsAccessibleWhenAuthenticated()
     {
-        $user = new User([
+        $user = new SuperAdminUser([
             'name' => 'Joe Test',
             'email' => 'none@noemail.com',
             'password' => 'not hashed but who cares',
@@ -32,7 +32,7 @@ class RulesPageTest extends TestCase
 
     public function testAuthenticatedUserCanSeeInitialRoles()
     {
-        $user = new User([
+        $user = new SuperAdminUser([
             'name' => 'Joe Test',
             'email' => 'none@noemail.com',
             'password' => 'not hashed but who cares',

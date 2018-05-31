@@ -1,33 +1,26 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
-use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
 use GeneaLabs\LaravelCasts\Providers\Service as LaravelCastsService;
-use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
-use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
-use GeneaLabs\LaravelGovernor\Http\ViewComposers\Layout;
 use GeneaLabs\LaravelGovernor\Action;
 use GeneaLabs\LaravelGovernor\Assignment;
+use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
 use GeneaLabs\LaravelGovernor\Entity;
+use GeneaLabs\LaravelGovernor\Http\ViewComposers\Layout;
+use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
+use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use GeneaLabs\LaravelGovernor\Ownership;
 use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Support\AggregateServiceProvider;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use ReflectionClass;
 
 class Service extends AggregateServiceProvider
 {
     protected $defer = false;
-    protected $policies = [
-        'GeneaLabs\LaravelGovernor\Action' => 'GeneaLabs\LaravelGovernor\Policies\ActionPolicy',
-        'GeneaLabs\LaravelGovernor\Assignment' => 'GeneaLabs\LaravelGovernor\Policies\AssignmentPolicy',
-        'GeneaLabs\LaravelGovernor\Entity' => 'GeneaLabs\LaravelGovernor\Policies\EntityPolicy',
-        'GeneaLabs\LaravelGovernor\Ownership' => 'GeneaLabs\LaravelGovernor\Policies\OwnershipPolicy',
-        'GeneaLabs\LaravelGovernor\Permission' => 'GeneaLabs\LaravelGovernor\Policies\PermissionPolicy',
-        'GeneaLabs\LaravelGovernor\Role' => 'GeneaLabs\LaravelGovernor\Policies\RolePolicy',
-    ];
     protected $providers = [
         LaravelCastsService::class,
     ];
@@ -37,12 +30,6 @@ class Service extends AggregateServiceProvider
      */
     public function boot(GateContract $gate)
     {
-        $this->registerPolicies($gate);
-
-        if (! $this->app->routesAreCached()) {
-            require __DIR__ . '/../../routes/web.php';
-        }
-
         app('events')->listen('eloquent.creating: *', CreatingListener::class);
         app('events')->listen('eloquent.created: *', CreatedListener::class);
 
@@ -71,16 +58,9 @@ class Service extends AggregateServiceProvider
         $this->commands(Publish::class);
     }
 
-    public function registerPolicies(GateContract $gate)
-    {
-        foreach ($this->policies as $key => $value) {
-            $gate->policy($key, $value);
-        }
-    }
-
     public function provides() : array
     {
-        return ['genealabs-laravel-governor'];
+        return [];
     }
 
     protected function parsePolicies(GateContract $gate)

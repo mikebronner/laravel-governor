@@ -1,7 +1,9 @@
 <?php namespace GeneaLabs\LaravelGovernor\Tests;
 
+use GeneaLabs\LaravelGovernor\Providers\Auth;
+use GeneaLabs\LaravelGovernor\Providers\Route;
+use GeneaLabs\LaravelGovernor\Providers\Service;
 use Illuminate\Contracts\Console\Kernel;
-use GeneaLabs\LaravelGovernor\Providers\LaravelGovernorService;
 
 trait CreatesApplication
 {
@@ -15,7 +17,9 @@ trait CreatesApplication
         $this->addAuthRoutes();
         $app = require(__DIR__ . '/../vendor/laravel/laravel/bootstrap/app.php');
         $app->make(Kernel::class)->bootstrap();
-        $app->register(LaravelGovernorService::class);
+        $app->register(Service::class);
+        $app->register(Route::class);
+        $app->register(Auth::class);
 
         return $app;
     }

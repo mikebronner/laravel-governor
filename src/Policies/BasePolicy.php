@@ -3,7 +3,7 @@
 use GeneaLabs\LaravelGovernor\Permission;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class LaravelGovernorPolicy
+abstract class BasePolicy
 {
     protected $entity;
     protected $permissions;

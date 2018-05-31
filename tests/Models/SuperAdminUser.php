@@ -4,7 +4,7 @@ use GeneaLabs\LaravelGovernor\Traits\Governable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class SuperAdminUser extends Authenticatable
 {
     use Governable;
     use Notifiable;
@@ -15,9 +15,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    protected $table = "users";
 
     public function getIsSuperAdminAttribute() : bool
     {
-        return $this->roles->contains("SuperAdmin");
+        return true;
     }
 }
