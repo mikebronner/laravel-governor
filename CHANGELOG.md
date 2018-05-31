@@ -1,6 +1,60 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.6.0] - 31 May 2018
+### Added
+- authorization api functionality.
+
+### Updated
+- changelog and readme.
+
+## [0.5.10] - 22 Mar 2018
+### Fixed
+- various controller and view related items (work in progress).
+
+## [0.5.9] - 22 Mar 2018
+### Fixed
+- policy check in Roles controller.
+
+## [0.5.8] - 16 Mar 2018
+### Fixed
+- service provider class reference in console command.
+
+## [0.5.7] - 7 Mar 2018
+### Fixed
+- permission seeder to respect existing records.
+
+## [0.5.6] - 5 Mar 2018
+### Fixed
+- an edge-case where non-model items were being listened to in listeners.
+
+## [0.5.5] - 10 Feb 2018
+### Fixed
+- service provider class name.
+
+## [0.5.4] - 10 Feb 2018
+### Added
+- Laravel 5.6 compatibility.
+
+## [0.5.3] - 3 Feb 2018
+### Fixed
+- entity management to automatically derive from registered policies.
+
+## [0.5.2] - 3 Feb 2018
+### Fixed
+- role controller authorization.
+
+## [0.5.1] - 20 Nov 2017
+### Updated
+- README with more detailed instructions on initial setup on an empty database.
+
+### Fixed
+- CreatedListener to detect edge-cases where database may not be migrated fully.
+
+## [0.5.0] - 31 Aug 2017
+### Updated
+- to work with Laravel 5.5.
+
 ## [0.4.0] - 4 Jul 2017
 ### Added
 - Laravel 5.4 compatibility.

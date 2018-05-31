@@ -18,7 +18,7 @@ Provide a simple method of managing ACL in a Laravel application built on the
 
 ## Requirements
 - PHP >=7.1.3
-- Laravel >= 5.4
+- Laravel >= 5.5
 - Bootstrap 3 (needs to be included in your layout file)
 - FontAwesome 4 (needs to be included in your layout file)
 
@@ -34,15 +34,6 @@ Install via composer:
 composer require genealabs/laravel-governor
 ```
 
-**ONLY FOR LARVEL 5.4 AND LOWER:** Add the service provider to your app.php config file:
-```php
-'providers' => [
-// [...]
-    GeneaLabs\LaravelGovernor\Providers\Service::class,
-// [...]
-],
-```
-
 ## Implementation
 1. First we need to update the database by running the migrations and data seeders:
     ```sh
@@ -50,7 +41,7 @@ composer require genealabs/laravel-governor
     php artisan db:seed --class=LaravelGovernorDatabaseSeeder
     ```
 
-2. If you are starting out with an empty database, run your seeders now:
+2. If you have seeders of your own, run them now:
     ```sh
     php artisan db:seed
     ```
@@ -73,7 +64,8 @@ composer require genealabs/laravel-governor
     class User extends Authenticatable
     {
         use Governable;
-    // [...]
+        // [...]
+    }
     ```
 
 ### Configuration
@@ -141,6 +133,40 @@ We recommend making a custom 403 error page to let the user know they don't have
  access. Otherwise the user will just see the default error message. See
  https://laravel.com/docs/5.4/errors#custom-http-error-pages for more details on
  how to set those up.
+
+### Authorization API
+You can check a user's ability to perform certain actions via a public API. It
+is recommended to use Laravel Passport to maintain session state between your
+client and your backend. Here's an example that checks if the currently logged
+in user can create `GeneaLabs\LaravelGovernor\Role` model records:
+
+```php
+$response = $this
+    ->json(
+        "GET",
+        route('genealabs.laravel-governor.api.user-can.show', "create"),
+        [
+            "model" => "GeneaLabs\LaravelGovernor\Role",
+        ]
+    );
+```
+
+This next example checks if the user can edit `GeneaLabs\LaravelGovernor\Role`
+model records:
+```php
+$response = $this
+    ->json(
+        "GET",
+        route('genealabs.laravel-governor.api.user-can.show', "edit"),
+        [
+            "model" => "GeneaLabs\LaravelGovernor\Role",
+            "primary-key" => 1,
+        ]
+    );
+```
+
+The abilities `inspect`, `edit`, and `remove`, except `create` and `view`,
+require the primary key to be passed.
 
 ## Examples
 ### Config File
@@ -269,3 +295,9 @@ class MyModelPolicy extends LaravelGovernorPolicy
     }
 }
 ```
+
+## Update Process
+### 0.5 to 0.6
+1. If you were extending `GeneaLabs\LaravelGovernor\Policies\LaravelGovernorPolicy`,
+  change to extend `GeneaLabs\LaravelGovernor\Policies\BasePolicy`;
+2. Support for version of Laravel lower than 5.5 has been dropped.
