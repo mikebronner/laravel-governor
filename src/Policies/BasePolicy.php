@@ -17,7 +17,9 @@ abstract class BasePolicy
 
     public function before($user)
     {
-        return $user->isSuperAdmin ? true : null;
+        return $user->isSuperAdmin
+            ? true
+            : null;
     }
 
     public function create(Model $user) : bool
