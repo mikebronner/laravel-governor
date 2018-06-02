@@ -26,7 +26,11 @@ class Route extends ServiceProvider
     {
         app("router")
             ->prefix('api' . config('genealabs-laravel-governor.url-prefix'))
-            ->middleware(['api', "auth:api"])
+            ->middleware([
+                "auth:api",
+                "bindings",
+                "throttle:60,1",
+            ])
             ->namespace($this->namespace . "\Api")
             ->group(__DIR__ . '/../../routes/api.php');
     }
