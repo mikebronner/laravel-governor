@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.6.1] - 31 May 2018
+### Fixed
+- api authentication, removed `api` middleware group.
+
 ## [0.6.0] - 31 May 2018
 ### Added
 - authorization api functionality.
