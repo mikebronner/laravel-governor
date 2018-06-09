@@ -18,7 +18,7 @@ class UserCan extends Request
         auth()->user()->load("roles");
 
         return auth()->check()
-            && app(Gate::class)->allows($ability, $model);
+            && auth()->user()->can($ability, $model);
     }
 
     public function rules() : array
