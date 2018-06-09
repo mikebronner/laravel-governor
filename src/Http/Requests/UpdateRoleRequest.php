@@ -12,31 +12,33 @@ class UpdateRoleRequest extends Request
 {
     public function authorize() : bool
     {
-        $this->role = (new Role)->find($this->name);
-
-        return app('Illuminate\Contracts\Auth\Access\Gate')
-            ->allows('edit', $this->role);
+        return auth()->check()
+            && ($this->role
+                ? auth()->user()->can("edit", $this->role)
+                : auth()->user()->can("create", Role::class));
     }
 
     public function rules() : array
     {
         return [
-            'name' => 'required',
+            'name' => 'required|string',
+            "description" => "string",
+            "permissions" => "array",
         ];
     }
 
     public function process()
     {
-        $role = (new Role)->find($this->name);
-        $this->authorize('edit', $role);
-        $role->fill($this->only(['name', 'description']));
+        $role = $this->role
+            ?? new Role;
+        $role->fill($this->all());
 
         if ($this->filled('permissions')) {
             $allActions = (new Action)->all();
             $allOwnerships = (new Ownership)->all();
             $allEntities = (new Entity)->all();
+            dump($role->permissions);
             $role->permissions()->delete();
-            $role->save();
 
             foreach ($this->permissions as $entity => $actions) {
                 foreach ($actions as $action => $ownership) {
@@ -54,5 +56,7 @@ class UpdateRoleRequest extends Request
                 }
             }
         }
+
+        $role->save();
     }
 }
