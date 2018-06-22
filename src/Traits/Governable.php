@@ -7,24 +7,28 @@ use Illuminate\Support\Collection;
 
 trait Governable
 {
-    public function roles() : BelongsToMany
+    public function is($role)
     {
-        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_key');
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
-     */
-    public function getIsSuperAdminAttribute() : bool
-    {
-        $superAdminRole = (new Role)->where('name', 'SuperAdmin')->first();
         $this->load('roles');
 
         if ($this->roles->isEmpty()) {
             return false;
         }
 
-        return $this->roles->contains($superAdminRole->name);
+        if ($this->roles->contains("SuperAdmin")) {
+            return true;
+        }
+
+        $role = (new Role)
+            ->where('name', $role)
+            ->first();
+
+        return $this->roles->contains($role->name);
+    }
+
+    public function roles() : BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_key');
     }
 
     public function getPermissionsAttribute() : Collection
