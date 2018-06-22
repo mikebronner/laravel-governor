@@ -7,10 +7,11 @@ class UserIs extends Request
 {
     public function authorize() : bool
     {
-        return true;
         auth()->user()->load("roles");
 
-        return auth()->user()->roles->contains($this->role);
+        return auth()->check()
+            && (auth()->user()->roles->contains($this->role)
+                || auth()->user()->roles->contains("SuperAdmin"));
     }
 
     public function rules() : array
