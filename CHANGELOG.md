@@ -3,7 +3,7 @@
 
 ## [0.6.5] - 22 Jun 2018
 ### Added
-- API endpoint to check if a user has a role.
+- API endpoint to check if a user has a role to support previous version.
 
 ## [0.6.4] - 22 Jun 2018
 ### Added
