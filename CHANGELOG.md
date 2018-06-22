@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.6.5] - 22 Jun 2018
+### Added
+- API endpoint to check if a user has a role.
+
 ## [0.6.4] - 22 Jun 2018
 ### Added
 - model method `->is($role)` to check if a user belongs to a method.
