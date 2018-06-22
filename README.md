@@ -168,6 +168,16 @@ $response = $this
 The abilities `inspect`, `edit`, and `remove`, except `create` and `view`,
 require the primary key to be passed.
 
+### Role-Check API
+// TODO: add documentation
+```php
+$response = $this
+    ->json(
+        "GET",
+        route('genealabs.laravel-governor.api.user-is.show', "SuperAdmin")
+    );
+```
+
 ## Examples
 ### Config File
 ```php
