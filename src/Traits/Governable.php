@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 trait Governable
 {
-    public function is($role)
+    public function is(string $roleName) : bool
     {
         $this->load('roles');
 
@@ -15,13 +15,13 @@ trait Governable
             return false;
         }
 
-        if ($this->roles->contains("SuperAdmin")) {
-            return true;
-        }
-
         $role = (new Role)
-            ->where('name', $role)
+            ->where('name', $roleName)
             ->first();
+
+        if (! $role) {
+            return false;
+        }
 
         return $this->roles->contains($role->name);
     }
