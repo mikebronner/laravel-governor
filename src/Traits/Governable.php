@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 trait Governable
 {
-    public function is(string $roleName) : bool
+    public function isRole(string $name) : bool
     {
         $this->load('roles');
 
@@ -16,7 +16,7 @@ trait Governable
         }
 
         $role = (new Role)
-            ->where('name', $roleName)
+            ->where('name', $name)
             ->first();
 
         if (! $role) {
