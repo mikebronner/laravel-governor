@@ -276,7 +276,7 @@ class MyModelPolicy extends LaravelGovernorPolicy
 
     public function before(User $user)
     {
-        return $user->is("SuperAdmin") ? true : null;
+        return $user->isRole("SuperAdmin") ? true : null;
     }
 
     public function create(User $user, MyModel $myModel)
