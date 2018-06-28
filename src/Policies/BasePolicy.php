@@ -17,7 +17,7 @@ abstract class BasePolicy
 
     public function before($user)
     {
-        return $user->is("SuperAdmin")
+        return $user->isRole("SuperAdmin")
             ? true
             : null;
     }
