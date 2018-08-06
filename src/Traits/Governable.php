@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 trait Governable
 {
-    public function isRole(string $name) : bool
+    public function hasRole(string $name) : bool
     {
         $this->load('roles');
 
@@ -23,7 +23,8 @@ trait Governable
             return false;
         }
 
-        return $this->roles->contains($role->name);
+        return $this->roles->contains($role->name)
+            || $this->roles->contains("SuperAdmin");
     }
 
     public function roles() : BelongsToMany
