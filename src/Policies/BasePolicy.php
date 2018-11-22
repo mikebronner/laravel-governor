@@ -12,7 +12,7 @@ abstract class BasePolicy
     {
         $policyClass = collect(explode('\\', get_class($this)))->last();
         $this->entity = str_replace('policy', '', strtolower($policyClass));
-        $this->permissions = Permission::with('role')->get();
+        $this->permissions = Permission->get();
     }
 
     public function before($user)
