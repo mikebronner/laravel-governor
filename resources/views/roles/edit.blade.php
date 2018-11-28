@@ -16,9 +16,16 @@
                 </div>
                 <div class="panel-body">
 
-                    @model($role, ['route' => ['genealabs.laravel-governor.roles.update', $role->name], 'method' => 'PUT', 'framework' => 'bootstrap3', 'class' => 'form-horizontal', 'id' => 'editForm', 'labelWidth' => 2, 'fieldWidth' => 10, 'onsubmit' => 'enableFields();'])
-                        @text('name', null, ['disabled' => ($role->name === 'Member' ? 'disabled' : '')])
-                        @textarea('description', null, ['disabled' => ($role->name === 'Member' ? 'disabled' : '')])
+                    @form ($role, ['route' => ['genealabs.laravel-governor.roles.update', $role->name], 'method' => 'PUT', 'framework' => 'bootstrap3', 'class' => 'form-horizontal', 'id' => 'editForm', 'labelWidth' => 2, 'fieldWidth' => 10, 'onsubmit' => 'enableFields();'])
+
+                        @if ($role->name === "Member")
+                            @text ('name', null, ['readonly'])
+                            @textarea ('description', null, ['readonly', "rows" => 5])
+                        @else
+                            @text ('name')
+                            @textarea ('description', null, ["rows" => 5])
+                        @endif
+
                         <div class="form-group">
                             @label('permissions', 'Permissions', ['class' => 'control-label col-sm-2'])
                             <div class="col-sm-10">

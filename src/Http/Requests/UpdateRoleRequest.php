@@ -22,7 +22,7 @@ class UpdateRoleRequest extends Request
     {
         return [
             'name' => 'required|string',
-            "description" => "string",
+            "description" => "string|nullable",
             "permissions" => "array",
         ];
     }
