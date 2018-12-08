@@ -8,7 +8,8 @@ class CreateRoleRequest extends Request
 {
     public function authorize() : bool
     {
-        return app('Illuminate\Contracts\Auth\Access\Gate')->allows('create', (new Role()));
+        return app('Illuminate\Contracts\Auth\Access\Gate')
+            ->allows('create', (new Role));
     }
 
     public function rules() : array

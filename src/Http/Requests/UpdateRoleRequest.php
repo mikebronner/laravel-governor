@@ -14,7 +14,7 @@ class UpdateRoleRequest extends Request
     {
         return auth()->check()
             && ($this->role
-                ? auth()->user()->can("edit", $this->role)
+                ? auth()->user()->can("update", $this->role)
                 : auth()->user()->can("create", Role::class));
     }
 
@@ -37,7 +37,6 @@ class UpdateRoleRequest extends Request
             $allActions = (new Action)->all();
             $allOwnerships = (new Ownership)->all();
             $allEntities = (new Entity)->all();
-            dump($role->permissions);
             $role->permissions()->delete();
 
             foreach ($this->permissions as $entity => $actions) {

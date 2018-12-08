@@ -31,13 +31,24 @@ abstract class BasePolicy
         );
     }
 
-    public function edit(Model $user, Model $model) : bool
+    public function update(Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
-            'edit',
+            'update',
             $this->entity,
             $model->governor_created_by
+        );
+    }
+
+    public function viewAny(Model $user) : bool
+    {
+        return true;
+        // TODO: figure out how this is different from `view`
+        return $this->validatePermissions(
+            $user,
+            'viewAny',
+            $this->entity
         );
     }
 
@@ -51,21 +62,31 @@ abstract class BasePolicy
         );
     }
 
-    public function inspect(Model $user, Model $model) : bool
+    public function delete(Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
-            'inspect',
+            'delete',
             $this->entity,
             $model->governor_created_by
         );
     }
 
-    public function remove(Model $user, Model $model) : bool
+    public function restore(Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
-            'remove',
+            'restore',
+            $this->entity,
+            $model->governor_created_by
+        );
+    }
+
+    public function forceDelete(Model $user, Model $model) : bool
+    {
+        return $this->validatePermissions(
+            $user,
+            'forceDelete',
             $this->entity,
             $model->governor_created_by
         );

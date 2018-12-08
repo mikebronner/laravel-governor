@@ -7,7 +7,8 @@ class CreateAssignmentRequest extends Request
 {
     public function authorize() : bool
     {
-        return app('Illuminate\Contracts\Auth\Access\Gate')->allows('create', (new Assignment()));
+        return app('Illuminate\Contracts\Auth\Access\Gate')
+            ->allows('create', (new Assignment));
     }
 
     public function rules() : array

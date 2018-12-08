@@ -1,9 +1,12 @@
 <?php namespace GeneaLabs\LaravelGovernor;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Assignment extends Model
 {
+    protected $primaryKey = ["role", "user_id"];
+    protected $table ="role_user";
     protected $user;
 
     public function __construct()
@@ -11,6 +14,16 @@ class Assignment extends Model
         parent::__construct();
 
         $this->user = app(config('genealabs-laravel-governor.auth-model'));
+    }
+
+    public function role() : BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function user() : BelongsTo
+    {
+        return $this->belongsTo(config("genealabs-laravel-governor.auth-model"));
     }
 
     public function addAllUsersToMemberRole()

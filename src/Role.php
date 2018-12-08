@@ -18,6 +18,16 @@ class Role extends Model
         'description',
     ];
 
+    public function entities() : HasMany
+    {
+        return $this->hasMany(Entity::class, "entity_key");
+    }
+
+    public function permissions() : HasMany
+    {
+        return $this->hasMany(Permission::class, 'role_key');
+    }
+
     public function users() : BelongsToMany
     {
         return $this->belongsToMany(
@@ -26,10 +36,5 @@ class Role extends Model
             'role_key',
             'user_id'
         );
-    }
-
-    public function permissions() : HasMany
-    {
-        return $this->hasMany(Permission::class, 'role_key');
     }
 }

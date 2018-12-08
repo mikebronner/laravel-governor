@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 
 class Permission extends Model
 {
@@ -36,5 +37,16 @@ class Permission extends Model
     public function ownership() : BelongsTo
     {
         return $this->belongsTo(Ownership::class, 'ownership_key', 'name');
+    }
+
+    public function getFilteredBy(string $filter = null, string $value = null) : Collection
+    {
+        return $this
+            ->where(function ($query) use ($filter, $value) {
+                if ($filter) {
+                    $query->where($filter, $value);
+                }
+            })
+            ->get();
     }
 }

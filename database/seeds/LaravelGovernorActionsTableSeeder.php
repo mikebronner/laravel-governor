@@ -9,9 +9,11 @@ class LaravelGovernorActionsTableSeeder extends Seeder
     {
         $action = new Action;
         $action->firstOrCreate(['name' => 'create']);
+        $action->firstOrCreate(['name' => 'delete']);
+        $action->firstOrCreate(['name' => 'forceDelete']);
+        $action->firstOrCreate(['name' => 'restore']);
+        $action->firstOrCreate(['name' => 'update']);
         $action->firstOrCreate(['name' => 'view']);
-        $action->firstOrCreate(['name' => 'inspect']);
-        $action->firstOrCreate(['name' => 'edit']);
-        $action->firstOrCreate(['name' => 'remove']);
+        $action->firstOrCreate(['name' => 'viewAny']);
     }
 }

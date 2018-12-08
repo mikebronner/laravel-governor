@@ -1,6 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Middleware;
 
-use Genealabs\LaravelGovernor\Nova\Tools\LaravelNovaGovernor;
+use GeneaLabs\LaravelGovernor\Nova\Tools\Governor;
 
 class Authorize
 {
@@ -13,7 +13,7 @@ class Authorize
      */
     public function handle($request, $next)
     {
-        return resolve(LaravelNovaGovernor::class)
+        return resolve(Governor::class)
             ->authorize($request)
             ? $next($request)
             : abort(403);

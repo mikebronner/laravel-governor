@@ -11,7 +11,8 @@
     },
     "devDependencies": {
         "cross-env": "^5.0.0",
-        "laravel-mix": "^1.0"
+        "laravel-mix": "^1.0",
+        "vue-multiselect": "^2.1.3"
     },
     "dependencies": {
         "vue": "^2.5.0"
