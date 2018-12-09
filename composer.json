@@ -11,7 +11,8 @@
   "require": {
     "php": ">=7.1.3",
     "genealabs/laravel-casts": "*",
-    "illuminate/support": "5.5 - 5.7"
+    "illuminate/support": "5.5 - 5.7",
+    "titasgailius/search-relations": "*"
   },
   "require-dev": {
         "codedungeon/phpunit-result-printer": "*",
