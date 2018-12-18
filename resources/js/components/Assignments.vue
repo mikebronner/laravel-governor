@@ -40,8 +40,7 @@
                     });
             },
 
-            updateAssignment: _.debounce(function (selectedUsers) {
-                var role = selectedUsers[0].pivot.role_key;
+            updateAssignment: _.debounce(function (selectedUsers, role) {
                 var self = this;
                 var userIds = _.map(selectedUsers, function (user) {
                     return user.id;
@@ -78,13 +77,13 @@
                             <multiselect
                                 v-model="role.users"
                                 :options="users"
-                                :allow-empty="false"
+                                :allow-empty="true"
                                 track-by="name"
                                 label="name"
                                 :multiple="true"
                                 :hideSelected="true"
                                 :clearOnSelect="true"
-                                @input="updateAssignment"
+                                @input="updateAssignment($event, role)"
                             ></multiselect>
                         </div>
                     </div>

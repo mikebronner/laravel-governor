@@ -4,22 +4,22 @@ Nova.booting((Vue, router) => {
         {
             name: 'laravel-nova-governor-roles',
             path: '/laravel-nova-governor/roles',
-            component: require('./components/Roles'),
+            component: require('./components/Roles').default,
         },
         {
             name: 'laravel-nova-governor-role-create',
             path: '/laravel-nova-governor/roles/create',
-            component: require('./components/RoleCreate'),
+            component: require('./components/RoleCreate').default,
         },
         {
             name: 'laravel-nova-governor-permissions',
             path: '/laravel-nova-governor/permissions/:role',
-            component: require('./components/Permissions'),
+            component: require('./components/Permissions').default,
         },
         {
             name: 'laravel-nova-governor-assignments',
             path: '/laravel-nova-governor/assignments',
-            component: require('./components/Assignments'),
+            component: require('./components/Assignments').default,
         },
     ])
 })
