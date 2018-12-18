@@ -46,11 +46,11 @@
                     return user.id;
                 });
 
-                Nova.request().put("/genealabs/laravel-governor/nova/assignments/" + role, {
+                Nova.request().put("/genealabs/laravel-governor/nova/assignments/" + role.name, {
                         user_ids: userIds,
                     })
                     .then(function (response) {
-                        self.$toasted.show("Role '" + role + "' user assignments updated successfully.", {type: "success"});
+                        self.$toasted.show("Role '" + role.name + "' user assignments updated successfully.", {type: "success"});
                     });
             }, 1000),
         },
