@@ -87,6 +87,22 @@ class Service extends AggregateServiceProvider
                     $permission->save();
                 });
             });
+        (new Entity)
+            ->with("permissions")
+            ->whereDoesntHave("permissions", function ($query) {
+                $query->where("role_key", "SuperAdmin");
+            })
+            ->get()
+            ->each(function ($entity) {
+                (new Action)->all()->each(function ($action) use ($entity, $superadmin, $ownership) {
+                    (new Permission)->firstOrCreate([
+                        "role_key" => "SuperAdmin",
+                        "action_key" => $action,
+                        "ownership_key" => "any",
+                        "entity_key" => $entity->name,
+                    ]);
+                });
+            });
     }
 
     protected function newEntity(string $policyClass)
