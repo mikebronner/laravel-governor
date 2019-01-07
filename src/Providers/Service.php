@@ -97,7 +97,7 @@ class Service extends AggregateServiceProvider
                 (new Action)->all()->each(function ($action) use ($entity) {
                     (new Permission)->firstOrCreate([
                         "role_key" => "SuperAdmin",
-                        "action_key" => $action,
+                        "action_key" => $action->name,
                         "ownership_key" => "any",
                         "entity_key" => $entity->name,
                     ]);
