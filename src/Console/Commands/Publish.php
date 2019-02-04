@@ -5,7 +5,7 @@ use Illuminate\Console\Command;
 
 class Publish extends Command
 {
-    protected $signature = 'governor:publish {--assets} {--config} {--views}';
+    protected $signature = 'governor:publish {--assets} {--config} {--views} {--migrations}';
     protected $description = 'Publish various assets of the Laravel Casts package.';
 
     public function handle()
@@ -26,6 +26,14 @@ class Publish extends Command
             $this->call('vendor:publish', [
                 '--provider' => LaravelGovernorService::class,
                 '--tag' => ['views'],
+                '--force' => true,
+            ]);
+        }
+
+        if ($this->option('migrations')) {
+            $this->call('vendor:publish', [
+                '--provider' => LaravelGovernorService::class,
+                '--tag' => ['migrations'],
                 '--force' => true,
             ]);
         }

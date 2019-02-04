@@ -42,8 +42,10 @@ class Service extends AggregateServiceProvider
         $this->publishes([
             __DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs-laravel-governor')
         ], 'views');
+        $this->publishes([
+            __DIR__ . '/../../database/migrations' => base_path('database/migrations')
+        ], 'migrations');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
         if (Schema::hasTable('entities')) {
             $this->parsePolicies($gate);
