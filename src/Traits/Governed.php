@@ -6,6 +6,6 @@ trait Governed
 {
     public function createdBy() : BelongsTo
     {
-        return $this->belongsTo(config("genealabs-laravel-governor.auth-model"));
+        return $this->belongsTo(config("genealabs-laravel-governor.models.auth"));
     }
 }

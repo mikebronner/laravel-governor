@@ -17,7 +17,7 @@ class CreatedListener
                     return $model instanceof Model;
                 })
                 ->each(function ($model) {
-                    if (get_class($model) === config('genealabs-laravel-governor.auth-model')) {
+                    if (get_class($model) === config('genealabs-laravel-governor.models.auth')) {
                         $model->roles()->attach('Member');
                     }
                 });

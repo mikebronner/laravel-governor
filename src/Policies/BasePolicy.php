@@ -1,6 +1,5 @@
 <?php namespace GeneaLabs\LaravelGovernor\Policies;
 
-use GeneaLabs\LaravelGovernor\Permission;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class BasePolicy
@@ -10,9 +9,10 @@ abstract class BasePolicy
 
     public function __construct()
     {
+        $permissionClass = config("laravel-governor.models.permission");
         $policyClass = collect(explode('\\', get_class($this)))->last();
         $this->entity = str_replace('policy', '', strtolower($policyClass));
-        $this->permissions = (new Permission)->get();
+        $this->permissions = (new $permissionClass)->get();
     }
 
     public function before($user)

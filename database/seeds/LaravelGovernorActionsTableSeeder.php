@@ -1,13 +1,13 @@
 <?php
 
-use GeneaLabs\LaravelGovernor\Action;
 use Illuminate\Database\Seeder;
 
 class LaravelGovernorActionsTableSeeder extends Seeder
 {
     public function run()
     {
-        $action = new Action;
+        $actionClass = config("laravel-governor.models.action");
+        $action = $actionClass;
         $action->firstOrCreate(['name' => 'create']);
         $action->firstOrCreate(['name' => 'delete']);
         $action->firstOrCreate(['name' => 'forceDelete']);

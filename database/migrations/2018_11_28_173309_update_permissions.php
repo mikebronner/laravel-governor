@@ -2,13 +2,13 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use GeneaLabs\LaravelGovernor\Action;
 
 class UpdatePermissions extends Migration
 {
     public function up()
     {
-        (new Action)
+        $actionClass = config("laravel-governor.models.action");
+        (new $actionClass)
             ->whereIn("name", ["edit", "inspect", "change", "remove"])
             ->delete();
         (new LaravelGovernorDatabaseSeeder)

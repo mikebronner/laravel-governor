@@ -1,7 +1,5 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
-use GeneaLabs\LaravelGovernor\Permission;
-use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 
@@ -9,13 +7,14 @@ trait Governable
 {
     public function hasRole(string $name) : bool
     {
+        $roleClass = config("laravel-governor.models.role");
         $this->load('roles');
 
         if ($this->roles->isEmpty()) {
             return false;
         }
 
-        $role = (new Role)
+        $role = (new $roleClass)
             ->where('name', $name)
             ->first();
 
@@ -29,13 +28,16 @@ trait Governable
 
     public function roles() : BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_key');
+        $roleClass = config("laravel-governor.models.role");
+
+        return $this->belongsToMany($roleClass, 'role_user', 'user_id', 'role_key');
     }
 
     public function getPermissionsAttribute() : Collection
     {
+        $permissionClass = config("laravel-governor.models.permission");
         $roleNames = $this->roles->pluck('name');
 
-        return (new Permission)->whereIn('role_key', $roleNames)->get();
+        return (new $permissionClass)->whereIn('role_key', $roleNames)->get();
     }
 }

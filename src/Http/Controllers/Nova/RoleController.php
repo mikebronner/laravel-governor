@@ -1,7 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers\Nova;
 
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
-use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Support\Collection;
 use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
 use Illuminate\Http\Response;
@@ -17,7 +16,9 @@ class RoleController extends Controller
 
     public function index() : Collection
     {
-        return (new Role)
+        $roleClass = config("laravel-governor.models.role");
+
+        return (new $roleClass)
             ->with("permissions", "users")
             ->get();
     }

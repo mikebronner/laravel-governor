@@ -12,7 +12,7 @@ class UserController extends Controller
 
     public function index() : Collection
     {
-        $userClass = config('genealabs-laravel-governor.auth-model');
+        $userClass = config('genealabs-laravel-governor.models.auth');
         return (new $userClass)
             ->get();
     }

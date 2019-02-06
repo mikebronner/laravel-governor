@@ -32,7 +32,17 @@ return [
     | Here you can customize what model should be used for authorization checks
     | in the event that you have customized your authentication processes.
     */
-    'auth-model' => config('auth.providers.users.model') ?? config('auth.model'),
+    // 'auth-model' => config('auth.providers.users.model') ?? config('auth.model'),
+    "models" => [
+        "auth" => config('auth.providers.users.model')
+            ?? config('auth.model'),
+        "action" => GeneaLabs\LaravelGovernor\Action::class,
+        "assignment" => GeneaLabs\LaravelGovernor\Assignment::class,
+        "entity" => GeneaLabs\LaravelGovernor\Entity::class,
+        "ownership" => GeneaLabs\LaravelGovernor\Ownership::class,
+        "permission" => GeneaLabs\LaravelGovernor\Permission::class,
+        "role" => GeneaLabs\LaravelGovernor\Role::class,
+    ],
 
     /*
     |--------------------------------------------------------------------------

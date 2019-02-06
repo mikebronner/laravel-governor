@@ -1,12 +1,7 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers;
 
-use GeneaLabs\LaravelGovernor\Action;
-use GeneaLabs\LaravelGovernor\Entity;
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateRoleRequest;
 use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
-use GeneaLabs\LaravelGovernor\Ownership;
-use GeneaLabs\LaravelGovernor\Permission;
-use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -19,29 +14,35 @@ class RolesController extends Controller
 
     public function index() : View
     {
-        $this->authorize('view', (new Role()));
-        $roles = (new Role)->orderBy('name')->get();
+        $roleClass = config("laravel-governor.models.role");
+
+        $this->authorize('view', (new $roleClass));
+        $roles = (new $roleClass)->orderBy('name')->get();
 
         return view('genealabs-laravel-governor::roles.index', compact('roles'));
     }
 
     public function create() : View
     {
-        $role = new Role();
-        $this->authorize('create', $role);
+        $roleClass = config("laravel-governor.models.role");
+        $this->authorize('create', new $roleClass);
 
         return view('genealabs-laravel-governor::roles.create', compact('role'));
     }
 
     public function store(CreateRoleRequest $request) : RedirectResponse
     {
-        (new Role)->create($request->except(['_token']));
+        $roleClass = config("laravel-governor.models.role");
+        (new $roleClass)->create($request->except(['_token']));
 
         return redirect()->route('genealabs.laravel-governor.roles.index');
     }
 
     public function edit(Role $role) : View
     {
+        $actionClass = config("laravel-governor.models.action");
+        $entityClass = config("laravel-governor.models.entity");
+        $ownershipClass = config("laravel-governor.models.ownership");
         $this->authorize('edit', $role);
 
         $gate = app('Illuminate\Contracts\Auth\Access\Gate');
@@ -51,17 +52,18 @@ class RolesController extends Controller
         $policies = $policies->getValue($gate);
 
         collect(array_keys($policies))
-            ->each(function ($entity) {
+            ->each(function ($entity) use ($entityClass) {
                 $entity = strtolower(collect(explode('\\', $entity))->last());
 
-                return (new Entity)
+                return (new $entityClass)
                     ->firstOrCreate([
                         'name' => $entity,
                     ]);
             });
-        $entities = (new Entity)->whereNotIn('name', ['permission', 'entity'])->get();
-        $actions = (new Action)->all();
-        $ownerships = (new Ownership)->all();
+
+        $entities = (new $entityClass)->whereNotIn('name', ['permission', 'entity'])->get();
+        $actions = (new $actionClass)->all();
+        $ownerships = (new $ownershipClass)->all();
         $permissionMatrix = [];
 
         foreach ($entities as $entity) {

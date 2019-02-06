@@ -1,28 +1,23 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers\Nova;
 
-use GeneaLabs\LaravelGovernor\Action;
-use GeneaLabs\LaravelGovernor\Entity;
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
-use GeneaLabs\LaravelGovernor\Ownership;
-use GeneaLabs\LaravelGovernor\Permission;
-use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Support\Collection;
 use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
 use Illuminate\Http\Response;
 
 class PermissionController extends Controller
 {
-    public function __construct()
-    {
-        //
-    }
-
     public function index() : array
     {
+        $actionClass = config("laravel-governor.models.action");
+        $entityClass = config("laravel-governor.models.entity");
+        $ownershipClass = config("laravel-governor.models.ownership");
+        $roleClass = config("laravel-governor.models.role");
+
         $roleKey = request("filter") === "role_key"
             ? request("value")
             : null;
-        $role = (new Role)
+        $role = (new $roleClass)
             ->with("permissions.action", "permissions.entity", "permissions.ownership")
             ->where("name", $roleKey)
             ->first();
@@ -33,20 +28,20 @@ class PermissionController extends Controller
         $policies = $policies->getValue($gate);
 
         collect(array_keys($policies))
-            ->each(function ($entity) {
+            ->each(function ($entity) use ($entityClass) {
                 $entity = strtolower(collect(explode('\\', $entity))->last());
 
-                return (new Entity)
+                return (new $entityClass)
                     ->firstOrCreate([
                         'name' => $entity,
                     ]);
             });
-        $entities = (new Entity)
+        $entities = (new $entityClass)
             ->whereNotIn('name', ['permission', 'entity', "action", "ownership"])
             ->get();
-        $actions = (new Action)
+        $actions = (new $actionClass)
             ->all();
-        $ownerships = (new Ownership)
+        $ownerships = (new $ownershipClass)
             ->all();
         $permissionMatrix = [];
 

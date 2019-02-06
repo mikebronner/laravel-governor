@@ -1,19 +1,15 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Requests;
 
-use GeneaLabs\LaravelGovernor\Action;
-use GeneaLabs\LaravelGovernor\Entity;
-use GeneaLabs\LaravelGovernor\Ownership;
-use GeneaLabs\LaravelGovernor\Permission;
-use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Foundation\Http\FormRequest as Request;
-use Illuminate\Support\Facades\Gate;
 
 class StoreRoleRequest extends Request
 {
     public function authorize() : bool
     {
+        $roleClass = config("laravel-governor.models.role");
+
         return auth()->check()
-            && auth()->user()->can("create", Role::class);
+            && auth()->user()->can("create", $roleClass);
     }
 
     public function rules() : array
@@ -26,7 +22,8 @@ class StoreRoleRequest extends Request
 
     public function process()
     {
-        $role = new Role;
+        $roleClass = config("laravel-governor.models.role");
+        $role = new $roleClass;
         $role->fill($this->all());
         $role->save();
 

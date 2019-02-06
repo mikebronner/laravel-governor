@@ -1,16 +1,10 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
 use GeneaLabs\LaravelCasts\Providers\Service as LaravelCastsService;
-use GeneaLabs\LaravelGovernor\Action;
-use GeneaLabs\LaravelGovernor\Assignment;
 use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
-use GeneaLabs\LaravelGovernor\Entity;
 use GeneaLabs\LaravelGovernor\Http\ViewComposers\Layout;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
-use GeneaLabs\LaravelGovernor\Ownership;
-use GeneaLabs\LaravelGovernor\Permission;
-use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Support\AggregateServiceProvider;
 use Illuminate\Support\Collection;
@@ -67,6 +61,12 @@ class Service extends AggregateServiceProvider
 
     protected function parsePolicies(GateContract $gate)
     {
+        $actionClass = config("laravel-governor.models.action");
+        $entityClass = config("laravel-governor.models.entity");
+        $ownershipClass = config("laravel-governor.models.ownership");
+        $permissionClass = config("laravel-governor.models.permission");
+        $roleClass = config("laravel-governor.models.role");
+
         $reflection = new ReflectionClass($gate);
         $property = $reflection->getProperty('policies');
         $property->setAccessible(true);
@@ -76,12 +76,12 @@ class Service extends AggregateServiceProvider
             })
             ->values()
             ->filter()
-            ->each(function ($entity) {
-                (new Entity)->firstOrCreate(['name' => $entity]);
-                $superadmin = (new Role)->whereName('SuperAdmin')->first();
-                $ownership = (new Ownership)->whereName('any')->first();
-                (new Action)->all()->each(function ($action) use ($entity, $superadmin, $ownership) {
-                    $permission = new Permission();
+            ->each(function ($entity) use ($actionClass, $entityClass, $ownershipClass, $permissionClass, $roleClass) {
+                (new $entityClass)->firstOrCreate(['name' => $entity]);
+                $superadmin = (new $roleClass)->whereName('SuperAdmin')->first();
+                $ownership = (new $ownershipClass)->whereName('any')->first();
+                (new $actionClass)->all()->each(function ($action) use ($entity, $superadmin, $ownership, $permissionClass) {
+                    $permission = new $permissionClass;
                     $permission->role()->associate($superadmin);
                     $permission->action()->associate($action);
                     $permission->ownership()->associate($ownership);
@@ -89,15 +89,15 @@ class Service extends AggregateServiceProvider
                     $permission->save();
                 });
             });
-        (new Entity)
+        (new $entityClass)
             ->with("permissions")
             ->whereDoesntHave("permissions", function ($query) {
                 $query->where("role_key", "SuperAdmin");
             })
             ->get()
-            ->each(function ($entity) {
-                (new Action)->all()->each(function ($action) use ($entity) {
-                    (new Permission)->firstOrCreate([
+            ->each(function ($entity) use ($actionClass, $permissionClass) {
+                (new $actionClass)->all()->each(function ($action) use ($entity, $permissionClass) {
+                    (new $permissionClass)->firstOrCreate([
                         "role_key" => "SuperAdmin",
                         "action_key" => $action->name,
                         "ownership_key" => "any",

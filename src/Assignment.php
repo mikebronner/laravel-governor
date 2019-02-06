@@ -13,7 +13,7 @@ class Assignment extends Model
     {
         parent::__construct();
 
-        $this->user = app(config('genealabs-laravel-governor.auth-model'));
+        $this->user = app(config('genealabs-laravel-governor.models.auth'));
     }
 
     public function role() : BelongsTo
@@ -23,7 +23,7 @@ class Assignment extends Model
 
     public function user() : BelongsTo
     {
-        return $this->belongsTo(config("genealabs-laravel-governor.auth-model"));
+        return $this->belongsTo(config("genealabs-laravel-governor.models.auth"));
     }
 
     public function addAllUsersToMemberRole()

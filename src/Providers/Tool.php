@@ -25,7 +25,7 @@ class Tool extends ServiceProvider
             $this->routes();
         });
 
-        User::$model = config("genealabs-laravel-governor.auth-model");
+        User::$model = config("genealabs-laravel-governor.models.auth");
 
         Nova::serving(function (ServingNova $event) {
             Nova::resources([

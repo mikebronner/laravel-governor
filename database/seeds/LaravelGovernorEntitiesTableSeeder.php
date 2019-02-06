@@ -1,15 +1,15 @@
 <?php
 
-use GeneaLabs\LaravelGovernor\Entity;
 use Illuminate\Database\Seeder;
 
 class LaravelGovernorEntitiesTableSeeder extends Seeder
 {
     public function run()
     {
-        (new Entity)->firstOrCreate(['name' => 'role']);
-        (new Entity)->firstOrCreate(['name' => 'entity']);
-        (new Entity)->firstOrCreate(['name' => 'permission']);
-        (new Entity)->firstOrCreate(['name' => 'assignment']);
+        $entityClass = config("laravel-governor.models.entity");
+        (new $entityClass)->firstOrCreate(['name' => 'role']);
+        (new $entityClass)->firstOrCreate(['name' => 'entity']);
+        (new $entityClass)->firstOrCreate(['name' => 'permission']);
+        (new $entityClass)->firstOrCreate(['name' => 'assignment']);
     }
 }
