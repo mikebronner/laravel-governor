@@ -7,7 +7,7 @@ class LaravelGovernorActionsTableSeeder extends Seeder
     public function run()
     {
         $actionClass = config("genealabs-laravel-governor.models.action");
-        $action = $actionClass;
+        $action = new $actionClass;
         $action->firstOrCreate(['name' => 'create']);
         $action->firstOrCreate(['name' => 'delete']);
         $action->firstOrCreate(['name' => 'forceDelete']);
