@@ -6,7 +6,7 @@ class UpdateRoleRequest extends Request
 {
     public function authorize() : bool
     {
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
 
         return auth()->check()
             && ($this->role
@@ -25,11 +25,11 @@ class UpdateRoleRequest extends Request
 
     public function process()
     {
-        $actionClass = config("laravel-governor.models.action");
-        $entityClass = config("laravel-governor.models.entity");
-        $ownershipClass = config("laravel-governor.models.ownership");
-        $permissionClass = config("laravel-governor.models.permission");
-        $roleClass = config("laravel-governor.models.role");
+        $actionClass = config("genealabs-laravel-governor.models.action");
+        $entityClass = config("genealabs-laravel-governor.models.entity");
+        $ownershipClass = config("genealabs-laravel-governor.models.ownership");
+        $permissionClass = config("genealabs-laravel-governor.models.permission");
+        $roleClass = config("genealabs-laravel-governor.models.role");
         $role = $this->role
             ?? new $roleClass;
         $role->fill($this->all());

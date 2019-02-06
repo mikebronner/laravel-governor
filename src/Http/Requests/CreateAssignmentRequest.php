@@ -6,7 +6,7 @@ class CreateAssignmentRequest extends Request
 {
     public function authorize() : bool
     {
-        $assignmentClass = config("laravel-governor.models.assignment");
+        $assignmentClass = config("genealabs-laravel-governor.models.assignment");
 
         return app('Illuminate\Contracts\Auth\Access\Gate')
             ->allows('create', new $assignmentClass);

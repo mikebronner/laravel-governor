@@ -6,7 +6,7 @@ class StoreRoleRequest extends Request
 {
     public function authorize() : bool
     {
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
 
         return auth()->check()
             && auth()->user()->can("create", $roleClass);
@@ -22,7 +22,7 @@ class StoreRoleRequest extends Request
 
     public function process()
     {
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
         $role = new $roleClass;
         $role->fill($this->all());
         $role->save();

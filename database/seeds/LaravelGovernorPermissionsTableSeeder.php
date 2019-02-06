@@ -6,11 +6,11 @@ class LaravelGovernorPermissionsTableSeeder extends Seeder
 {
     public function run()
     {
-        $actionClass = config("laravel-governor.models.action");
-        $entityClass = config("laravel-governor.models.entity");
-        $ownershipClass = config("laravel-governor.models.ownership");
-        $permissionClass = config("laravel-governor.models.permission");
-        $roleClass = config("laravel-governor.models.role");
+        $actionClass = config("genealabs-laravel-governor.models.action");
+        $entityClass = config("genealabs-laravel-governor.models.entity");
+        $ownershipClass = config("genealabs-laravel-governor.models.ownership");
+        $permissionClass = config("genealabs-laravel-governor.models.permission");
+        $roleClass = config("genealabs-laravel-governor.models.role");
 
         $superadmin = (new $roleClass)->whereName('SuperAdmin')->get()->first();
         $actions = (new $actionClass)->all();

@@ -16,7 +16,7 @@ class RoleController extends Controller
 
     public function index() : Collection
     {
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
 
         return (new $roleClass)
             ->with("permissions", "users")

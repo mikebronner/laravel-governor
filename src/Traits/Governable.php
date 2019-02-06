@@ -7,7 +7,7 @@ trait Governable
 {
     public function hasRole(string $name) : bool
     {
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
         $this->load('roles');
 
         if ($this->roles->isEmpty()) {
@@ -28,14 +28,14 @@ trait Governable
 
     public function roles() : BelongsToMany
     {
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
 
         return $this->belongsToMany($roleClass, 'role_user', 'user_id', 'role_key');
     }
 
     public function getPermissionsAttribute() : Collection
     {
-        $permissionClass = config("laravel-governor.models.permission");
+        $permissionClass = config("genealabs-laravel-governor.models.permission");
         $roleNames = $this->roles->pluck('name');
 
         return (new $permissionClass)->whereIn('role_key', $roleNames)->get();

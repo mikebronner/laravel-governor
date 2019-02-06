@@ -20,8 +20,8 @@ class AssignmentsController extends Controller
      */
     public function edit()
     {
-        $assignmentClass = config("laravel-governor.models.assignment");
-        $roleClass = config("laravel-governor.models.role");
+        $assignmentClass = config("genealabs-laravel-governor.models.assignment");
+        $roleClass = config("genealabs-laravel-governor.models.role");
         $assignment = new $assignmentClass;
         $this->authorize('view', $assignment);
         $displayNameField = $this->displayNameField;
@@ -40,7 +40,7 @@ class AssignmentsController extends Controller
      */
     public function update(CreateAssignmentRequest $request)
     {
-        $actionClass = config("laravel-governor.models.action");
+        $actionClass = config("genealabs-laravel-governor.models.action");
         $assignment = new $actionClass;
         $assignment->removeAllUsersFromRoles();
         $assignedUsers = $request->get('users');

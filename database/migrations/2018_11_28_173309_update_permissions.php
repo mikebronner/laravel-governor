@@ -7,7 +7,7 @@ class UpdatePermissions extends Migration
 {
     public function up()
     {
-        $actionClass = config("laravel-governor.models.action");
+        $actionClass = config("genealabs-laravel-governor.models.action");
         (new $actionClass)
             ->whereIn("name", ["edit", "inspect", "change", "remove"])
             ->delete();

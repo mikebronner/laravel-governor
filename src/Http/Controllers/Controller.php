@@ -16,9 +16,9 @@ abstract class Controller extends BaseController
 
     protected function resetSuperAdminPermissions()
     {
-        $actionClass = config("laravel-governor.models.action");
-        $entityClass = config("laravel-governor.models.entity");
-        $permissionClass = config("laravel-governor.models.permission");
+        $actionClass = config("genealabs-laravel-governor.models.action");
+        $entityClass = config("genealabs-laravel-governor.models.entity");
+        $permissionClass = config("genealabs-laravel-governor.models.permission");
 
         (new $permissionClass)->where('role_key', 'SuperAdmin')->delete();
         $entities = (new $entityClass)->all();

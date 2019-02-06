@@ -14,7 +14,7 @@ class RolesController extends Controller
 
     public function index() : View
     {
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
 
         $this->authorize('view', (new $roleClass));
         $roles = (new $roleClass)->orderBy('name')->get();
@@ -24,7 +24,7 @@ class RolesController extends Controller
 
     public function create() : View
     {
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
         $this->authorize('create', new $roleClass);
 
         return view('genealabs-laravel-governor::roles.create', compact('role'));
@@ -32,7 +32,7 @@ class RolesController extends Controller
 
     public function store(CreateRoleRequest $request) : RedirectResponse
     {
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
         (new $roleClass)->create($request->except(['_token']));
 
         return redirect()->route('genealabs.laravel-governor.roles.index');
@@ -40,9 +40,9 @@ class RolesController extends Controller
 
     public function edit(Role $role) : View
     {
-        $actionClass = config("laravel-governor.models.action");
-        $entityClass = config("laravel-governor.models.entity");
-        $ownershipClass = config("laravel-governor.models.ownership");
+        $actionClass = config("genealabs-laravel-governor.models.action");
+        $entityClass = config("genealabs-laravel-governor.models.entity");
+        $ownershipClass = config("genealabs-laravel-governor.models.ownership");
         $this->authorize('edit', $role);
 
         $gate = app('Illuminate\Contracts\Auth\Access\Gate');

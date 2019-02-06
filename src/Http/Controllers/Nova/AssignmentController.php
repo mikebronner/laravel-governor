@@ -7,7 +7,7 @@ class AssignmentController extends Controller
 {
     public function update(string $role) : Response
     {
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
 
         $role = (new $roleClass)
             ->find($role);

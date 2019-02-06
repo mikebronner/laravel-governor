@@ -7,7 +7,7 @@ class CreateRoleRequest extends Request
 {
     public function authorize() : bool
     {
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
 
         return app('Illuminate\Contracts\Auth\Access\Gate')
             ->allows('create', new $roleClass);

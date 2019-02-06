@@ -9,10 +9,10 @@ class PermissionController extends Controller
 {
     public function index() : array
     {
-        $actionClass = config("laravel-governor.models.action");
-        $entityClass = config("laravel-governor.models.entity");
-        $ownershipClass = config("laravel-governor.models.ownership");
-        $roleClass = config("laravel-governor.models.role");
+        $actionClass = config("genealabs-laravel-governor.models.action");
+        $entityClass = config("genealabs-laravel-governor.models.entity");
+        $ownershipClass = config("genealabs-laravel-governor.models.ownership");
+        $roleClass = config("genealabs-laravel-governor.models.role");
 
         $roleKey = request("filter") === "role_key"
             ? request("value")

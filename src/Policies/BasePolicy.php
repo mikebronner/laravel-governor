@@ -9,7 +9,7 @@ abstract class BasePolicy
 
     public function __construct()
     {
-        $permissionClass = config("laravel-governor.models.permission");
+        $permissionClass = config("genealabs-laravel-governor.models.permission");
         $policyClass = collect(explode('\\', get_class($this)))->last();
         $this->entity = str_replace('policy', '', strtolower($policyClass));
         $this->permissions = (new $permissionClass)->get();

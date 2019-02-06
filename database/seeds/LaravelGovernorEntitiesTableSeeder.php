@@ -6,7 +6,7 @@ class LaravelGovernorEntitiesTableSeeder extends Seeder
 {
     public function run()
     {
-        $entityClass = config("laravel-governor.models.entity");
+        $entityClass = config("genealabs-laravel-governor.models.entity");
         (new $entityClass)->firstOrCreate(['name' => 'role']);
         (new $entityClass)->firstOrCreate(['name' => 'entity']);
         (new $entityClass)->firstOrCreate(['name' => 'permission']);

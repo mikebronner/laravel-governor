@@ -8,7 +8,7 @@ class LaravelGovernorRolesTableSeeder extends Seeder
     {
         $users = app()->make(config('genealabs-laravel-governor.models.auth'));
         $superuser = $users->find($users->min($users->getKeyName()));
-        $roleClass = config("laravel-governor.models.role");
+        $roleClass = config("genealabs-laravel-governor.models.role");
 
         $role = (new $roleClass)->firstOrCreate([
             'name' => 'SuperAdmin',
