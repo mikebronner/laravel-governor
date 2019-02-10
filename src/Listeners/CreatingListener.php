@@ -16,16 +16,19 @@ class CreatingListener
             ->filter(function ($model) {
                 return $model instanceof Model;
             })
-            ->each(function ($model) {
+            ->each(function (Model $model) {
                 if (auth()->check()
                     && ! (property_exists($model, 'isGoverned')
                         && $model['isGoverned'] === false)
                 ) {
                     $model->governor_created_by = auth()->user()->getKey();
                     $table = $model->getTable();
+                    $connection = $model
+                        ->getConnection()
+                        ->getName();
 
-                    if (! Schema::hasColumn($table, 'governor_created_by')) {
-                        Schema::table($table, function (Blueprint $table) {
+                    if (! Schema::connection($connection)->hasColumn($table, 'governor_created_by')) {
+                        Schema::connection($connection)->table($table, function (Blueprint $table) {
                             $table->integer('governor_created_by')->unsigned()->nullable();
                         });
                     }
