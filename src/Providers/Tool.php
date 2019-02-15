@@ -1,17 +1,9 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
 use GeneaLabs\LaravelGovernor\Http\Middleware\Authorize;
-use GeneaLabs\LaravelGovernor\Nova\Assignment;
-use GeneaLabs\LaravelGovernor\Nova\Ownership;
-use GeneaLabs\LaravelGovernor\Nova\Permission;
-use GeneaLabs\LaravelGovernor\Nova\Role;
-use GeneaLabs\LaravelGovernor\Nova\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
-use Laravel\Nova\Nova;
-use GeneaLabs\LaravelGovernor\Nova\Action;
-use GeneaLabs\LaravelGovernor\Nova\Entity;
 
 class Tool extends ServiceProvider
 {
@@ -25,19 +17,20 @@ class Tool extends ServiceProvider
             $this->routes();
         });
 
-        User::$model = config("genealabs-laravel-governor.models.auth");
-
-        Nova::serving(function (ServingNova $event) {
-            Nova::resources([
-                Action::class,
-                Assignment::class,
-                Entity::class,
-                Ownership::class,
-                Permission::class,
-                Role::class,
-                User::class,
-            ]);
-        });
+        if (class_exists("Laravel\Nova\Resource")) {
+            GeneaLabs\LaravelGovernor\Nova\User::$model = config("genealabs-laravel-governor.models.auth");
+            Laravel\Nova\Nova::serving(function (ServingNova $event) {
+                Laravel\Nova\Nova::resources([
+                    GeneaLabs\LaravelGovernor\Nova\Action::class,
+                    GeneaLabs\LaravelGovernor\Nova\Assignment::class,
+                    GeneaLabs\LaravelGovernor\Nova\Entity::class,
+                    GeneaLabs\LaravelGovernor\Nova\Ownership::class,
+                    GeneaLabs\LaravelGovernor\Nova\Permission::class,
+                    GeneaLabs\LaravelGovernor\Nova\Role::class,
+                    GeneaLabs\LaravelGovernor\Nova\User::class,
+                ]);
+            });
+        }
     }
 
     protected function routes()
