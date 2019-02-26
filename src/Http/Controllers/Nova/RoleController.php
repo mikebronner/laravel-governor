@@ -1,10 +1,11 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers\Nova;
 
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
-use Illuminate\Support\Collection;
-use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
-use Illuminate\Http\Response;
 use GeneaLabs\LaravelGovernor\Http\Requests\StoreRoleRequest;
+use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
+use GeneaLabs\LaravelGovernor\Role;
+use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 
 class RoleController extends Controller
 {
