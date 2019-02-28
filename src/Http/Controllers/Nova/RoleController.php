@@ -31,22 +31,28 @@ class RoleController extends Controller
         return response(null, 204);
     }
 
-    public function show(Role $role) : Role
+    public function show($id) : Role
     {
+        $roleClass = config("genealabs-laravel-governor.models.role");
+        $role = (new $roleClass)
+            ->find($id);
         $role->load("permissions.entity");
 
         return $role;
     }
 
-    public function update(UpdateRoleRequest $request, Role $role) : Response
+    public function update(UpdateRoleRequest $request) : Response
     {
         $request->process();
 
         return response(null, 204);
     }
 
-    public function destroy(Role $role) : Response
+    public function destroy($id) : Response
     {
+        $roleClass = config("genealabs-laravel-governor.models.role");
+        $role = (new $roleClass)
+            ->find($id);
         $role->delete();
 
         return response(null, 204);
