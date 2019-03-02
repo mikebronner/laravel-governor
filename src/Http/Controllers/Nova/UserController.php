@@ -7,7 +7,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        //
+        // prevent default construct
     }
 
     public function index() : Collection

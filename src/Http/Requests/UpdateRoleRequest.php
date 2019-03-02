@@ -30,8 +30,9 @@ class UpdateRoleRequest extends Request
         $ownershipClass = config("genealabs-laravel-governor.models.ownership");
         $permissionClass = config("genealabs-laravel-governor.models.permission");
         $roleClass = config("genealabs-laravel-governor.models.role");
-        $role = $this->role
-            ?? new $roleClass;
+        $role = $this->id
+            ? (new $roleClass)->find($this->id)
+            : new $roleClass;
         $role->fill($this->all());
 
         if ($this->filled('permissions')) {
