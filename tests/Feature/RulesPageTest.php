@@ -1,7 +1,7 @@
 <?php namespace GeneaLabs\LaravelGovernor\Tests\Feature;
 
 use GeneaLabs\LaravelGovernor\Role;
-use GeneaLabs\LaravelGovernor\Tests\Models\SuperAdminUser;
+use GeneaLabs\LaravelGovernor\Tests\Models\User;
 use GeneaLabs\LaravelGovernor\Tests\TestCase;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -12,33 +12,45 @@ class RulesPageTest extends TestCase
 {
     public function testThatRulesPageIsAccessibleWhenAuthenticated()
     {
-        $user = new SuperAdminUser([
-            'name' => 'Joe Test',
-            'email' => 'none@noemail.com',
-            'password' => 'not hashed but who cares',
-        ]);
-        auth()->login($user);
-        $response = $this->get(route('genealabs.laravel-governor.roles.index'));
+        $user = (new User)->firstOrNew([
+                'email' => 'none@noemail.com',
+            ])
+            ->fill([
+                'name' => 'Joe Test',
+                'password' => 'not hashed but who cares',
+            ]);
+        $user->save();
+        $user->roles()->sync(["SuperAdmin"]);
+
+        $response = $this
+            ->actingAs($user)
+            ->get(route('genealabs.laravel-governor.roles.index'));
 
         $response->assertStatus(200);
     }
 
     public function testThatRulesPageIsNotAccessibleWhenNotAuthenticated()
     {
-        $this->expectException(AuthenticationException::class);
-
-        $this->get(route('genealabs.laravel-governor.roles.index'));
+        $this
+            ->get(route('genealabs.laravel-governor.roles.index'))
+            ->assertRedirect("/login");
     }
 
     public function testAuthenticatedUserCanSeeInitialRoles()
     {
-        $user = new SuperAdminUser([
-            'name' => 'Joe Test',
-            'email' => 'none@noemail.com',
-            'password' => 'not hashed but who cares',
-        ]);
-        auth()->login($user);
-        $response = $this->get(route('genealabs.laravel-governor.roles.index'));
+        $user = (new User)->firstOrNew([
+                'email' => 'none@noemail.com',
+            ])
+            ->fill([
+                'name' => 'Joe Test',
+                'password' => 'not hashed but who cares',
+            ]);
+        $user->save();
+        $user->roles()->sync(["SuperAdmin"]);
+
+        $response = $this
+            ->actingAs($user)
+            ->get(route('genealabs.laravel-governor.roles.index'));
 
         $response->assertSee('Member');
         $response->assertSee('SuperAdmin');

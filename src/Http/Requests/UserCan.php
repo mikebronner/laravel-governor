@@ -16,7 +16,7 @@ class UserCan extends Request
         }
 
         auth()->user()->load("roles");
-
+// dump("test",auth()->check(), auth()->user()->can($ability, $model), $ability, $model, auth()->user());
         return auth()->check()
             && auth()->user()->can($ability, $model);
     }

@@ -1,6 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Tests\Feature;
 
-use GeneaLabs\LaravelGovernor\Tests\Models\SuperAdminUser;
+use GeneaLabs\LaravelGovernor\Tests\Models\User;
 use GeneaLabs\LaravelGovernor\Tests\TestCase;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -11,31 +11,41 @@ class AssignmentsPageTest extends TestCase
 {
     public function testThatAssignmentPageIsAccessibleWhenAuthenticated()
     {
-        $user = new SuperAdminUser([
-            'name' => 'Joe Test',
-            'email' => 'none@noemail.com',
-            'password' => 'not hashed but who cares',
-        ]);
-        auth()->login($user);
-        $response = $this->get(route('genealabs.laravel-governor.assignments.edit', 0));
+        $user = (new User)->firstOrNew([
+                'email' => 'none@noemail.com',
+            ])
+            ->fill([
+                'name' => 'Joe Test',
+                'password' => 'not hashed but who cares',
+            ]);
+        $user->save();
+        $user->roles()->sync(["SuperAdmin"]);
+        $response = $this
+            ->actingAs($user, "api")
+            ->get(route('genealabs.laravel-governor.assignments.edit', 0));
 
         $response->assertStatus(200);
     }
 
-    public function testThatssignmentPageIsNotAccessibleWhenNotAuthenticated()
+    public function testThatAssignmentPageIsNotAccessibleWhenNotAuthenticated()
     {
-        $this->expectException(AuthenticationException::class);
+        $response = $this
+            ->get(route('genealabs.laravel-governor.assignments.edit', 0));
 
-        $this->get(route('genealabs.laravel-governor.assignments.edit', 0));
+        $response->assertRedirect("/login");
     }
 
     public function testAuthenticatedUserCanSeeAssignments()
     {
-        $user = new SuperAdminUser([
-            'name' => 'Joe Test',
-            'email' => 'none@noemail.com',
-            'password' => 'not hashed but who cares',
-        ]);
+        $user = (new User)->firstOrNew([
+                'email' => 'none@noemail.com',
+            ])
+            ->fill([
+                'name' => 'Joe Test',
+                'password' => 'not hashed but who cares',
+            ]);
+        $user->save();
+        $user->roles()->sync(["SuperAdmin"]);
         auth()->login($user);
         $response = $this->get(route('genealabs.laravel-governor.assignments.edit', 0));
 
