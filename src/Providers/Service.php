@@ -2,13 +2,10 @@
 
 use GeneaLabs\LaravelCasts\Providers\Service as LaravelCastsService;
 use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
-use GeneaLabs\LaravelGovernor\Http\ViewComposers\Layout;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Support\AggregateServiceProvider;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use ReflectionClass;
 
@@ -40,7 +37,7 @@ class Service extends AggregateServiceProvider
             __DIR__ . '/../../database/migrations' => base_path('database/migrations')
         ], 'migrations');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        // $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
         if (Schema::hasTable('entities')) {
             $this->parsePolicies($gate);
