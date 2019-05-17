@@ -3,24 +3,24 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Action extends Model
+class Group extends Model
 {
     protected $primaryKey = 'name';
     protected $rules = [
-        'name' => 'required|min:3|unique:governor_actions,name',
+        'name' => 'required|min:3|unique:governor_groups,name',
     ];
     protected $fillable = [
         'name',
     ];
-    protected $table = "governor_actions";
+    protected $table = "governor_groups";
 
     public $incrementing = false;
 
-    public function permissions() : HasMany
+    public function entities() : HasMany
     {
         return $this->hasMany(
-            config('genealabs-laravel-governor.models.permission'),
-            'action_name'
+            config('genealabs-laravel-governor.models.entity'),
+            'group_name'
         );
     }
 }

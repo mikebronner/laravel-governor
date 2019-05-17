@@ -17,7 +17,6 @@
 
                 axios.get("/genealabs/laravel-governor/nova/roles")
                     .then(function (response) {
-                        console.log(response);
                         self.roles = Object.assign({}, response.data);
                         self.isLoading = false;
                     });

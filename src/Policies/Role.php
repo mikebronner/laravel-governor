@@ -6,10 +6,10 @@ class Role extends BasePolicy
 {
     public function update(Model $user, Model $model) : bool
     {
+        return ($model->name !== "SuperAdmin");
         if ($model->name === "SuperAdmin") {
             return false;
         }
-        return true;
 
         return $this->validatePermissions(
             $user,
@@ -61,4 +61,3 @@ class Role extends BasePolicy
         );
     }
 }
-

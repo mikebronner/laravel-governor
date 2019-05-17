@@ -6,34 +6,41 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
-    public $incrementing = false;
-
     protected $primaryKey = 'name';
     protected $rules = [
-        'name' => 'required|min:3|unique:roles,name',
+        'name' => 'required|min:3|unique:governor_roles,name',
         'description' => 'required|min:25',
     ];
     protected $fillable = [
         'name',
         'description',
     ];
+    protected $table = "governor_roles";
+
+    public $incrementing = false;
 
     public function entities() : HasMany
     {
-        return $this->hasMany(Entity::class, "entity_key");
+        return $this->hasMany(
+            config('genealabs-laravel-governor.models.entity'),
+            "entity_name"
+        );
     }
 
     public function permissions() : HasMany
     {
-        return $this->hasMany(Permission::class, 'role_key');
+        return $this->hasMany(
+            config('genealabs-laravel-governor.models.permission'),
+            'role_name'
+        );
     }
 
     public function users() : BelongsToMany
     {
         return $this->belongsToMany(
             config('genealabs-laravel-governor.models.auth'),
-            'role_user',
-            'role_key',
+            'governor_role_user',
+            'role_name',
             'user_id'
         );
     }

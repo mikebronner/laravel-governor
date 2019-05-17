@@ -7,6 +7,7 @@
                     "no",
                 ],
                 deleteModalOpen: false,
+                groupsIsLoading: true,
                 originalRoleName: "",
                 permissionsIsLoading: true,
                 permissions: [],
@@ -45,6 +46,16 @@
                     })
                     .catch(function (error) {
                         self.$toasted.show(error.response, {type: "error"});
+                    });
+            },
+
+            loadGroups: function () {
+                var self = this;
+
+                axios.get("/genealabs/laravel-governor/nova/groups")
+                    .then(function (response) {
+                        self.groups = Object.assign([], response.data);
+                        self.groupsIsLoading = false;
                     });
             },
 
@@ -192,7 +203,7 @@
         </loading-card>
         <heading class="mt-8 mb-6">Permissions</heading>
         <loading-card
-            :loading="permissionsIsLoading"
+            :loading="permissionsIsLoading || groupsIsLoading"
         >
             <div class="relative">
                 <table cellpadding="0"

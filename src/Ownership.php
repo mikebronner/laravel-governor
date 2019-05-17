@@ -9,14 +9,18 @@ class Ownership extends Model
 
     protected $primaryKey = 'name';
     protected $rules = [
-        'name' => 'required|min:3',
+        'name' => 'required|min:3|unique:governor_ownerships,name',
     ];
     protected $fillable = [
         'name',
     ];
+    protected $table = "governor_ownerships";
 
     public function permissions() : HasMany
     {
-        return $this->hasMany(Permission::class, 'ownership_key');
+        return $this->hasMany(
+            config('genealabs-laravel-governor.models.permission'),
+            'ownership_name'
+        );
     }
 }

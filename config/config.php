@@ -39,6 +39,7 @@ return [
         "action" => GeneaLabs\LaravelGovernor\Action::class,
         "assignment" => GeneaLabs\LaravelGovernor\Assignment::class,
         "entity" => GeneaLabs\LaravelGovernor\Entity::class,
+        "group" => GeneaLabs\LaravelGovernor\Group::class,
         "ownership" => GeneaLabs\LaravelGovernor\Ownership::class,
         "permission" => GeneaLabs\LaravelGovernor\Permission::class,
         "role" => GeneaLabs\LaravelGovernor\Role::class,

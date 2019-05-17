@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Assignment extends Model
 {
     protected $primaryKey = ["role", "user_id"];
-    protected $table ="role_user";
+    protected $roles;
+    protected $table ="governor_role_user";
     protected $user;
 
     public function __construct()
@@ -14,11 +15,13 @@ class Assignment extends Model
         parent::__construct();
 
         $this->user = app(config('genealabs-laravel-governor.models.auth'));
+        $this->roles = config('genealabs-laravel-governor.models.role');
+        $this->roles = new $this->roles;
     }
 
     public function role() : BelongsTo
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(config('genealabs-laravel-governor.models.role'));
     }
 
     public function user() : BelongsTo
@@ -28,12 +31,14 @@ class Assignment extends Model
 
     public function addAllUsersToMemberRole()
     {
-        $allUsers = $this->user->with('roles')->get();
-        $allUsers->each(function ($user) {
-            if (! $user->roles->contains('Member')) {
-                $user->roles()->attach('Member');
-            }
-        });
+        $this->user
+            ->with('roles')
+            ->get()
+            ->each(function ($user) {
+                if (! $user->roles->contains('Member')) {
+                    $user->roles()->attach('Member');
+                }
+            });
     }
 
     public function removeAllSuperAdminUsersFromOtherRoles($assignedUsers)
@@ -44,12 +49,18 @@ class Assignment extends Model
             $users = $assignedUsers[$role];
 
             foreach ($users as $id) {
-                $user = $this->user->with('roles')->find($id);
-                $user->roles()->detach();
+                $this->user
+                    ->with('roles')
+                    ->find($id)
+                    ->roles()
+                    ->detach();
             }
 
-            $currentRole = Role::with('users')->find($role);
-            $currentRole->users()->attach($users);
+            (new $this->roles)
+                ->with('users')
+                ->find($role)
+                ->users()
+                ->attach($users);
         }
     }
 
@@ -60,24 +71,30 @@ class Assignment extends Model
                 continue;
             }
 
-            $currentRole = Role::with('users')->find($role);
-            $currentRole->users()->attach($users);
+            (new $this->roles)
+                ->with('users')
+                ->find($role)
+                ->users()
+                ->attach($users);
         }
     }
 
     public function removeAllUsersFromRoles()
     {
-        $roles = Role::with('users')->get();
-        $roles->each(function ($role) {
-            $role->users()->detach();
-        });
+        (new $this->roles)
+            ->with('users')
+            ->get()
+            ->each(function ($role) {
+                $role->users()->detach();
+            });
     }
 
 
     public function getAllUsersOfRole($role)
     {
-        $role = Role::with('users')->find($role);
-
-        return $role->users;
+        return (new $this->roles)
+            ->with('users')
+            ->find($role)
+            ->users;
     }
 }

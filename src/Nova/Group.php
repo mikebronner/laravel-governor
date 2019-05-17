@@ -1,28 +1,28 @@
 <?php namespace GeneaLabs\LaravelGovernor\Nova;
 
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Select;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\HasMany;
+use Titasgailius\SearchRelations\SearchesRelations;
 
-class Entity extends Resource
+class Group extends Resource
 {
-    public static $model = 'GeneaLabs\\LaravelGovernor\\Entity';
+    use SearchesRelations;
+
+    public static $model = 'GeneaLabs\\LaravelGovernor\\Group';
     public static $title = "name";
     public static $search = [
         "name",
     ];
-    public static $displayInPermissions = false;
-    
+
     public function fields(Request $request)
     {
         return [
             Text::make("name")
                 ->sortable(),
-            // HasMany::make("Permissions"),
+            HasMany::make("Entities"),
         ];
     }
 

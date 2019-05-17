@@ -1,3 +1,5 @@
+global._ = require('lodash');
+
 Nova.booting((Vue, router) => {
     Vue.component("multiselect", require("vue-multiselect").default);
     router.addRoutes([
@@ -15,6 +17,16 @@ Nova.booting((Vue, router) => {
             name: 'laravel-nova-governor-permissions',
             path: '/laravel-nova-governor/permissions/:role',
             component: require('./components/Permissions').default,
+        },
+        {
+            name: 'laravel-nova-governor-groups',
+            path: '/laravel-nova-governor/groups',
+            component: require('./components/Groups').default,
+        },
+        {
+            name: 'laravel-nova-governor-groups-create',
+            path: '/laravel-nova-governor/groups/create',
+            component: require('./components/GroupCreate').default,
         },
         {
             name: 'laravel-nova-governor-assignments',

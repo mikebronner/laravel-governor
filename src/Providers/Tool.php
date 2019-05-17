@@ -24,6 +24,7 @@ class Tool extends ServiceProvider
                     \GeneaLabs\LaravelGovernor\Nova\Action::class,
                     \GeneaLabs\LaravelGovernor\Nova\Assignment::class,
                     \GeneaLabs\LaravelGovernor\Nova\Entity::class,
+                    \GeneaLabs\LaravelGovernor\Nova\Group::class,
                     \GeneaLabs\LaravelGovernor\Nova\Ownership::class,
                     \GeneaLabs\LaravelGovernor\Nova\Permission::class,
                     \GeneaLabs\LaravelGovernor\Nova\Role::class,

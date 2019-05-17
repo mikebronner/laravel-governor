@@ -37,7 +37,7 @@ class Service extends AggregateServiceProvider
             __DIR__ . '/../../database/migrations' => base_path('database/migrations')
         ], 'migrations');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
-        // $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
         if (Schema::hasTable('entities')) {
             $this->parsePolicies($gate);

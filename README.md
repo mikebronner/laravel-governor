@@ -34,6 +34,31 @@ Install via composer:
 composer require genealabs/laravel-governor
 ```
 
+### Laravel Tenancy (Hyn)
+If you are using the `hyn/multi-tenancy` package, execute the following command
+to run Laravel Governor's migrations:
+```sh
+php artisan tenancy:migrate --path="vendor/genealabs/laravel-governor/database/migrations"
+```
+
+And then the seeders:
+```sh
+php artisan tenancy:db:seed --class="LaravelGovernorDatabaseSeeder"
+```
+
+## Upgrading
+### From Versions Prior To 0.10.0 to Version 0.10.x
+To upgrade from version previous to `0.10.0`, first run the migrations and
+seeders, then run the update seeder:
+```sh
+php artisan db:seed --class="LaravelGovernorUpgradeTo0100"
+```
+
+If you are using `Laravel Tenancy`, run the following instead:
+```sh
+php artisan tenancy:db:seed --class="LaravelGovernorUpgradeTo0100"
+```
+
 ## Implementation
 1. First we need to update the database by running the migrations and data seeders:
     ```sh

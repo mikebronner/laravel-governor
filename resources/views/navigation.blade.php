@@ -14,6 +14,13 @@
     </li>
     <li class="leading-tight mb-4 ml-8 text-sm">
         <router-link
+            :to="{name: 'laravel-nova-governor-groups'}"
+            class="text-white text-justify no-underline dim">
+            Groups
+        </router-link>
+    </li>
+    <li class="leading-tight mb-4 ml-8 text-sm">
+        <router-link
             :to="{name: 'laravel-nova-governor-assignments'}"
             class="text-white text-justify no-underline dim">
             Assignments

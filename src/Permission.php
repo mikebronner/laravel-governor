@@ -18,25 +18,38 @@ class Permission extends Model
         'action_key',
         'ownership_key',
     ];
+    protected $table = "governor_permissions";
 
     public function role() : BelongsTo
     {
-        return $this->belongsTo(Role::class, 'role_key', 'name');
+        return $this->belongsTo(
+            config('genealabs-laravel-governor.models.role'),
+            'role_name'
+        );
     }
 
     public function entity() : BelongsTo
     {
-        return $this->belongsTo(Entity::class, 'entity_key', 'name');
+        return $this->belongsTo(
+            config('genealabs-laravel-governor.models.entity'),
+            'entity_name'
+        );
     }
 
     public function action() : BelongsTo
     {
-        return $this->belongsTo(Action::class, 'action_key', 'name');
+        return $this->belongsTo(
+            config('genealabs-laravel-governor.models.action'),
+            'action_name'
+        );
     }
 
     public function ownership() : BelongsTo
     {
-        return $this->belongsTo(Ownership::class, 'ownership_key', 'name');
+        return $this->belongsTo(
+            config('genealabs-laravel-governor.models.ownership'),
+            'ownership_name'
+        );
     }
 
     public function getFilteredBy(string $filter = null, string $value = null) : Collection
