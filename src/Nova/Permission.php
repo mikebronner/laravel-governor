@@ -13,10 +13,10 @@ class Permission extends Resource
     public static $model = 'GeneaLabs\\LaravelGovernor\\Permission';
     public static $perPageViaRelationship = 25;
     public static $search = [
-        "role_key",
-        "entity_key",
-        "action_key",
-        "ownership_key",
+        "role_name",
+        "entity_name",
+        "action_name",
+        "ownership_name",
     ];
     public static $displayInPermissions = false;
     public static $title = "entity";
@@ -24,19 +24,19 @@ class Permission extends Resource
     public function fields(Request $request)
     {
         return [
-            Text::make("Role", "role_key")
+            Text::make("Role", "role_name")
                 ->onlyOnIndex()
                 ->sortable(),
-            Text::make("Action", "action_key")
+            Text::make("Action", "action_name")
                 ->resolveUsing(function ($actionName) {
                     return "can {$actionName}";
                 })
                 ->onlyOnIndex()
                 ->sortable(),
-            Text::make("Ownership", "ownership_key")
+            Text::make("Ownership", "ownership_name")
                 ->onlyOnIndex()
                 ->sortable(),
-            Text::make("Entity", "entity_key")
+            Text::make("Entity", "entity_name")
                 ->onlyOnIndex()
                 ->sortable(),
             BelongsTo::make("Role")

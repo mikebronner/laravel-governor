@@ -62,7 +62,7 @@
             loadPermissions: function () {
                 var self = this;
 
-                axios.get("/genealabs/laravel-governor/nova/permissions?filter=role_key&value=" + this.originalRoleName)
+                axios.get("/genealabs/laravel-governor/nova/permissions?filter=role_name&value=" + this.originalRoleName)
                     .then(function (response) {
                         self.permissions = Object.assign({}, response.data);
                         self.permissionsIsLoading = false;
@@ -202,147 +202,157 @@
             </form>
         </loading-card>
         <heading class="mt-8 mb-6">Permissions</heading>
-        <loading-card
-            :loading="permissionsIsLoading || groupsIsLoading"
+        <loading
+            v-for="(group, groupName) in permissions"
+            :key="'group-' + groupName"
+            :loading="permissionsIsLoading"
         >
-            <div class="relative">
-                <table cellpadding="0"
-                    cellspacing="0"
-                    class="table w-full"
-                >
-                    <thead>
-                        <tr class="bg-none">
-                            <th class="rounded-tl">
-                                Entity
-                            </th>
-                            <th>
-                                Create
-                            </th>
-                            <th>
-                                ViewAny
-                            </th>
-                            <th>
-                                View
-                            </th>
-                            <th>
-                                Update
-                            </th>
-                            <th>
-                                Delete
-                            </th>
-                            <th>
-                                Restore
-                            </th>
-                            <th class="rounded-tr">
-                                Force Delete
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(permission, name) in permissions"
-                            :key="name"
-                            class="hover:bg-none"
-                        >
-                            <td class="whitespace-no-wrap text-left capitalize">
-                                {{ name }}
-                            </td>
-                            <td>
-                                <multiselect
-                                    v-model="permissions[name]['create']"
-                                    :options="binarySelectOptions"
-                                    select-label=""
-                                    deselect-label=""
-                                    selected-label=""
-                                    :searchable="false"
-                                    :close-on-select="true"
-                                    :allow-empty="false"
-                                    @input="updatePermissions"
-                                ></multiselect>
-                            </td>
-                            <td>
-                                <multiselect
-                                    v-model="permissions[name]['viewAny']"
-                                    :options="binarySelectOptions"
-                                    select-label=""
-                                    deselect-label=""
-                                    selected-label=""
-                                    :searchable="false"
-                                    :close-on-select="true"
-                                    :allow-empty="false"
-                                    @input="updatePermissions"
-                                ></multiselect>
-                            </td>
-                            <td>
-                                <multiselect
-                                    v-model="permissions[name]['view']"
-                                    :options="selectOptions"
-                                    select-label=""
-                                    deselect-label=""
-                                    selected-label=""
-                                    :searchable="false"
-                                    :close-on-select="true"
-                                    :allow-empty="false"
-                                    @input="updatePermissions"
-                                ></multiselect>
-                            </td>
-                            <td>
-                                <multiselect
-                                    v-model="permissions[name]['update']"
-                                    :options="selectOptions"
-                                    select-label=""
-                                    deselect-label=""
-                                    selected-label=""
-                                    :searchable="false"
-                                    :close-on-select="true"
-                                    :allow-empty="false"
-                                    @input="updatePermissions"
-                                ></multiselect>
-                            </td>
-                            <td>
-                                <multiselect
-                                    v-model="permissions[name]['delete']"
-                                    :options="selectOptions"
-                                    select-label=""
-                                    deselect-label=""
-                                    selected-label=""
-                                    :searchable="false"
-                                    :close-on-select="true"
-                                    :allow-empty="false"
-                                    @input="updatePermissions"
-                                ></multiselect>
-                            </td>
-                            <td>
-                                <multiselect
-                                    v-model="permissions[name]['restore']"
-                                    :options="selectOptions"
-                                    select-label=""
-                                    deselect-label=""
-                                    selected-label=""
-                                    :searchable="false"
-                                    :close-on-select="true"
-                                    :allow-empty="false"
-                                    @input="updatePermissions"
-                                ></multiselect>
-                            </td>
-                            <td>
-                                <multiselect
-                                    v-model="permissions[name]['forceDelete']"
-                                    :options="selectOptions"
-                                    select-label=""
-                                    deselect-label=""
-                                    selected-label=""
-                                    :searchable="false"
-                                    :close-on-select="true"
-                                    :allow-empty="false"
-                                    @input="updatePermissions"
-                                ></multiselect>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </loading-card>
+            <h2 class="mt-6 mb-3 text-80 font-normal text-2xl"
+                v-text="groupName"
+            ></h2>
+
+            <card
+                :loading="permissionsIsLoading"
+            >
+                <div class="relative">
+                    <table cellpadding="0"
+                        cellspacing="0"
+                        class="table w-full"
+                    >
+                        <thead>
+                            <tr class="bg-none">
+                                <th class="rounded-tl">
+                                    Entity
+                                </th>
+                                <th>
+                                    Create
+                                </th>
+                                <th>
+                                    ViewAny
+                                </th>
+                                <th>
+                                    View
+                                </th>
+                                <th>
+                                    Update
+                                </th>
+                                <th>
+                                    Delete
+                                </th>
+                                <th>
+                                    Restore
+                                </th>
+                                <th class="rounded-tr">
+                                    Force Delete
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="(permission, name) in group"
+                                :key="name"
+                                class="hover:bg-none"
+                            >
+                                <td class="whitespace-no-wrap text-left capitalize">
+                                    {{ name }}
+                                </td>
+                                <td>
+                                    <multiselect
+                                        v-model="permissions[groupName][name]['create']"
+                                        :options="binarySelectOptions"
+                                        select-label=""
+                                        deselect-label=""
+                                        selected-label=""
+                                        :searchable="false"
+                                        :close-on-select="true"
+                                        :allow-empty="false"
+                                        @input="updatePermissions"
+                                    ></multiselect>
+                                </td>
+                                <td>
+                                    <multiselect
+                                        v-model="permissions[groupName][name]['viewAny']"
+                                        :options="binarySelectOptions"
+                                        select-label=""
+                                        deselect-label=""
+                                        selected-label=""
+                                        :searchable="false"
+                                        :close-on-select="true"
+                                        :allow-empty="false"
+                                        @input="updatePermissions"
+                                    ></multiselect>
+                                </td>
+                                <td>
+                                    <multiselect
+                                        v-model="permissions[groupName][name]['view']"
+                                        :options="selectOptions"
+                                        select-label=""
+                                        deselect-label=""
+                                        selected-label=""
+                                        :searchable="false"
+                                        :close-on-select="true"
+                                        :allow-empty="false"
+                                        @input="updatePermissions"
+                                    ></multiselect>
+                                </td>
+                                <td>
+                                    <multiselect
+                                        v-model="permissions[groupName][name]['update']"
+                                        :options="selectOptions"
+                                        select-label=""
+                                        deselect-label=""
+                                        selected-label=""
+                                        :searchable="false"
+                                        :close-on-select="true"
+                                        :allow-empty="false"
+                                        @input="updatePermissions"
+                                    ></multiselect>
+                                </td>
+                                <td>
+                                    <multiselect
+                                        v-model="permissions[groupName][name]['delete']"
+                                        :options="selectOptions"
+                                        select-label=""
+                                        deselect-label=""
+                                        selected-label=""
+                                        :searchable="false"
+                                        :close-on-select="true"
+                                        :allow-empty="false"
+                                        @input="updatePermissions"
+                                    ></multiselect>
+                                </td>
+                                <td>
+                                    <multiselect
+                                        v-model="permissions[groupName][name]['restore']"
+                                        :options="selectOptions"
+                                        select-label=""
+                                        deselect-label=""
+                                        selected-label=""
+                                        :searchable="false"
+                                        :close-on-select="true"
+                                        :allow-empty="false"
+                                        @input="updatePermissions"
+                                    ></multiselect>
+                                </td>
+                                <td>
+                                    <multiselect
+                                        v-model="permissions[groupName][name]['forceDelete']"
+                                        :options="selectOptions"
+                                        select-label=""
+                                        deselect-label=""
+                                        selected-label=""
+                                        :searchable="false"
+                                        :close-on-select="true"
+                                        :allow-empty="false"
+                                        @input="updatePermissions"
+                                    ></multiselect>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </card>
+        </loading>
     </div>
 </template>
 

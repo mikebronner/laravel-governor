@@ -20,17 +20,17 @@ abstract class Controller extends BaseController
         $entityClass = config("genealabs-laravel-governor.models.entity");
         $permissionClass = config("genealabs-laravel-governor.models.permission");
 
-        (new $permissionClass)->where('role_key', 'SuperAdmin')->delete();
+        (new $permissionClass)->where('role_name', 'SuperAdmin')->delete();
         $entities = (new $entityClass)->all();
         $actions = (new $actionClass)->all();
 
         foreach ($entities as $entity) {
             foreach ($actions as $action) {
                 (new $permissionClass)->updateOrCreate([
-                    'role_key' => 'SuperAdmin',
-                    'entity_key' => $entity->name,
-                    'action_key' => $action->name,
-                    'ownership_key' => 'any',
+                    'role_name' => 'SuperAdmin',
+                    'entity_name' => $entity->name,
+                    'action_name' => $action->name,
+                    'ownership_name' => 'any',
                 ]);
             }
         }

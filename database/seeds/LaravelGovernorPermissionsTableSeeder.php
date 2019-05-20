@@ -20,10 +20,10 @@ class LaravelGovernorPermissionsTableSeeder extends Seeder
         foreach ($entities as $entity) {
             foreach ($actions as $action) {
                 (new $permissionClass)->firstOrCreate([
-                    "role_key" => $superadmin->name,
-                    "action_key" => $action->name,
-                    "ownership_key" => $ownership->name,
-                    "entity_key" => $entity->name,
+                    "role_name" => $superadmin->name,
+                    "action_name" => $action->name,
+                    "ownership_name" => $ownership->name,
+                    "entity_name" => $entity->name,
                 ]);
             }
         }

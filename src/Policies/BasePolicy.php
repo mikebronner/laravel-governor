@@ -119,9 +119,9 @@ abstract class BasePolicy
     protected function filterPermissions($action, $entity, $ownership)
     {
         $filteredPermissions = $this->permissions->filter(function ($permission) use ($action, $entity, $ownership) {
-            return ($permission->action_key === $action
-                && $permission->entity_key === $entity
-                && in_array($permission->ownership_key, [$ownership, 'any']));
+            return ($permission->action_name === $action
+                && $permission->entity_name === $entity
+                && in_array($permission->ownership_name, [$ownership, 'any']));
         });
 
         return $filteredPermissions;

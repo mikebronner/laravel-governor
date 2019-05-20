@@ -7,16 +7,16 @@ use Illuminate\Support\Collection;
 class Permission extends Model
 {
     protected $rules = [
-        'role_key' => 'required',
-        'entity_key' => 'required',
-        'action_key' => 'required',
-        'ownership_key' => 'required',
+        'role_name' => 'required',
+        'entity_name' => 'required',
+        'action_name' => 'required',
+        'ownership_name' => 'required',
     ];
     protected $fillable = [
-        'role_key',
-        'entity_key',
-        'action_key',
-        'ownership_key',
+        'role_name',
+        'entity_name',
+        'action_name',
+        'ownership_name',
     ];
     protected $table = "governor_permissions";
 

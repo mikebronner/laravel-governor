@@ -90,16 +90,16 @@ class Service extends AggregateServiceProvider
         (new $entityClass)
             ->with("permissions")
             ->whereDoesntHave("permissions", function ($query) {
-                $query->where("role_key", "SuperAdmin");
+                $query->where("role_name", "SuperAdmin");
             })
             ->get()
             ->each(function ($entity) use ($actionClass, $permissionClass) {
                 (new $actionClass)->all()->each(function ($action) use ($entity, $permissionClass) {
                     (new $permissionClass)->firstOrCreate([
-                        "role_key" => "SuperAdmin",
-                        "action_key" => $action->name,
-                        "ownership_key" => "any",
-                        "entity_key" => $entity->name,
+                        "role_name" => "SuperAdmin",
+                        "action_name" => $action->name,
+                        "ownership_name" => "any",
+                        "entity_name" => $entity->name,
                     ]);
                 });
             });

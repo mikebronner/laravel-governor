@@ -2,8 +2,6 @@
 
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
 use Illuminate\Support\Collection;
-use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
-use Illuminate\Http\Response;
 
 class PermissionController extends Controller
 {
@@ -14,7 +12,7 @@ class PermissionController extends Controller
         $ownershipClass = config("genealabs-laravel-governor.models.ownership");
         $roleClass = config("genealabs-laravel-governor.models.role");
 
-        $roleKey = request("filter") === "role_key"
+        $roleKey = request("filter") === "role_name"
             ? request("value")
             : null;
         $role = (new $roleClass)
@@ -56,11 +54,13 @@ class PermissionController extends Controller
                     }
                 }
 
-                $permissionMatrix[$entity->name][$action->name] = $selectedOwnership;
+                $groupName = ucwords($entity->group_name)
+                    ?: "Ungrouped";
+                $permissionMatrix[$groupName][$entity->name][$action->name] = $selectedOwnership;
             }
         }
 
-        $ownershipOptions = array_merge(['no' => 'no'], $ownerships->pluck('name', 'name')->toArray());
+        asort($permissionMatrix);
 
         return $permissionMatrix;
     }

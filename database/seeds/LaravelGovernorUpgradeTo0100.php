@@ -9,16 +9,16 @@ class LaravelGovernorUpgradeTo0100 extends Seeder
         if (Schema::hasTable('permissions')) {
             app("db")
                 ->table("permissions")
-                ->where("role_key", "NOT LIKE", "SuperAdmin")
+                ->where("role_name", "NOT LIKE", "SuperAdmin")
                 ->get()
                 ->each(function ($permission) {
                     app("db")
                         ->table("governor_permissions")
                         ->insert([
-                            "role_name" => $permission->role_key,
-                            "action_name" => $permission->action_key,
-                            "entity_name" => $permission->entity_key,
-                            "ownership_name" => $permission->ownership_key,
+                            "role_name" => $permission->role_name,
+                            "action_name" => $permission->action_name,
+                            "entity_name" => $permission->entity_name,
+                            "ownership_name" => $permission->ownership_name,
                         ]);
                 });
         }
@@ -31,7 +31,7 @@ class LaravelGovernorUpgradeTo0100 extends Seeder
                     app("db")
                         ->table("governor_role_user")
                         ->insert([
-                            "role_name" => $roleUser->role_key,
+                            "role_name" => $roleUser->role_name,
                             "user_id" => $roleUser->user_id,
                         ]);
                 });

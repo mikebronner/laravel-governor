@@ -7,6 +7,8 @@ class UpdateRoleRequest extends Request
     public function authorize() : bool
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
+        $this->role = (new $roleClass)
+            ->find($this->role);
 
         return auth()->check()
             && ($this->role
@@ -25,39 +27,30 @@ class UpdateRoleRequest extends Request
 
     public function process()
     {
-        $actionClass = config("genealabs-laravel-governor.models.action");
-        $entityClass = config("genealabs-laravel-governor.models.entity");
-        $ownershipClass = config("genealabs-laravel-governor.models.ownership");
         $permissionClass = config("genealabs-laravel-governor.models.permission");
-        $roleClass = config("genealabs-laravel-governor.models.role");
-        $role = $this->id
-            ? (new $roleClass)->find($this->id)
-            : new $roleClass;
-        $role->fill($this->all());
+        $this->role->fill($this->all());
 
         if ($this->filled('permissions')) {
-            $allActions = (new $actionClass)->all();
-            $allOwnerships = (new $ownershipClass)->all();
-            $allEntities = (new $entityClass)->all();
-            $role->permissions()->delete();
+            $this->role->permissions()->delete();
 
-            foreach ($this->permissions as $entity => $actions) {
-                foreach ($actions as $action => $ownership) {
-                    if ('no' !== $ownership) {
-                        $currentAction = $allActions->find($action);
-                        $currentOwnership = $allOwnerships->find($ownership);
-                        $currentEntity = $allEntities->find($entity);
-                        $currentPermission = new $permissionClass;
-                        $currentPermission->ownership()->associate($currentOwnership);
-                        $currentPermission->action()->associate($currentAction);
-                        $currentPermission->role()->associate($role);
-                        $currentPermission->entity()->associate($currentEntity);
-                        $currentPermission->save();
+            foreach ($this->permissions as $group) {
+                foreach ($group as $entity => $actions) {
+                    foreach ($actions as $action => $ownership) {
+                        if ('no' !== $ownership) {
+                            $currentPermission = (new $permissionClass)
+                                ->firstOrNew([
+                                    "action_name" => $action,
+                                    "entity_name" => $entity,
+                                    "role_name" => $this->role->name,
+                                ]);
+                            $currentPermission->ownership_name = $ownership;
+                            $currentPermission->save();
+                        }
                     }
                 }
             }
         }
 
-        $role->save();
+        $this->role->save();
     }
 }
