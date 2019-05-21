@@ -7,18 +7,32 @@
                     name: "",
                     entities: [],
                 },
+                groupName: this.$router.currentRoute.params.groupName,
+                isLoadingEntities: true,
+                isLoadingGroup: true,
             };
         },
 
         created: function () {
+            this.loadGroup();
             this.loadAvailableEntities();
         },
 
         computed: {
             availableEntities: function () {
-                return _.filter(this.entities, function (entity) {
-                    return entity.group_name.length === 0;
+                var entities = _.filter(this.entities, function (entity) {
+                    return (entity.group_name || "").length === 0;
                 });
+
+                return entities.concat(this.group.entities);
+            },
+
+            isCreating: function () {
+                return ! this.isEditing;
+            },
+
+            isEditing: function () {
+                return this.$router.currentRoute.params.groupName;
             },
         },
 
@@ -37,7 +51,24 @@
                 axios.get("/genealabs/laravel-governor/nova/entities")
                     .then(function (response) {
                         self.entities = Object.assign([], response.data);
-                        self.isLoading = false;
+                        self.isLoadingEntities = false;
+                    });
+            },
+
+            loadGroup: function () {
+                var self = this;
+                var groupName = this.$router.currentRoute.params.groupName;
+
+                if ((groupName || "").length === 0) {
+                    return;
+                }
+
+                axios.get("/genealabs/laravel-governor/nova/groups/" + groupName)
+                    .then(function (response) {
+                        console.log(response.data);
+                        self.group.name  = response.data.name;
+                        self.group.entities = response.data.entities;
+                        self.isLoadingGroup = false;
                     });
             },
             
@@ -69,7 +100,7 @@
     <div>
         <heading class="mb-6">Create Group</heading>
         <loading-card
-            :loading="false"
+            :loading="isLoadingEntities && isLoadingGroup"
         >
             <form autocomplete="off">
                 <div>
@@ -98,7 +129,7 @@
                         <div class="py-6 px-8 w-4/5">
                             <multiselect
                                 v-model="group.entities"
-                                :options="entities"
+                                :options="availableEntities"
                                 :allow-empty="true"
                                 track-by="name"
                                 label="name"
@@ -111,6 +142,7 @@
                 </div>
                 <div class="bg-30 flex px-8 py-4">
                     <button
+                        v-if="isCreating"
                         type="button"
                         class="btn btn-default btn-primary inline-flex items-center relative ml-auto mr-3"
                         dusk="create-and-add-another-button"
@@ -121,12 +153,24 @@
                         </span>
                     </button>
                     <button
+                        v-if="isEditing"
+                        type="button"
+                        class="btn btn-default btn-primary inline-flex items-center relative ml-auto"
+                        dusk="create-button"
+                        @click="createGroup"
+                    >
+                        <span>
+                            Update Group
+                        </span>
+                    </button>
+                    <button
+                        v-if="isCreating"
                         type="button"
                         class="btn btn-default btn-primary inline-flex items-center relative"
                         dusk="create-button"
                         @click="createGroup"
                     >
-                        <span class="">
+                        <span>
                             Create Group
                         </span>
                     </button>

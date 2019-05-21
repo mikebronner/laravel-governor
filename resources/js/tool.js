@@ -25,7 +25,12 @@ Nova.booting((Vue, router) => {
         },
         {
             name: 'laravel-nova-governor-groups-create',
-            path: '/laravel-nova-governor/groups/create',
+            path: '/laravel-nova-governor/groups/create/',
+            component: require('./components/GroupCreate').default,
+        },
+        {
+            name: 'laravel-nova-governor-groups-edit',
+            path: '/laravel-nova-governor/groups/:group',
             component: require('./components/GroupCreate').default,
         },
         {

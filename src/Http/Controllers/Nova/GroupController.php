@@ -1,9 +1,8 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers\Nova;
 
+use GeneaLabs\LaravelGovernor\Group;
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
 use GeneaLabs\LaravelGovernor\Http\Requests\StoreGroupRequest;
-use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
-use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
@@ -34,7 +33,7 @@ class GroupController extends Controller
         return response(null, 204);
     }
 
-    public function show($id) : Role
+    public function show($id) : Group
     {
         return $this->groups
             ->with("entities")

@@ -1,7 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers\Nova;
 
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
-use Illuminate\Support\Collection;
 
 class PermissionController extends Controller
 {
@@ -9,7 +8,6 @@ class PermissionController extends Controller
     {
         $actionClass = config("genealabs-laravel-governor.models.action");
         $entityClass = config("genealabs-laravel-governor.models.entity");
-        $ownershipClass = config("genealabs-laravel-governor.models.ownership");
         $roleClass = config("genealabs-laravel-governor.models.role");
 
         $roleKey = request("filter") === "role_name"
@@ -35,11 +33,11 @@ class PermissionController extends Controller
                     ]);
             });
         $entities = (new $entityClass)
-            ->whereNotIn('name', ['permission', 'entity', "action", "ownership"])
+            ->whereNotIn('name', ['governor_permission', 'governor_entity', "governor_action", "governor_ownership"])
+            ->orderBy("group_name")
+            ->orderBy("name")
             ->get();
         $actions = (new $actionClass)
-            ->all();
-        $ownerships = (new $ownershipClass)
             ->all();
         $permissionMatrix = [];
 
@@ -59,8 +57,6 @@ class PermissionController extends Controller
                 $permissionMatrix[$groupName][$entity->name][$action->name] = $selectedOwnership;
             }
         }
-
-        asort($permissionMatrix);
 
         return $permissionMatrix;
     }

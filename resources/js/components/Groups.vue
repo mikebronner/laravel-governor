@@ -2,8 +2,11 @@
     module.exports = {
         data: function () {
             return {
-                isLoading: true,
                 groups: [],
+                groupToBeDeleted: {},
+                isDeleteModalVisible: false,
+                isDeleting: false,
+                isLoading: true,
             };
         },
 
@@ -22,6 +25,21 @@
         },
 
         methods: {
+            deleteGroup: function () {
+                var self = this;
+
+                this.isDeleting = true;
+                axios.delete("/genealabs/laravel-governor/nova/groups/" + this.groupToBeDeleted.name)
+                    .then(function (response) {
+                        self.isDeleting = false;
+                        self.isDeleteModalVisible = false;
+                        self.$toasted.show("Group '" + self.groupToBeDeleted.name + "' deleted successfully.", {type: "success"});
+                        self.groups = _.filter(self.groups, function (group) {
+                            return group.name !== self.groupToBeDeleted.name;
+                        });
+                    });
+            },
+
             entityNames: function (group) {
                 return _.chain(group.entities)
                     .map(function (entity) {
@@ -32,6 +50,11 @@
                     });
             },
 
+            hideDeleteModal: function () {
+                this.isDeleteModalVisible = false;
+                this.groupToBeDeleted = {};
+            },
+
             loadGroups: function () {
                 var self = this;
 
@@ -40,6 +63,11 @@
                         self.groups = Object.assign([], response.data);
                         self.isLoading = false;
                     });
+            },
+
+            showDeleteModalFor: function (group) {
+                this.groupToBeDeleted = group;
+                this.isDeleteModalVisible = true;
             },
         },
     };
@@ -80,6 +108,7 @@
                             <th class="text-left">
                                 Entities
                             </th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,11 +130,9 @@
                                 </div>
                             </div>
                         </tr>
-                        <router-link
+                        <tr
                             v-for="group in groups"
                             :key="group.name"
-                            tag="tr"
-                            :to="{name: 'laravel-nova-governor-group-edit', params: {group: group.name} }"
                             :class="{'disabled': group.name == 'SuperAdmin'}"
                             class="cursor-pointer font-normal dim text-white mb-6 text-base no-underline"
                         >
@@ -119,11 +146,69 @@
                                     {{ entityNames(group) }}
                                 </span>
                             </td>
-                        </router-link>
+                            <td>
+                                <span>
+                                    <router-link
+                                        tag="a"
+                                        :to="{name: 'laravel-nova-governor-groups-edit', params: {groupName: group.name}}"
+                                        class="cursor-pointer text-70 hover:text-primary mr-3"
+                                        title="Edit"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" aria-labelledby="edit" role="presentation" class="fill-current"><path d="M4.3 10.3l10-10a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-10 10a1 1 0 0 1-.7.3H5a1 1 0 0 1-1-1v-4a1 1 0 0 1 .3-.7zM6 14h2.59l9-9L15 2.41l-9 9V14zm10-2a1 1 0 0 1 2 0v6a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4c0-1.1.9-2 2-2h6a1 1 0 1 1 0 2H2v14h14v-6z"></path></svg>
+                                    </router-link>
+                                </span>
+                                <button
+                                    title="Delete"
+                                    class="appearance-none cursor-pointer text-70 hover:text-primary mr-3"
+                                    type="button"
+                                    @click="showDeleteModalFor(group)"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" aria-labelledby="delete" role="presentation" class="fill-current"><path fill-rule="nonzero" d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path></svg>
+                                </button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </loading-card>
+        <portal to="modals">
+            <modal
+                v-if="isDeleteModalVisible"
+                @modal-close="hideDeleteModal"
+            >
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden" style="width: 460px;">
+                    <div class="p-8">
+                        <h2 class="mb-6 text-90 font-normal text-xl">Delete Resource</h2>
+                        <p class="text-80 leading-normal">
+                            Are you sure you want to delete this resource?
+                        </p>
+                    </div>
+                    <div class="bg-30 px-6 py-3 flex">
+                        <div class="ml-auto">
+                            <button
+                                type="button"
+                                class="btn text-80 font-normal h-9 px-3 mr-3 btn-link"
+                                @click="hideDeleteModal"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-default btn-danger"
+                                @click="deleteGroup"
+                                :disabled="isDeleting"
+                            >
+                                <i
+                                    class="fas fa-circle-notch fa-spin"
+                                    v-show="isDeleting"
+                                ></i>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </modal>
+        </portal>
     </div>
 </template>
 
