@@ -1,24 +1,36 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use GeneaLabs\LaravelGovernor\Entity;
 
 class LaravelGovernorUpgradeTo0100 extends Seeder
 {
     public function run()
     {
+        if (Schema::hasTable("entities")) {
+            app("db")
+                ->table("entities")
+                ->get()
+                ->each(function ($entity) {
+                    (new Entity)->firstOrCreate([
+                        "name" => $entity->name,
+                    ]);
+                });
+        }
+
         if (Schema::hasTable('permissions')) {
             app("db")
                 ->table("permissions")
-                ->where("role_name", "NOT LIKE", "SuperAdmin")
+                ->where("role_key", "NOT LIKE", "SuperAdmin")
                 ->get()
                 ->each(function ($permission) {
                     app("db")
                         ->table("governor_permissions")
                         ->insert([
-                            "role_name" => $permission->role_name,
-                            "action_name" => $permission->action_name,
-                            "entity_name" => $permission->entity_name,
-                            "ownership_name" => $permission->ownership_name,
+                            "role_name" => $permission->role_key,
+                            "action_name" => $permission->action_key,
+                            "entity_name" => $permission->entity_key,
+                            "ownership_name" => $permission->ownership_key,
                         ]);
                 });
         }
@@ -31,7 +43,7 @@ class LaravelGovernorUpgradeTo0100 extends Seeder
                     app("db")
                         ->table("governor_role_user")
                         ->insert([
-                            "role_name" => $roleUser->role_name,
+                            "role_name" => $roleUser->role_key,
                             "user_id" => $roleUser->user_id,
                         ]);
                 });
