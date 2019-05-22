@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use GeneaLabs\LaravelGovernor\Entity;
+use GeneaLabs\LaravelGovernor\Permission;
+use GeneaLabs\LaravelGovernor\Role;
 
 class LaravelGovernorUpgradeTo0100 extends Seeder
 {
@@ -24,14 +26,12 @@ class LaravelGovernorUpgradeTo0100 extends Seeder
                 ->where("role_key", "NOT LIKE", "SuperAdmin")
                 ->get()
                 ->each(function ($permission) {
-                    app("db")
-                        ->table("governor_permissions")
-                        ->insert([
-                            "role_name" => $permission->role_key,
-                            "action_name" => $permission->action_key,
-                            "entity_name" => $permission->entity_key,
-                            "ownership_name" => $permission->ownership_key,
-                        ]);
+                    (new Permission)->firstOrCreate([
+                        "role_name" => $permission->role_key,
+                        "action_name" => $permission->action_key,
+                        "entity_name" => $permission->entity_key,
+                        "ownership_name" => $permission->ownership_key,
+                    ]);
                 });
         }
         
@@ -40,12 +40,10 @@ class LaravelGovernorUpgradeTo0100 extends Seeder
                 ->table("role_user")
                 ->get()
                 ->each(function ($roleUser) {
-                    app("db")
-                        ->table("governor_role_user")
-                        ->insert([
-                            "role_name" => $roleUser->role_key,
-                            "user_id" => $roleUser->user_id,
-                        ]);
+                    (new Role)
+                        ->find($roleUser->role_key)
+                        ->users()
+                        ->syncWithoutDetaching($roleUser->user_id);
                 });
         }
 
