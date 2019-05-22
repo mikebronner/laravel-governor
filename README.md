@@ -59,8 +59,8 @@ php artisan db:seed --class="LaravelGovernorUpgradeTo0100"
 If you are using `Laravel Tenancy`, run the following instead:
 ```sh
 php artisan tenancy:migrate --path="vendor/genealabs/laravel-governor/database/migrations"
-php artisan tenancy:db:seed --class="LaravelGovernorUpgradeTo0100"
 php artisan tenancy:db:seed --class="LaravelGovernorDatabaseSeeder"
+php artisan tenancy:db:seed --class="LaravelGovernorUpgradeTo0100"
 ```
 
 ## Implementation
