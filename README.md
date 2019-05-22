@@ -51,14 +51,16 @@ php artisan tenancy:db:seed --class="LaravelGovernorDatabaseSeeder"
 To upgrade from version previous to `0.10.0`, first run the migrations and
 seeders, then run the update seeder:
 ```sh
-pa tenancy:migrate --path="vendor/genealabs/laravel-governor/database/migrations"
+php artisan migrate --path="vendor/genealabs/laravel-governor/database/migrations"
 php artisan db:seed --class="LaravelGovernorDatabaseSeeder"
 php artisan db:seed --class="LaravelGovernorUpgradeTo0100"
 ```
 
 If you are using `Laravel Tenancy`, run the following instead:
 ```sh
+php artisan tenancy:migrate --path="vendor/genealabs/laravel-governor/database/migrations"
 php artisan tenancy:db:seed --class="LaravelGovernorUpgradeTo0100"
+php artisan tenancy:db:seed --class="LaravelGovernorDatabaseSeeder"
 ```
 
 ## Implementation
