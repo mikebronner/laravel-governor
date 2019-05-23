@@ -138,6 +138,48 @@ To validate a user against a given policy, use one of the keywords that Governor
  you would authorize your user with something like `$user->can('create', (new BlogPost))`
  or `$user->can('edit', $blogPost)`.
 
+### Filter Queries To Show Ownly Allowed Items
+Often it is desirable to let the user see only the items that they have access
+    to. This was previously difficult and tedious. Using Nova as an example, you
+    can now limit the index view as follows:
+    ```php
+    <?php namespace App\Nova;
+
+    use Laravel\Nova\Resource as NovaResource;
+    use Laravel\Nova\Http\Requests\NovaRequest;
+
+    abstract class Resource extends NovaResource
+    {
+        public static function indexQuery(NovaRequest $request, $query)
+        {
+            $model = $query->getModel();
+
+            if ($model
+                && is_object($model)
+                && method_exists($model, "filterViewAnyable")
+            ) {
+                $query = $model->filterViewAnyable($query);
+            }
+
+            return $query;
+        }
+
+        // ...
+    }
+    ```
+
+    The available query filters are:
+    - `filterDeletable(Builder $query)`
+    - `filterUpdatable(Builder $query)`
+    - `filterViewable(Builder $query)`
+    - `filterViewAnyable(Builder $query)`
+
+    The same functionality is availabe via model scopes, as well:
+    - `deletable()`
+    - `updatable()`
+    - `viewable()`
+    - `viewAnyable()`
+
 ### Tables
 Tables will automatically be updated with a `governor_created_by` column that references
  the user that created the entry. There is no more need to run separate

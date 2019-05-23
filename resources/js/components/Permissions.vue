@@ -272,7 +272,7 @@
                                 <td>
                                     <multiselect
                                         v-model="permissions[groupName][name]['viewAny']"
-                                        :options="binarySelectOptions"
+                                        :options="selectOptions"
                                         select-label=""
                                         deselect-label=""
                                         selected-label=""

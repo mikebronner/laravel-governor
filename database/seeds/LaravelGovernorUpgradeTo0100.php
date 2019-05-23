@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use GeneaLabs\LaravelGovernor\Entity;
 use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Role;
+use Illuminate\Database\Seeder;
 
 class LaravelGovernorUpgradeTo0100 extends Seeder
 {
