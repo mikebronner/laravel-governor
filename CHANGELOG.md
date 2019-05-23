@@ -1,6 +1,11 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.10.3]  - 23 May 2019
+### Added
+- functionality to allow filtering of queries, via direct methods or scopes,
+    based on permissions.
+
 ## [0.6.5] - 22 Jun 2018
 ### Added
 - API endpoint to check if a user has a role to support previous version.
