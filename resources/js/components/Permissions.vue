@@ -202,7 +202,7 @@
             </form>
         </loading-card>
         <heading class="mt-8 mb-6">Permissions</heading>
-        <loading
+        <loading-view
             v-for="(group, groupName) in permissions"
             :key="'group-' + groupName"
             :loading="permissionsIsLoading"
