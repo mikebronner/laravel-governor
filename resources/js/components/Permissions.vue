@@ -272,7 +272,7 @@
                                 <td>
                                     <multiselect
                                         v-model="permissions[groupName][name]['viewAny']"
-                                        :options="selectOptions"
+                                        :options="binarySelectOptions"
                                         select-label=""
                                         deselect-label=""
                                         selected-label=""
@@ -352,7 +352,7 @@
                     </table>
                 </div>
             </card>
-        </loading>
+        </loading-view>
     </div>
 </template>
 

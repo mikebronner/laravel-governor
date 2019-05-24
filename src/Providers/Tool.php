@@ -18,7 +18,6 @@ class Tool extends ServiceProvider
         });
 
         if (class_exists("Laravel\Nova\Resource")) {
-            \GeneaLabs\LaravelGovernor\Nova\User::$model = config("genealabs-laravel-governor.models.auth");
             \Laravel\Nova\Nova::serving(function (ServingNova $event) {
                 \Laravel\Nova\Nova::resources([
                     \GeneaLabs\LaravelGovernor\Nova\Action::class,
@@ -28,7 +27,6 @@ class Tool extends ServiceProvider
                     \GeneaLabs\LaravelGovernor\Nova\Ownership::class,
                     \GeneaLabs\LaravelGovernor\Nova\Permission::class,
                     \GeneaLabs\LaravelGovernor\Nova\Role::class,
-                    \GeneaLabs\LaravelGovernor\Nova\User::class,
                 ]);
             });
         }

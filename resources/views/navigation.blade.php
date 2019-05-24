@@ -5,25 +5,34 @@
     <span class="sidebar-label">{{ __("Permissions") }}</span>
 </h3>
 <ul class="list-reset mb-8">
-    <li class="leading-tight mb-4 ml-8 text-sm">
-        <router-link
-            :to="{name: 'laravel-nova-governor-roles'}"
-            class="text-white text-justify no-underline dim">
-            Roles
-        </router-link>
-    </li>
-    <li class="leading-tight mb-4 ml-8 text-sm">
-        <router-link
-            :to="{name: 'laravel-nova-governor-groups'}"
-            class="text-white text-justify no-underline dim">
-            Groups
-        </router-link>
-    </li>
-    <li class="leading-tight mb-4 ml-8 text-sm">
-        <router-link
-            :to="{name: 'laravel-nova-governor-assignments'}"
-            class="text-white text-justify no-underline dim">
-            Assignments
-        </router-link>
-    </li>
+    @can ("viewAny", "GeneaLabs\LaravelGovernor\Role")
+        <li class="leading-tight mb-4 ml-8 text-sm">
+            <router-link
+                :to="{name: 'laravel-nova-governor-roles'}"
+                class="text-white text-justify no-underline dim">
+                Roles
+            </router-link>
+        </li>
+    @endcan
+
+    @can ("viewAny", "GeneaLabs\LaravelGovernor\Group")
+        <li class="leading-tight mb-4 ml-8 text-sm">
+            <router-link
+                :to="{name: 'laravel-nova-governor-groups'}"
+                class="text-white text-justify no-underline dim">
+                Groups
+            </router-link>
+        </li>
+    @endcan
+
+    @can ("viewAny", "GeneaLabs\LaravelGovernor\Assignment")
+        <li class="leading-tight mb-4 ml-8 text-sm">
+            <router-link
+                :to="{name: 'laravel-nova-governor-assignments'}"
+                class="text-white text-justify no-underline dim">
+                Assignments
+            </router-link>
+        </li>
+    @endcan
+
 </ul>

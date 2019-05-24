@@ -34,6 +34,14 @@ abstract class Resource extends NovaResource
      */
     public static function scoutQuery(NovaRequest $request, $query)
     {
+        $model = $query->getModel();
+
+        if (is_object($model)
+            && method_exists($model, "filterViewable")
+        ) {
+            $query = $model->filterViewable($query);
+        }
+
         return $query;
     }
 

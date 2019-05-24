@@ -36,14 +36,12 @@ abstract class BasePolicy
             $user,
             'update',
             $this->entity,
-            $model->governor_created_by
+            $model->owner
         );
     }
 
     public function viewAny(Model $user) : bool
     {
-        return true;
-        // TODO: figure out how this is different from `view`
         return $this->validatePermissions(
             $user,
             'viewAny',
@@ -57,7 +55,7 @@ abstract class BasePolicy
             $user,
             'view',
             $this->entity,
-            $model->governor_created_by
+            $model->owner
         );
     }
 
@@ -67,7 +65,7 @@ abstract class BasePolicy
             $user,
             'delete',
             $this->entity,
-            $model->governor_created_by
+            $model->owner
         );
     }
 
@@ -77,7 +75,7 @@ abstract class BasePolicy
             $user,
             'restore',
             $this->entity,
-            $model->governor_created_by
+            $model->owner
         );
     }
 
@@ -87,7 +85,7 @@ abstract class BasePolicy
             $user,
             'forceDelete',
             $this->entity,
-            $model->governor_created_by
+            $model->owner
         );
     }
 
