@@ -37,9 +37,9 @@ class Service extends AggregateServiceProvider
             __DIR__ . '/../../database/migrations' => base_path('database/migrations')
         ], 'migrations');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        // $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
-        if (Schema::hasTable('entities')) {
+        if (Schema::hasTable('governor_entities')) {
             $this->parsePolicies($gate);
         }
     }
@@ -75,6 +75,7 @@ class Service extends AggregateServiceProvider
             ->values()
             ->filter()
             ->each(function ($entity) use ($actionClass, $entityClass, $ownershipClass, $permissionClass, $roleClass) {
+                // dd(new $entityClass);
                 (new $entityClass)->firstOrCreate(['name' => $entity]);
                 $superadmin = (new $roleClass)->whereName('SuperAdmin')->first();
                 $ownership = (new $ownershipClass)->whereName('any')->first();
@@ -94,19 +95,22 @@ class Service extends AggregateServiceProvider
             })
             ->get()
             ->each(function ($entity) use ($actionClass, $permissionClass) {
-                (new $actionClass)->all()->each(function ($action) use ($entity, $permissionClass) {
-                    (new $permissionClass)->firstOrCreate([
-                        "role_name" => "SuperAdmin",
-                        "action_name" => $action->name,
-                        "ownership_name" => "any",
-                        "entity_name" => $entity->name,
-                    ]);
-                });
+                (new $actionClass)->all()
+                    ->each(function ($action) use ($entity, $permissionClass) {
+                        (new $permissionClass)->firstOrCreate([
+                            "role_name" => "SuperAdmin",
+                            "action_name" => $action->name,
+                            "ownership_name" => "any",
+                            "entity_name" => $entity->name,
+                        ]);
+                    });
             });
     }
 
     protected function newEntity(string $policyClass)
     {
+        $entityClass = config("genealabs-laravel-governor.models.entity");
+        $entityClass = new $entityClass;
         $policyClass = collect(explode('\\', $policyClass))->last();
         $entity = str_replace('policy', '', strtolower($policyClass));
 
@@ -114,7 +118,7 @@ class Service extends AggregateServiceProvider
             return;
         }
 
-        if (! app('db')->table('entities')->where('name', $entity)->exists()) {
+        if (! app('db')->table($entityClass->getTable())->where('name', $entity)->exists()) {
             return $entity;
         }
     }

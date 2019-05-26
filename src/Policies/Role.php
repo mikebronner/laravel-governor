@@ -4,47 +4,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends BasePolicy
 {
-    public function update(Model $user, Model $model) : bool
-    {
-        return ($model->name !== "SuperAdmin");
-        if ($model->name === "SuperAdmin") {
-            return false;
-        }
-
-        return $this->validatePermissions(
-            $user,
-            'update',
-            $this->entity,
-            $model->governor_created_by
-        );
-    }
-
     public function delete(Model $user, Model $model) : bool
     {
         if ($model->name === "SuperAdmin") {
             return false;
         }
 
-        return $this->validatePermissions(
-            $user,
-            'delete',
-            $this->entity,
-            $model->governor_created_by
-        );
-    }
-
-    public function restore(Model $user, Model $model) : bool
-    {
-        if ($model->name === "SuperAdmin") {
-            return false;
-        }
-
-        return $this->validatePermissions(
-            $user,
-            'restore',
-            $this->entity,
-            $model->governor_created_by
-        );
+        return parent::delete($user, $Model);
     }
 
     public function forceDelete(Model $user, Model $model) : bool
@@ -53,11 +19,34 @@ class Role extends BasePolicy
             return false;
         }
 
-        return $this->validatePermissions(
-            $user,
-            'forceDelete',
-            $this->entity,
-            $model->governor_created_by
-        );
+        return parent::forceDelete($user, $Model);
     }
+
+    public function restore(Model $user, Model $model) : bool
+    {
+        if ($model->name === "SuperAdmin") {
+            return false;
+        }
+
+        return parent::restore($user, $Model);
+    }
+
+    public function update(Model $user, Model $model) : bool
+    {
+        if ($model->name === "SuperAdmin") {
+            return false;
+        }
+
+        return parent::update($user, $Model);
+    }
+
+    public function view(Model $user, Model $model) : bool
+    {
+        if ($model->name === "SuperAdmin") {
+            return false;
+        }
+
+        return parent::view($user, $Model);
+    }
+
 }
