@@ -1,7 +1,28 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
-## [0.10.3]  - 23 May 2019
+## [0.11.0] - 26 May 2019
+### Added
+- caching to database checks to run only once every 5 minutes per table, instead
+    of every query.
+- upgrade instructions to README.
+- query scopes for governed models.
+- `ownedBy` BelongsTo relationship to governed models.
+
+### Changed
+- `governor_created_by` field to `governor_owned_by`.
+- config file details in README to match current config file.
+- model listeners to run more optimised and return early where possible.
+- Role policy to run parent code, instead of replicating code from base policy.
+- entity detection in service provider to be more robust and account for custom
+    overriding of governor models.
+- traits `Governable` to `Governing` and `Governed` to `Governable`.
+
+### Removed
+- autoloading of migrations, so that it won't conflict with other packages that
+    might need migrations to be run a special way.
+
+## [0.10.3] - 23 May 2019
 ### Added
 - functionality to allow filtering of queries, via direct methods or scopes,
     based on permissions.

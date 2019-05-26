@@ -11,19 +11,20 @@ class CreatedListener
      */
     public function handle(string $event, array $models)
     {
-        if (! str_contains($event, "Hyn\Tenancy\Models\Website")
-            && ! str_contains($event, "Hyn\Tenancy\Models\Hostname")
-            && Schema::hasTable('roles')
+        if (str_contains($event, "Hyn\Tenancy\Models\Website")
+            || str_contains($event, "Hyn\Tenancy\Models\Hostname")
+            || ! Schema::hasTable('roles')
         ) {
-            collect($models)
-                ->filter(function ($model) {
-                    return $model instanceof Model;
-                })
-                ->each(function ($model) {
-                    if (get_class($model) === config('genealabs-laravel-governor.models.auth')) {
-                        $model->roles()->attach('Member');
-                    }
-                });
+            return;
         }
+
+        collect($models)
+            ->filter(function ($model) {
+                return $model instanceof Model
+                    && get_class($model) === config('genealabs-laravel-governor.models.auth');
+            })
+            ->each(function ($model) {
+                $model->roles()->attach('Member');
+            });
     }
 }

@@ -12,27 +12,33 @@ class CreatingListener
      */
     public function handle(string $event, array $models)
     {
+        if (auth()->guest()) {
+            return;
+        }
+
         collect($models)
             ->filter(function ($model) {
                 return $model instanceof Model;
             })
             ->each(function (Model $model) {
-                if (auth()->check()
-                    && ! (property_exists($model, 'isGoverned')
-                        && $model['isGoverned'] === false)
-                ) {
-                    $model->governor_created_by = auth()->user()->getKey();
-                    $table = $model->getTable();
+                $model->governor_owned_by = $model->governor_owned_by
+                    ?: auth()->user()->getKey();
+                app("cache")->remember("governor-{$model->getTable()}-table-check-ownedby-field", 300, function () use ($model) {
                     $connection = $model
                         ->getConnection()
                         ->getName();
 
-                    if (! Schema::connection($connection)->hasColumn($table, 'governor_created_by')) {
-                        Schema::connection($connection)->table($table, function (Blueprint $table) {
-                            $table->integer('governor_created_by')->unsigned()->nullable();
+                    if (! Schema::connection($connection)->hasColumn($model->getTable(), 'governor_owned_by')) {
+                        Schema::connection($connection)->table($model->getTable(), function (Blueprint $table) {
+                            $table->unsignedBigInteger('governor_owned_by')
+                                ->nullable();
                         });
+
+                        return true;
                     }
-                }
+
+                    return false;
+                });
             });
     }
 }

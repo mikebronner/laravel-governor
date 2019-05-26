@@ -34,39 +34,10 @@ Install via composer:
 composer require genealabs/laravel-governor
 ```
 
-### Laravel Tenancy (Hyn)
-If you are using the `hyn/multi-tenancy` package, execute the following command
-to run Laravel Governor's migrations:
-```sh
-php artisan tenancy:migrate --path="vendor/genealabs/laravel-governor/database/migrations"
-```
-
-And then the seeders:
-```sh
-php artisan tenancy:db:seed --class="LaravelGovernorDatabaseSeeder"
-```
-
-## Upgrading
-### From Versions Prior To 0.10.0 to Version 0.10.x
-To upgrade from version previous to `0.10.0`, first run the migrations and
-seeders, then run the update seeder:
-```sh
-php artisan migrate --path="vendor/genealabs/laravel-governor/database/migrations"
-php artisan db:seed --class="LaravelGovernorDatabaseSeeder"
-php artisan db:seed --class="LaravelGovernorUpgradeTo0100"
-```
-
-If you are using `Laravel Tenancy`, run the following instead:
-```sh
-php artisan tenancy:migrate --path="vendor/genealabs/laravel-governor/database/migrations"
-php artisan tenancy:db:seed --class="LaravelGovernorDatabaseSeeder"
-php artisan tenancy:db:seed --class="LaravelGovernorUpgradeTo0100"
-```
-
 ## Implementation
 1. First we need to update the database by running the migrations and data seeders:
     ```sh
-    php artisan migrate
+    php artisan migrate --path="vendor/genealabs/laravel-governor/database/migrations"
     php artisan db:seed --class=LaravelGovernorDatabaseSeeder
     ```
 
@@ -97,7 +68,36 @@ php artisan tenancy:db:seed --class="LaravelGovernorUpgradeTo0100"
     }
     ```
 
-### Configuration
+## Upgrading
+The following upgrade guides should help navigate updates with breaking changes.
+
+### From 0.10 to 0.11 [Breaking]
+The following traits have changed:
+- `Governable` has been renamed to `Governing`.
+- `Governed` has been renamed to `Governable`.
+- the `governor_created_by` has been renamed to `governor_owned_by`. Run
+    migrations to update your tables.
+    ```sh
+    php artisan migrate --path="vendor/genealabs/laravel-governor/database/migrations"
+    ```
+- replace any reference in your app from `governor_created_by` to
+    `governor_owned_by`.
+
+### From 0.6 to Version 0.10 [Breaking]
+To upgrade from version previous to `0.10.0`, first run the migrations and
+seeders, then run the update seeder:
+```sh
+php artisan migrate --path="vendor/genealabs/laravel-governor/database/migrations"
+php artisan db:seed --class="LaravelGovernorDatabaseSeeder"
+php artisan db:seed --class="LaravelGovernorUpgradeTo0100"
+```
+
+### to 0.6 [Breaking]
+1. If you were extending `GeneaLabs\LaravelGovernor\Policies\LaravelGovernorPolicy`,
+  change to extend `GeneaLabs\LaravelGovernor\Policies\BasePolicy`;
+2. Support for version of Laravel lower than 5.5 has been dropped.
+
+## Configuration
 If you need to make any changes (see Example selection below for the default
  config file) to the default configuration, publish the configuration file:
 
@@ -181,7 +181,7 @@ Often it is desirable to let the user see only the items that they have access
     - `viewAnyable()`
 
 ### Tables
-Tables will automatically be updated with a `governor_created_by` column that references
+Tables will automatically be updated with a `governor_owned_by` column that references
  the user that created the entry. There is no more need to run separate
  migrations or work around packages that have models without a created_by
  property.
@@ -330,55 +330,87 @@ class MyPolicy extends LaravelGovernorPolicy
 ```
 
 #### Default Methods In A Policy Class
-Adding any of the `before`, `create`, `edit`, `view`, `inspect`, and `remove`
- methods to your policy is only required if you want to customize a given method.
+Adding any of the `before`, `create`, `update`, `view`, `viewAny`, `delete`,
+`restore`, and `forceDelete` methods to your policy is only required if you want
+to customize a given method.
 
 ```php
-<?php namespace App\Policies;
-
-use App\MyModel;
-use App\User;
-use GeneaLabs\LaravelGovernor\Policies\LaravelGovernorPolicy;
-use Illuminate\Auth\Access\HandlesAuthorization;
-
-class MyModelPolicy extends LaravelGovernorPolicy
+abstract class BasePolicy
 {
-    use HandlesAuthorization;
-
-    public function before(User $user)
+    public function before($user)
     {
-        return $user->hasRole("SuperAdmin") ? true : null;
+        return $user->hasRole("SuperAdmin")
+            ?: null;
     }
 
-    public function create(User $user, MyModel $myModel)
+    public function create(Model $user) : bool
     {
-        return $this->validatePermissions($user, 'create', 'myModel', $myModel->governor_created_by);
+        return $this->validatePermissions(
+            $user,
+            'create',
+            $this->entity
+        );
     }
 
-    public function edit(User $user, MyModel $myModel)
+    public function update(Model $user, Model $model) : bool
     {
-        return $this->validatePermissions($user, 'edit', 'myModel', $myModel->governor_created_by);
+        return $this->validatePermissions(
+            $user,
+            'update',
+            $this->entity,
+            $model->governor_owned_by
+        );
     }
 
-    public function view(User $user, MyModel $myModel)
+    public function viewAny(Model $user) : bool
     {
-        return $this->validatePermissions($user, 'view', 'myModel', $myModel->governor_created_by);
+        return true;
+
+        return $this->validatePermissions(
+            $user,
+            'viewAny',
+            $this->entity
+        );
     }
 
-    public function inspect(User $user, MyModel $myModel)
+    public function view(Model $user, Model $model) : bool
     {
-        return $this->validatePermissions($user, 'inspect', 'myModel', $myModel->governor_created_by);
+        return $this->validatePermissions(
+            $user,
+            'view',
+            $this->entity,
+            $model->governor_owned_by
+        );
     }
 
-    public function remove(User $user, MyModel $myModel)
+    public function delete(Model $user, Model $model) : bool
     {
-        return $this->validatePermissions($user, 'remove', 'myModel', $myModel->governor_created_by);
+        return $this->validatePermissions(
+            $user,
+            'delete',
+            $this->entity,
+            $model->governor_owned_by
+        );
+    }
+
+    public function restore(Model $user, Model $model) : bool
+    {
+        return $this->validatePermissions(
+            $user,
+            'restore',
+            $this->entity,
+            $model->governor_owned_by
+        );
+    }
+
+    public function forceDelete(Model $user, Model $model) : bool
+    {
+        return $this->validatePermissions(
+            $user,
+            'forceDelete',
+            $this->entity,
+            $model->governor_owned_by
+        );
     }
 }
 ```
-
-## Update Process
-### 0.5 to 0.6
-1. If you were extending `GeneaLabs\LaravelGovernor\Policies\LaravelGovernorPolicy`,
-  change to extend `GeneaLabs\LaravelGovernor\Policies\BasePolicy`;
-2. Support for version of Laravel lower than 5.5 has been dropped.
