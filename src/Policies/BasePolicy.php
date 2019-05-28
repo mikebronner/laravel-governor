@@ -42,8 +42,6 @@ abstract class BasePolicy
 
     public function viewAny(Model $user) : bool
     {
-        return true;
-
         return $this->validatePermissions(
             $user,
             'viewAny',
