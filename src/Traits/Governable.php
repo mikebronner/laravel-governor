@@ -22,6 +22,13 @@ trait Governable
         }
 
         if ($ownerships->contains("own")) {
+            $authModel = config("genealabs-laravel-governor.models.auth");
+            $authTable = (new $authModel)->getTable();
+
+            if ($query->getModel()->getTable() === $authTable) {
+                return $query->where("id", auth()->user()->getKey());
+            }
+            
             return $query->where("governor_owned_by", auth()->user()->getKey());
         }
 
