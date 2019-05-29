@@ -32,7 +32,7 @@ return [
     | Here you can customize what model should be used for authorization checks
     | in the event that you have customized your authentication processes.
     */
-    // 'auth-model' => config('auth.providers.users.model') ?? config('auth.model'),
+    'auth-model-primary-key-type' => 'bigInteger',
     "models" => [
         "auth" => config('auth.providers.users.model')
             ?? config('auth.model'),
