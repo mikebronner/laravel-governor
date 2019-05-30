@@ -3,7 +3,6 @@
 use GeneaLabs\LaravelCasts\Providers\Service as LaravelCastsService;
 use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
-use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Support\AggregateServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -21,7 +20,6 @@ class Service extends AggregateServiceProvider
      */
     public function boot(GateContract $gate)
     {
-        app('events')->listen('eloquent.creating: *', CreatingListener::class);
         app('events')->listen('eloquent.created: *', CreatedListener::class);
 
         $this->publishes([

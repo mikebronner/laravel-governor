@@ -1,6 +1,10 @@
 <?php namespace GeneaLabs\LaravelGovernor\Policies;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use ReflectionClass;
 
 abstract class BasePolicy
 {
@@ -9,9 +13,61 @@ abstract class BasePolicy
 
     public function __construct()
     {
+        $this->createGovernorOwnedByFields();
         $policyClass = collect(explode('\\', get_class($this)))->last();
         $this->entity = str_replace('policy', '', strtolower($policyClass));
-        $this->permissions = app("cache")->rememberForever("governorpermissions", function () {
+        $this->permissions = $this->getPermissions();
+    }
+
+    protected function createGovernorOwnedByFields()
+    {
+        $gate = app("Illuminate\Contracts\Auth\Access\Gate");
+        $reflection = new ReflectionClass($gate);
+        $property = $reflection->getProperty('policies');
+        $property->setAccessible(true);
+        $protectedClass = collect($property->getValue($gate))
+            ->flip()
+            ->get(get_class($this));
+        $model = new $protectedClass;
+
+        if (! in_array("GeneaLabs\\LaravelGovernor\\Traits\\Governable", class_uses_recursive($model))) {
+            return;
+        }
+
+        $connection = $model
+            ->getConnection()
+            ->getName();
+
+        $governorOwnedByExists = app("cache")->rememberForever("governor-{$model->getTable()}-table-check-ownedby-field", function () use ($connection, $model) {
+            return Schema::connection($connection)->hasColumn($model->getTable(), 'governor_owned_by');
+        });
+
+        if (! $governorOwnedByExists
+            && ! Schema::connection($connection)->hasColumn($model->getTable(), 'governor_owned_by')
+        ) {
+            Schema::connection($connection)->table($model->getTable(), function (Blueprint $table) use ($model) {
+                $authModelPrimaryKeyType = config("genealabs-laravel-governor.auth-model-primary-key-type", "bigInteger");
+                $fieldType = "unsigned";
+
+                switch (strtolower($authModelPrimaryKeyType)) {
+                    case "integer":
+                        $fieldType .= "Integer";
+                        break;
+                    default:
+                        $fieldType .= "BigInteger";
+                        break;
+                }
+
+                $table->{$fieldType}('governor_owned_by')
+                    ->nullable();
+            });
+            app("cache")->forget("governor-{$model->getTable()}-table-check-ownedby-field");
+        }
+    }
+
+    protected function getPermissions() : Collection
+    {
+        return app("cache")->rememberForever("governorpermissions", function () {
             $permissionClass = config("genealabs-laravel-governor.models.permission");
 
             return (new $permissionClass)->get();
