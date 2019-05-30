@@ -11,7 +11,7 @@ abstract class BasePolicy
     {
         $policyClass = collect(explode('\\', get_class($this)))->last();
         $this->entity = str_replace('policy', '', strtolower($policyClass));
-        $this->permissions = app("cache")->rememberForever("governor-permissions", function () {
+        $this->permissions = app("cache")->rememberForever("governorpermissions", function () {
             $permissionClass = config("genealabs-laravel-governor.models.permission");
 
             return (new $permissionClass)->get();

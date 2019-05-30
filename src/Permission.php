@@ -22,11 +22,17 @@ class Permission extends Model
 
     public static function boot()
     {
+        parent::boot();
+
         static::created(function () {
             app("cache")->forget("governor-permissions");
         });
 
         static::deleted(function () {
+            app("cache")->forget("governor-permissions");
+        });
+
+        static::saved(function () {
             app("cache")->forget("governor-permissions");
         });
 
