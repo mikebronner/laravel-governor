@@ -20,6 +20,21 @@ class Permission extends Model
     ];
     protected $table = "governor_permissions";
 
+    public static function boot()
+    {
+        static::created(function () {
+            app("cache")->forget("governor-permissions");
+        });
+
+        static::deleted(function () {
+            app("cache")->forget("governor-permissions");
+        });
+
+        static::updated(function () {
+            app("cache")->forget("governor-permissions");
+        });
+    }
+
     public function role() : BelongsTo
     {
         return $this->belongsTo(
