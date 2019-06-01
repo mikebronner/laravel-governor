@@ -13,7 +13,7 @@ class CreatedListener
     {
         if (str_contains($event, "Hyn\Tenancy\Models\Website")
             || str_contains($event, "Hyn\Tenancy\Models\Hostname")
-            || ! Schema::hasTable('roles')
+            || ! Schema::hasTable('governor_roles')
         ) {
             return;
         }
