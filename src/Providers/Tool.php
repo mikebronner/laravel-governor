@@ -29,6 +29,8 @@ class Tool extends ServiceProvider
                     \GeneaLabs\LaravelGovernor\Nova\Permission::class,
                     \GeneaLabs\LaravelGovernor\Nova\Role::class,
                     \GeneaLabs\LaravelGovernor\Nova\User::class,
+                    \GeneaLabs\LaravelGovernor\Nova\Team::class,
+                    \GeneaLabs\LaravelGovernor\Nova\TeamInvitation::class,
                 ]);
             });
         }

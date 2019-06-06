@@ -1,7 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider;
-use Illuminate\Support\Facades\Gate;
 
 class Auth extends AuthServiceProvider
 {
@@ -13,6 +12,8 @@ class Auth extends AuthServiceProvider
         'GeneaLabs\LaravelGovernor\Ownership' => 'GeneaLabs\LaravelGovernor\Policies\Ownership',
         'GeneaLabs\LaravelGovernor\Permission' => 'GeneaLabs\LaravelGovernor\Policies\Permission',
         'GeneaLabs\LaravelGovernor\Role' => 'GeneaLabs\LaravelGovernor\Policies\Role',
+        'GeneaLabs\LaravelGovernor\Team' => 'GeneaLabs\LaravelGovernor\Policies\Team',
+        'GeneaLabs\LaravelGovernor\TeamInvitation' => 'GeneaLabs\LaravelGovernor\Policies\TeamInvitation',
     ];
 
     public function register()

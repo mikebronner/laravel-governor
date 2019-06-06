@@ -30,6 +30,16 @@
             </li>
         @endif
 
+        @if (auth()->user()->can("viewAny", "GeneaLabs\LaravelGovernor\Team"))
+            <li class="leading-tight mb-4 ml-8 text-sm">
+                <router-link
+                    :to="{name: 'laravel-nova-governor-team'}"
+                    class="text-white text-justify no-underline dim">
+                    Teams
+                </router-link>
+            </li>
+        @endif
+
         @if (auth()->user()->can("viewAny", "GeneaLabs\LaravelGovernor\Assignment"))
             <li class="leading-tight mb-4 ml-8 text-sm">
                 <router-link
