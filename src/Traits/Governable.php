@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
 use ReflectionClass;
 
@@ -71,6 +72,11 @@ trait Governable
     public function ownedBy() : BelongsTo
     {
         return $this->belongsTo(config("genealabs-laravel-governor.models.auth"), "governor_owned_by");
+    }
+
+    public function teams() : MorphToMany
+    {
+        return $this->morphToMany(Team::class, "teamable");
     }
 
     public function scopeDeletable(Builder $query) : Builder

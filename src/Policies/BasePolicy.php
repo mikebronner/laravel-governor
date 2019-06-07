@@ -90,7 +90,7 @@ abstract class BasePolicy
             $user,
             'update',
             $this->entity,
-            $model->governor_owned_by
+            $model
         );
     }
 
@@ -109,7 +109,7 @@ abstract class BasePolicy
             $user,
             'view',
             $this->entity,
-            $model->governor_owned_by
+            $model
         );
     }
 
@@ -119,7 +119,7 @@ abstract class BasePolicy
             $user,
             'delete',
             $this->entity,
-            $model->governor_owned_by
+            $model
         );
     }
 
@@ -129,7 +129,7 @@ abstract class BasePolicy
             $user,
             'restore',
             $this->entity,
-            $model->governor_owned_by
+            $model
         );
     }
 
@@ -139,25 +139,31 @@ abstract class BasePolicy
             $user,
             'forceDelete',
             $this->entity,
-            $model->governor_owned_by
+            $model
         );
     }
 
-    protected function validatePermissions($user, $action, $entity, $entityCreatorId = null) : bool
-    {
-        if ($user->hasRole("SuperAdmin")) {
+    protected function validatePermissions(
+        Model $user,
+        string $action,
+        string $entity,
+        Model $model = null
+    ) : bool {
+        if ($user->hasRole("SuperAdmin")
+            || auth()->user()->teams->intersect($model->teams)->isNotEmpty()
+        ) {
             return true;
         }
 
         $user->load('roles');
 
-        if (! $user->roles) {
+        if ($user->roles->isEmpty()) {
             return false;
         }
 
         $ownership = 'other';
 
-        if ($user->getKey() === $entityCreatorId) {
+        if ($user->getKey() === $model->governor_owned_by) {
             $ownership = 'own';
         }
 
