@@ -10,13 +10,13 @@ use Laravel\Nova\Fields\Textarea;
 
 class Entity extends Resource
 {
-    public static $model = 'GeneaLabs\\LaravelGovernor\\Entity';
+    public static $model;
     public static $title = "name";
     public static $search = [
         "name",
     ];
     public static $displayInPermissions = false;
-    
+
     public function fields(Request $request)
     {
         return [

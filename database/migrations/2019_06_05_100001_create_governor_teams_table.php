@@ -22,7 +22,9 @@ class CreateGovernorTeamsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->string('team_name');
+            $table->string('name');
+            $table->text("description")
+                ->nullable();
 
             $table->foreign('governor_owned_by')
                 ->references($user->getKeyName())

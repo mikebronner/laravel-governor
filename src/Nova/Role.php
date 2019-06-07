@@ -11,7 +11,7 @@ class Role extends Resource
 {
     use SearchesRelations;
 
-    public static $model = 'GeneaLabs\\LaravelGovernor\\Role';
+    public static $model;
     public static $title = "name";
     public static $search = [
         "description",

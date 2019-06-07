@@ -10,7 +10,7 @@ use Laravel\Nova\Fields\Textarea;
 
 class Ownership extends Resource
 {
-    public static $model = 'GeneaLabs\\LaravelGovernor\\Ownership';
+    public static $model;
     public static $title = "name";
     public static $search = [
         "name",

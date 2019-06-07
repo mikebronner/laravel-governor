@@ -3,7 +3,7 @@
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Titasgailius\SearchRelations\SearchesRelations;
 
@@ -11,24 +11,19 @@ class TeamInvitation extends Resource
 {
     use SearchesRelations;
 
+    public static $model;
     public static $displayInPermissions = false;
-    public static $model = 'GeneaLabs\\LaravelGovernor\\Team';
-    public static $title = "name";
+    public static $title = "email";
     public static $search = [
-        "description",
-        "name",
+        "email",
     ];
 
     public function fields(Request $request) : array
     {
         return [
-            ID::make("Id")
+            Text::make("Email")
                 ->sortable(),
-            Text::make("Name")
-                ->sortable(),
-            Text::make("Description"),
-            BelongsToMany::make("Members", "members", "GeneaLabs\LaravelGovernor\Nova\User"),
-            HasMany::make("Invitations", "invitations", "GeneaLabs\LaravelGovernor\Nova\TeamInvitation"),
+            BelongsTo::make("Team"),
         ];
     }
 

@@ -12,7 +12,7 @@ class Team extends Resource
 {
     use SearchesRelations;
 
-    public static $model = 'GeneaLabs\\LaravelGovernor\\Team';
+    public static $model;
     public static $title = "name";
     public static $search = [
         "description",
@@ -22,15 +22,36 @@ class Team extends Resource
     public function fields(Request $request) : array
     {
         return [
-            ID::make("Id")
-                ->sortable(),
             Text::make("Name")
                 ->sortable(),
             Text::make("Description"),
-            BelongsTo::make("Owner", "governor_owned_by", "GeneaLabs\LaravelGovernor\Nova\User"),
+            BelongsTo::make("Owner", "ownedBy", "GeneaLabs\LaravelGovernor\Nova\User")
+                ->withMeta([
+                    "belongsToId" => $this->governor_owned_by
+                        ?: auth()->user()->id,
+                ])
+                ->searchable()
+                ->prepopulate()
+                ->hideFromIndex(),
+            Text::make("Owner", "governor_owned_by")
+                ->resolveUsing(function () {
+                    if (! $this->ownedBy) {
+                        return "";
+                    }
+
+                    if (! auth()->user()->can("view", $this->ownedBy)) {
+                        return $this->ownedBy->name
+                            ?: "";
+                    }
+
+                    return "<a href='/dashboard/resources/" . $this->ownedBy->getTable() . "/" . $this->ownedBy->getRouteKey() . "' class='no-underline dim text-primary font-bold'>" . $this->ownedBy->name . '</a>';
+                })
+                ->asHtml()
+                ->onlyOnIndex()
+                ->sortable(),
+
             BelongsToMany::make("Members", "members", "GeneaLabs\LaravelGovernor\Nova\User"),
             HasMany::make("Invitations", "invitations", "GeneaLabs\LaravelGovernor\Nova\TeamInvitation"),
-
         ];
     }
 

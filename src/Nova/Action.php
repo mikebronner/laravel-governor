@@ -10,7 +10,7 @@ use Laravel\Nova\Fields\Textarea;
 
 class Action extends Resource
 {
-    public static $model = 'GeneaLabs\\LaravelGovernor\\Action';
+    public static $model;
     public static $title = "name";
     public static $search = [
         "name",

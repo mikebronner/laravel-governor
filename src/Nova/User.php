@@ -1,16 +1,14 @@
 <?php namespace GeneaLabs\LaravelGovernor\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
 
 class User extends Resource
 {
     public static $model;
     public static $title = "name";
     public static $search = [
-        "id",
         "name",
     ];
     public static $displayInPermissions = false;
@@ -18,8 +16,7 @@ class User extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
-
+            Gravatar::make(),
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255'),

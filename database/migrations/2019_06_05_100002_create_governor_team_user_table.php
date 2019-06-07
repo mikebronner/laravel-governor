@@ -17,14 +17,14 @@ class CreateGovernorTeamUserTable extends Migration
         Schema::create('governor_team_user', function (Blueprint $table) {
             $user = app(config('genealabs-laravel-governor.models.auth'));
 
-            $table->string('team_name')
+            $table->unsignedBigInteger('team_id')
                 ->index();
             $table->unsignedBigInteger('user_id')
                 ->index();
             $table->timestamps();
 
-            $table->foreign('team_name')
-                ->references('name')
+            $table->foreign('team_id')
+                ->references('id')
                 ->on('governor_teams')
                 ->onDelete('CASCADE')
                 ->onUpdate('CASCADE');
@@ -38,6 +38,6 @@ class CreateGovernorTeamUserTable extends Migration
 
     public function down()
     {
-        Schema::drop('governor_role_user');
+        Schema::drop('governor_team_user');
     }
 }

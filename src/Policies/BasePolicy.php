@@ -37,10 +37,11 @@ abstract class BasePolicy
         $connection = $model
             ->getConnection()
             ->getName();
-
-        $governorOwnedByExists = app("cache")->rememberForever("governor-{$model->getTable()}-table-check-ownedby-field", function () use ($connection, $model) {
-            return Schema::connection($connection)->hasColumn($model->getTable(), 'governor_owned_by');
-        });
+        $governorOwnedByExists = app("cache")
+            ->rememberForever("governor-{$model->getTable()}-table-check-ownedby-field", function () use ($connection, $model) {
+                return Schema::connection($connection)
+                    ->hasColumn($model->getTable(), 'governor_owned_by');
+            });
 
         if (! $governorOwnedByExists
             && ! Schema::connection($connection)->hasColumn($model->getTable(), 'governor_owned_by')
@@ -67,17 +68,11 @@ abstract class BasePolicy
 
     protected function getPermissions() : Collection
     {
-        return app("cache")->rememberForever("governorpermissions", function () {
+        return app("cache")->remember("governorpermissions", 5, function () {
             $permissionClass = config("genealabs-laravel-governor.models.permission");
 
             return (new $permissionClass)->get();
         });
-    }
-
-    public function before($user)
-    {
-        return $user->hasRole("SuperAdmin")
-            ?: null;
     }
 
     public function create(Model $user) : bool
@@ -150,6 +145,10 @@ abstract class BasePolicy
 
     protected function validatePermissions($user, $action, $entity, $entityCreatorId = null) : bool
     {
+        if ($user->hasRole("SuperAdmin")) {
+            return true;
+        }
+
         $user->load('roles');
 
         if (! $user->roles) {

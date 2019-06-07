@@ -35,6 +35,13 @@ trait Governing
         return $this->belongsToMany($roleClass, 'governor_role_user', 'user_id', 'role_name');
     }
 
+    public function teams() : BelongsToMany
+    {
+        $teamClass = config("genealabs-laravel-governor.models.team");
+
+        return $this->belongsToMany($teamClass, "govnernor_team_user", "user_id", "team_id");
+    }
+
     public function getPermissionsAttribute() : Collection
     {
         $permissionClass = config("genealabs-laravel-governor.models.permission");

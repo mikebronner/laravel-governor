@@ -10,7 +10,7 @@ use Laravel\Nova\Fields\BelongsTo;
 
 class Permission extends Resource
 {
-    public static $model = 'GeneaLabs\\LaravelGovernor\\Permission';
+    public static $model;
     public static $perPageViaRelationship = 25;
     public static $search = [
         "role_name",

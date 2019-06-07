@@ -2,7 +2,9 @@
 
 use GeneaLabs\LaravelCasts\Providers\Service as LaravelCastsService;
 use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
+use GeneaLabs\LaravelGovernor\Listeners\CreatedInvitationListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
+use GeneaLabs\LaravelGovernor\Listeners\CreatingInvitationListener;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Support\AggregateServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -21,6 +23,8 @@ class Service extends AggregateServiceProvider
     public function boot(GateContract $gate)
     {
         app('events')->listen('eloquent.created: *', CreatedListener::class);
+        app('events')->listen('eloquent.created: App\\Governor\\TeamInvitation', CreatedInvitationListener::class);
+        app('events')->listen('eloquent.creating: App\\Governor\\TeamInvitation', CreatingInvitationListener::class);
 
         $this->publishes([
             __DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')

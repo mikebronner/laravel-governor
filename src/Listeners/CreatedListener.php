@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Schema;
 class CreatedListener
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function handle(string $event, array $models)

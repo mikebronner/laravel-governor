@@ -17,23 +17,16 @@ class CreateGovernorTeamInvitationsTable extends Migration
         Schema::create('governor_team_invitations', function (Blueprint $table) {
             $user = app(config('genealabs-laravel-governor.models.auth'));
 
-            $table->string('team_name')
-                ->index();
-            $table->unsignedBigInteger('user_id')
-                ->index();
+            $table->bigIncrements("id");
+            $table->bigInteger('team_id');
             $table->timestamps();
 
             $table->string("email");
             $table->string("token");
 
-            $table->foreign('team_name')
-                ->references('name')
-                ->on('governor_team')
-                ->onDelete('CASCADE')
-                ->onUpdate('CASCADE');
-            $table->foreign('user_id')
-                ->references($user->getKeyName())
-                ->on($user->getTable())
+            $table->foreign('team_id')
+                ->references('id')
+                ->on('governor_teams')
                 ->onDelete('CASCADE')
                 ->onUpdate('CASCADE');
         });
@@ -41,6 +34,6 @@ class CreateGovernorTeamInvitationsTable extends Migration
 
     public function down()
     {
-        Schema::drop('governor_role_user');
+        Schema::drop('governor_team_invitations');
     }
 }

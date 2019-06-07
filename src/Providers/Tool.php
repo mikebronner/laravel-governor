@@ -18,6 +18,15 @@ class Tool extends ServiceProvider
         });
 
         if (class_exists("Laravel\Nova\Resource")) {
+            \GeneaLabs\LaravelGovernor\Nova\Action::$model = config("genealabs-laravel-governor.models.action");
+            \GeneaLabs\LaravelGovernor\Nova\Assignment::$model = config("genealabs-laravel-governor.models.assignment");
+            \GeneaLabs\LaravelGovernor\Nova\Entity::$model = config("genealabs-laravel-governor.models.entity");
+            \GeneaLabs\LaravelGovernor\Nova\Group::$model = config("genealabs-laravel-governor.models.group");
+            \GeneaLabs\LaravelGovernor\Nova\Ownership::$model = config("genealabs-laravel-governor.models.ownership");
+            \GeneaLabs\LaravelGovernor\Nova\Permission::$model = config("genealabs-laravel-governor.models.permission");
+            \GeneaLabs\LaravelGovernor\Nova\Role::$model = config("genealabs-laravel-governor.models.role");
+            \GeneaLabs\LaravelGovernor\Nova\Team::$model = config("genealabs-laravel-governor.models.team");
+            \GeneaLabs\LaravelGovernor\Nova\TeamInvitation::$model = config("genealabs-laravel-governor.models.invitation");
             \GeneaLabs\LaravelGovernor\Nova\User::$model = config("genealabs-laravel-governor.models.auth");
             \Laravel\Nova\Nova::serving(function (ServingNova $event) {
                 \Laravel\Nova\Nova::resources([

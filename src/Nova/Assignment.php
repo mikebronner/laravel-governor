@@ -8,7 +8,7 @@ use Laravel\Nova\Fields\BelongsToMany;
 
 class Assignment extends Resource
 {
-    public static $model = 'GeneaLabs\\LaravelGovernor\\Role';
+    public static $model;
     public static $title = "name";
     public static $search = [
         "name",

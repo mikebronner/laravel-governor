@@ -1,11 +1,14 @@
 <?php namespace GeneaLabs\LaravelGovernor;
 
+use GeneaLabs\LaravelGovernor\Traits\Governable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Team extends Model
 {
+    use Governable;
+
     protected $rules = [
         'name' => 'required|min:3',
         'description' => 'string',
@@ -19,7 +22,7 @@ class Team extends Model
     public function members() : BelongsToMany
     {
         return $this->belongsToMany(
-            config('genealabs-laravel-governor.models.entity'),
+            config('genealabs-laravel-governor.models.auth'),
             "governor_team_user",
             "team_id",
             "user_id"
@@ -28,6 +31,9 @@ class Team extends Model
 
     public function invitations() : HasMany
     {
-        return $this->hasMany(TeamInvitation::class);
+        return $this->hasMany(
+            config('genealabs-laravel-governor.models.invitation'),
+            "team_id"
+        );
     }
 }
