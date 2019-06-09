@@ -42,16 +42,16 @@
       "App\\": "tests/Fixtures/App/"
     }
   },
-  "extra": {
-      "laravel": {
-          "providers": [
-              "GeneaLabs\\LaravelGovernor\\Providers\\Auth",
-              "GeneaLabs\\LaravelGovernor\\Providers\\Route",
-              "GeneaLabs\\LaravelGovernor\\Providers\\Service",
-              "GeneaLabs\\LaravelGovernor\\Providers\\Tool"
-          ]
-      }
-  },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "GeneaLabs\\LaravelGovernor\\Providers\\Auth",
+                "GeneaLabs\\LaravelGovernor\\Providers\\Nova",
+                "GeneaLabs\\LaravelGovernor\\Providers\\Route",
+                "GeneaLabs\\LaravelGovernor\\Providers\\Service"
+            ]
+        }
+    },
   "config": {
     "sort-packages": true,
     "preferred-install": "dist"

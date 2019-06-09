@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 
-class Tool extends ServiceProvider
+class Nova extends ServiceProvider
 {
     protected $namespace = 'GeneaLabs\LaravelGovernor\Http\Controllers';
 
@@ -29,6 +29,8 @@ class Tool extends ServiceProvider
             \GeneaLabs\LaravelGovernor\Nova\TeamInvitation::$model = config("genealabs-laravel-governor.models.invitation");
             \GeneaLabs\LaravelGovernor\Nova\User::$model = config("genealabs-laravel-governor.models.auth");
             \Laravel\Nova\Nova::serving(function (ServingNova $event) {
+                \Laravel\Nova\Nova::script('genealabs-laravel-governor', __DIR__ . '/../../dist/js/tool.js');
+                \Laravel\Nova\Nova::style('genealabs-laravel-governor', __DIR__ . '/../../dist/css/tool.css');
                 \Laravel\Nova\Nova::resources([
                     \GeneaLabs\LaravelGovernor\Nova\Action::class,
                     \GeneaLabs\LaravelGovernor\Nova\Assignment::class,

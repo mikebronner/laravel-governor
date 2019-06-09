@@ -36,4 +36,11 @@ class Team extends Model
             "team_id"
         );
     }
+
+    public function permissions() : HasMany
+    {
+        return $this->hasMany(
+            config('genealabs-laravel-governor.models.permission')
+        );
+    }
 }

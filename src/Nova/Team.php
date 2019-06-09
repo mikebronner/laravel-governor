@@ -1,11 +1,12 @@
 <?php namespace GeneaLabs\LaravelGovernor\Nova;
 
+use GeneaLabs\LaravelGovernor\PermissionsTool;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 
 class Team extends Resource
@@ -52,6 +53,10 @@ class Team extends Resource
 
             BelongsToMany::make("Members", "members", "GeneaLabs\LaravelGovernor\Nova\User"),
             HasMany::make("Invitations", "invitations", "GeneaLabs\LaravelGovernor\Nova\TeamInvitation"),
+            PermissionsTool::make()
+                ->canSee(function () {
+                    return $this->governor_owned_by === auth()->user()->id;
+                }),
         ];
     }
 

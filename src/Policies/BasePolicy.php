@@ -149,15 +149,15 @@ abstract class BasePolicy
         string $entity,
         Model $model = null
     ) : bool {
-        if ($user->hasRole("SuperAdmin")
-            || auth()->user()->teams->intersect($model->teams)->isNotEmpty()
-        ) {
+        $user->load("roles", "teams");
+
+        if ($user->hasRole("SuperAdmin")) {
             return true;
         }
 
-        $user->load('roles');
-
-        if ($user->roles->isEmpty()) {
+        if ($user->roles->isEmpty()
+            && $user->teams->isEmpty()
+        ) {
             return false;
         }
 
@@ -170,7 +170,9 @@ abstract class BasePolicy
         $filteredPermissions = $this->filterPermissions($action, $entity, $ownership);
 
         foreach ($filteredPermissions as $permission) {
-            if ($user->roles->contains($permission->role)) {
+            if ($user->roles->contains($permission->role)
+                || $user->teams->contains($permission->team)
+            ) {
                 return true;
             }
         }

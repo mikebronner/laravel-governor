@@ -9,13 +9,22 @@ class PermissionController extends Controller
         $actionClass = config("genealabs-laravel-governor.models.action");
         $entityClass = config("genealabs-laravel-governor.models.entity");
         $roleClass = config("genealabs-laravel-governor.models.role");
+        $teamClass = config("genealabs-laravel-governor.models.team");
 
-        $roleKey = request("filter") === "role_name"
-            ? request("value")
-            : null;
-        $role = (new $roleClass)
+        $permissibleClass = request("filter") === "team_id"
+            ? $teamClass
+            : $roleClass;
+        $permissible = (new $permissibleClass)
             ->with("permissions.action", "permissions.entity", "permissions.ownership")
-            ->where("name", $roleKey)
+            ->where(function ($query) {
+                if (request("filter") === "team_id") {
+                    $query->where("id", request("value"));
+                }
+
+                if (request("filter") === "role_name") {
+                    $query->where("name", request("value"));
+                }
+            })
             ->first();
         $gate = app('Illuminate\Contracts\Auth\Access\Gate');
         $reflectedGate = new \ReflectionObject($gate);
@@ -45,7 +54,7 @@ class PermissionController extends Controller
             foreach ($actions as $action) {
                 $selectedOwnership = 'no';
 
-                foreach ($role->permissions as $permissioncheck) {
+                foreach ($permissible->permissions as $permissioncheck) {
                     if (($permissioncheck->entity->name === $entity->name)
                         && ($permissioncheck->action->name === $action->name)) {
                         $selectedOwnership = $permissioncheck->ownership->name;
