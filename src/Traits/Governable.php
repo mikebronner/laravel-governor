@@ -62,7 +62,10 @@ trait Governable
         $permissionClass = config("genealabs-laravel-governor.models.permission");
 
         return (new $permissionClass)
-            ->whereIn("role_name", auth()->user()->roles->pluck("name"))
+            ->where(function ($query) {
+                $query->whereIn("role_name", auth()->user()->roles->pluck("name"))
+                    ->orWhereIn("team_id", auth()->user()->teams->pluck("id"));
+            })
             ->where("action_name", $ability)
             ->where("entity_name", $entityName)
             ->get()
