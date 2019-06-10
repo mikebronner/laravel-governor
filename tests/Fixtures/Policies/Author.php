@@ -2,7 +2,7 @@
 
 use GeneaLabs\LaravelGovernor\Policies\BasePolicy;
 
-class author extends BasePolicy
+class Author extends BasePolicy
 {
     //
 }

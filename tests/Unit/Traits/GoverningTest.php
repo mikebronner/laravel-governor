@@ -29,9 +29,7 @@ class GoverningTest extends UnitTestCase
 
     public function testHasRole()
     {
-        $isMember = $this->user->hasRole("Member");
-
-        $this->assertTrue($isMember);
+        $this->assertTrue($this->user->hasRole("Member"));
     }
 
     public function testRolesRelationship()
@@ -62,5 +60,21 @@ class GoverningTest extends UnitTestCase
         ]);
 
         $this->assertTrue($this->user->permissions->contains($permission));
+    }
+
+    public function testHasRoleWithoutRoles()
+    {
+        (new Role)
+            ->whereIn("name", ["Member", "SuperAdmin"])
+            ->delete();
+
+        $this->assertFalse($this->user->hasRole("Member"));
+    }
+
+    public function testHasRoleWhereUserHasNoRole()
+    {
+        $this->user->roles()->sync([]);
+
+        $this->assertFalse($this->user->hasRole("Member"));
     }
 }

@@ -8,7 +8,7 @@ use ReflectionClass;
 
 trait GovernorOwnedByField
 {
-    protected function createGovernorOwnedByFieldsByPolicy(BasePolicy $policy)
+    protected function createGovernorOwnedByFieldsByPolicy(BasePolicy $policy) : bool
     {
         $gate = app("Illuminate\Contracts\Auth\Access\Gate");
         $reflection = new ReflectionClass($gate);
@@ -18,13 +18,14 @@ trait GovernorOwnedByField
             ->flip()
             ->get(get_class($policy));
         $model = new $protectedClass;
-        $this->createGovernorOwnedByFields($model);
+
+        return $this->createGovernorOwnedByFields($model);
     }
 
-    protected function createGovernorOwnedByFields(Model $model)
+    protected function createGovernorOwnedByFields(Model $model) : bool
     {
         if (! in_array("GeneaLabs\\LaravelGovernor\\Traits\\Governable", class_uses_recursive($model))) {
-            return;
+            return false;
         }
 
         $connection = $model
@@ -37,7 +38,7 @@ trait GovernorOwnedByField
             });
         
         if ($governorOwnedByExists) {
-            return;
+            return false;
         }
 
         Schema::connection($connection)->table($model->getTable(), function (Blueprint $table) {
@@ -57,5 +58,7 @@ trait GovernorOwnedByField
                 ->nullable();
         });
         app("cache")->forget("governor-{$model->getTable()}-table-check-ownedby-field");
+
+        return true;
     }
 }
