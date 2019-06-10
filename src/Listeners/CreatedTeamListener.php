@@ -4,6 +4,6 @@ class CreatedTeamListener
 {
     public function handle($team)
     {
-        $team->members()->syncWithoutDetaching([$team->governor_owned_by]);
+        auth()->user()->teams()->save($team);
     }
 }

@@ -1,6 +1,7 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 trait Governing
@@ -35,11 +36,12 @@ trait Governing
         return $this->belongsToMany($roleClass, 'governor_role_user', 'user_id', 'role_name');
     }
 
-    public function teams() : BelongsToMany
+    public function ownedTeams() : HasMany
     {
-        $teamClass = config("genealabs-laravel-governor.models.team");
-
-        return $this->belongsToMany($teamClass, "governor_team_user", "user_id", "team_id");
+        return $this->hasMany(
+            config("genealabs-laravel-governor.models.team"),
+            "governor_owned_by"
+        );
     }
 
     public function getPermissionsAttribute() : Collection
