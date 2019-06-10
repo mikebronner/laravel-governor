@@ -3,6 +3,7 @@
 use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Team;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
+use GeneaLabs\LaravelGovernor\Tests\Fixtures\AuthorWithoutPolicy;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
 
@@ -326,5 +327,14 @@ class GovernableTest extends UnitTestCase
         $this->assertTrue($results->isNotEmpty());
         $this->assertTrue($results->contains($this->author));
         $this->assertFalse($results->contains($this->otherAuthor));
+    }
+
+    public function testAuthorWithoutPolicyFailsPermissions()
+    {
+        $results = (new AuthorWithoutPolicy)
+            ->viewable()
+            ->get();
+
+        $this->assertTrue($results->isEmpty());
     }
 }
