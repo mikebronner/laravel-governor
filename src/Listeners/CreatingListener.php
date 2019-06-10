@@ -1,11 +1,13 @@
 <?php namespace GeneaLabs\LaravelGovernor\Listeners;
 
+use GeneaLabs\LaravelGovernor\Traits\GovernorOwnedByField;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
-use GeneaLabs\LaravelGovernor\Role;
 
-class CreatedListener
+class CreatingListener
 {
+    use GovernorOwnedByField;
+
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
@@ -14,6 +16,7 @@ class CreatedListener
         if (str_contains($event, "Hyn\Tenancy\Models\Website")
             || str_contains($event, "Hyn\Tenancy\Models\Hostname")
             || ! Schema::hasTable('governor_roles')
+            || auth()->guest()
         ) {
             return;
         }
@@ -21,10 +24,14 @@ class CreatedListener
         collect($models)
             ->filter(function ($model) {
                 return $model instanceof Model
-                    && get_class($model) === config('genealabs-laravel-governor.models.auth');
+                    && in_array(
+                        "GeneaLabs\LaravelGovernor\Traits\Governable",
+                        class_uses_recursive($model)
+                    );
             })
             ->each(function ($model) {
-                $model->roles()->attach('Member');
+                $this->createGovernorOwnedByFields($model);
+                $model->governor_owned_by = auth()->user()->id;
             });
     }
 }

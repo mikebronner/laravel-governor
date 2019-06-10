@@ -26,7 +26,7 @@ class UpdateTeamRequest extends Request
     public function process()
     {
         $permissionClass = config("genealabs-laravel-governor.models.permission");
-\Log::debug([$this->team->id]);
+
         if ($this->filled('permissions')) {
             $this->team->permissions()->delete();
 

@@ -4,6 +4,8 @@ use GeneaLabs\LaravelCasts\Providers\Service as LaravelCastsService;
 use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedInvitationListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
+use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
+use GeneaLabs\LaravelGovernor\Listeners\CreatedTeamListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingInvitationListener;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Support\AggregateServiceProvider;
@@ -22,9 +24,13 @@ class Service extends AggregateServiceProvider
      */
     public function boot(GateContract $gate)
     {
+        $teamClass = config("genealabs-laravel-governor.models.team");
+        $invitationClass = config("genealabs-laravel-governor.models.invitation");
         app('events')->listen('eloquent.created: *', CreatedListener::class);
-        app('events')->listen('eloquent.created: App\\Governor\\TeamInvitation', CreatedInvitationListener::class);
-        app('events')->listen('eloquent.creating: App\\Governor\\TeamInvitation', CreatingInvitationListener::class);
+        app('events')->listen('eloquent.creating: *', CreatingListener::class);
+        app('events')->listen("eloquent.created: {$invitationClass}", CreatedInvitationListener::class);
+        app('events')->listen("eloquent.created: {$teamClass}", CreatedTeamListener::class);
+        app('events')->listen("eloquent.creating: {$invitationClass}", CreatingInvitationListener::class);
 
         $this->publishes([
             __DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')
@@ -77,7 +83,6 @@ class Service extends AggregateServiceProvider
             ->values()
             ->filter()
             ->each(function ($entity) use ($actionClass, $entityClass, $ownershipClass, $permissionClass, $roleClass) {
-                // dd(new $entityClass);
                 (new $entityClass)->firstOrCreate(['name' => $entity]);
                 $superadmin = (new $roleClass)->whereName('SuperAdmin')->first();
                 $ownership = (new $ownershipClass)->whereName('any')->first();

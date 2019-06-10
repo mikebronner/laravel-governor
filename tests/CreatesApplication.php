@@ -1,39 +1,51 @@
 <?php namespace GeneaLabs\LaravelGovernor\Tests;
 
-use GeneaLabs\LaravelGovernor\Providers\Auth;
-use GeneaLabs\LaravelGovernor\Providers\Route;
-use GeneaLabs\LaravelGovernor\Providers\Service;
-use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Support\Facades\Artisan;
+use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
+use Illuminate\Support\Facades\Gate;
+use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
+use GeneaLabs\LaravelGovernor\Tests\Fixtures\Policies\Author as AuthorPolicy;
 
 trait CreatesApplication
 {
-    /**
-     * Creates the application.
-     *
-     * @return \Illuminate\Foundation\Application
-     */
-    public function createApplication()
+    protected function getEnvironmentSetUp($app)
     {
+        Gate::policy(Author::class, AuthorPolicy::class);
 
-        // $this->addAuthRoutes();
-        // $app = require(__DIR__ . '/../vendor/laravel/laravel/bootstrap/app.php');
-        // $app->make(Kernel::class)->bootstrap();
-        app()->register(Service::class);
-        app()->register(Route::class);
-        app()->register(Auth::class);
-
-        Artisan::call('make:auth', ['--no-interaction' => 'true']);
-        // Artisan::call('db:seed', [
-        //     '--class' => 'LaravelGovernorDatabaseSeeder',
-        //     '--no-interaction' => 'true'
-        // ]);
+        $app['config']->set('database.default', 'testing');
+        $app['config']->set('genealabs-laravel-governor.models.auth', User::class);
+        $app["router"]->get('login', 'Auth\LoginController@showLoginForm')->name('login');
+        $app["router"]->post('login', 'Auth\LoginController@login');
+        $app["router"]->post('logout', 'Auth\LoginController@logout')->name('logout');
+        $app["router"]->get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+        $app["router"]->post('register', 'Auth\RegisterController@register');
+        $app["router"]->get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
+        $app["router"]->post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+        $app["router"]->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
+        $app["router"]->post('password/reset', 'Auth\ResetPasswordController@reset');
     }
 
-    protected function addAuthRoutes()
+    protected function getPackageProviders($app)
     {
-        $routes = file_get_contents(__DIR__ . '/../vendor/laravel/laravel/routes/web.php');
-        $routes .= "\r\nAuth::routes();\r\n";
-        file_put_contents(__DIR__ . '/../vendor/laravel/laravel/routes/web.php', $routes);
+        return [
+            'GeneaLabs\LaravelGovernor\Providers\Service',
+            'GeneaLabs\LaravelGovernor\Providers\Auth',
+            'GeneaLabs\LaravelGovernor\Providers\Route',
+            'GeneaLabs\LaravelGovernor\Providers\Nova',
+        ];
+    }
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $this->withFactories(__DIR__ . "/database/factories");
+        $this->loadLaravelMigrations();
+        $this->loadMigrationsFrom(__DIR__ . "/../database/migrations");
+        $this->loadMigrationsFrom(__DIR__ . "/database/migrations");
+        $this->artisan('migrate');
+        $this->artisan('db:seed', [
+            '--class' => 'LaravelGovernorDatabaseSeeder',
+            '--no-interaction' => true
+        ]);
     }
 }

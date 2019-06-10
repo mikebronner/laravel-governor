@@ -40,14 +40,6 @@ class AddTeamToPermissionsTable extends Migration
 
     public function down()
     {
-        $this
-            ->getTableNames()
-            ->each(function ($tableName) {
-                if (Schema::hasColumn($tableName, 'governor_owned_by')) {
-                    Schema::table($tableName, function (Blueprint $table) {
-                        $table->renameColumn("governor_owned_by", "governor_created_by");
-                    });
-                }
-            });
+        // TODO
     }
 }
