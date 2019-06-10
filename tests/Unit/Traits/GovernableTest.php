@@ -168,6 +168,12 @@ class GovernableTest extends UnitTestCase
 
     public function testScopeViewableWithOwnPermission()
     {
+        (new Permission)->create([
+            "role_name" => "Member",
+            "entity_name" => "user",
+            "action_name" => "view",
+            "ownership_name" => "own"
+        ]);
         $permission = (new Permission)->firstOrNew([
             "role_name" => "Member",
             "entity_name" => "author",
@@ -175,13 +181,19 @@ class GovernableTest extends UnitTestCase
         ]);
         $permission->ownership_name = "own";
         $permission->save();
-        $results = (new Author)
+        $authorResults = (new Author)
+            ->viewable()
+            ->get();
+        $userResults = (new User)
             ->viewable()
             ->get();
 
-        $this->assertTrue($results->isNotEmpty());
-        $this->assertTrue($results->contains($this->author));
-        $this->assertFalse($results->contains($this->otherAuthor));
+        $this->assertTrue($authorResults->isNotEmpty());
+        $this->assertTrue($authorResults->contains($this->author));
+        $this->assertFalse($authorResults->contains($this->otherAuthor));
+        $this->assertTrue($userResults->isNotEmpty());
+        $this->assertTrue($userResults->contains($this->user));
+        $this->assertFalse($userResults->contains($this->otherUser));
     }
 
     public function testScopeViewAnyableWithoutPermissions()

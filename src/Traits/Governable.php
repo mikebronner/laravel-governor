@@ -27,7 +27,7 @@ trait Governable
             $authTable = (new $authModel)->getTable();
 
             if ($query->getModel()->getTable() === $authTable) {
-                return $query->where("id", auth()->user()->getKey());
+                return $query->where($query->getModel()->getKeyName(), auth()->user()->getKey());
             }
             
             return $query->where("governor_owned_by", auth()->user()->getKey());
