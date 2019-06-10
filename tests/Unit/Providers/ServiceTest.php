@@ -8,7 +8,7 @@ class ServiceTest extends UnitTestCase
     protected function resolveApplicationBootstrappers($app)
     {
         $app['config']->set('database.default', 'sqlite');
-        $this->app['config']->set('database.connections.sqlite', [
+        $app['config']->set('database.connections.sqlite', [
             'driver' => 'sqlite',
             "url" => null,
             'database' => __DIR__ . '/database/testing.sqlite',
