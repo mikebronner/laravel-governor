@@ -1,8 +1,7 @@
-[![Join the chat at https://gitter.im/GeneaLabs/laravel-governor](https://badges.gitter.im/GeneaLabs/laravel-governor.svg)](https://gitter.im/GeneaLabs/laravel-governor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/GeneaLabs/laravel-governor.svg?branch=master)](https://travis-ci.org/GeneaLabs/laravel-governor)
+[![Coverage Status](https://coveralls.io/repos/github/GeneaLabs/laravel-governor/badge.svg?branch=master)](https://coveralls.io/github/GeneaLabs/laravel-governor?branch=master)
 [![Latest StableVersion](https://poser.pugx.org/genealabs/laravel-governor/v/stable.png)](https://packagist.org/packages/genealabs/laravel-governor)
 [![Total Downloads](https://poser.pugx.org/genealabs/laravel-governor/downloads.png)](https://packagist.org/packages/genealabs/laravel-governor)
-[![Build Status](https://ci.genealabs.com/build-status/image/1)](https://ci.genealabs.com/build-status/view/2)
-[Code Coverate Report](https://ci.genealabs.com/coverage/2)
 
 # Governor For Laravel
 **Manage authorization with granular role-based permissions in your Laravel apps.**
