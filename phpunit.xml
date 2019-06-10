@@ -11,8 +11,8 @@
     stopOnFailure="false"
 >
     <testsuites>
-        <testsuite name="Governor for Laravel Test Suite">
-            <directory suffix="Test.php">./tests</directory>
+        <testsuite name="UnitTests">
+            <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
     </testsuites>
     <filter>

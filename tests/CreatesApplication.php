@@ -49,6 +49,5 @@ trait CreatesApplication
             '--class' => 'LaravelGovernorDatabaseSeeder',
             '--no-interaction' => true
             ]);
-        }
     }
-    
+}

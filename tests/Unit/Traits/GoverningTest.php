@@ -62,10 +62,15 @@ class GoverningTest extends UnitTestCase
         $this->assertTrue($this->user->permissions->contains($permission));
     }
 
+    public function testHasRoleWithNonExistingRole()
+    {
+        $this->assertFalse($this->user->hasRole("Janitor"));
+    }
+
     public function testHasRoleWithoutRoles()
     {
         (new Role)
-            ->whereIn("name", ["Member", "SuperAdmin"])
+            ->whereIn("name", ["Member"])
             ->delete();
 
         $this->assertFalse($this->user->hasRole("Member"));
