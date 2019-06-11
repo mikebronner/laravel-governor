@@ -1,10 +1,10 @@
 <?php namespace GeneaLabs\LaravelGovernor\Tests\Unit\Policies;
 
-use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
-use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
-use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
-use GeneaLabs\LaravelGovernor\Team;
 use GeneaLabs\LaravelGovernor\Permission;
+use GeneaLabs\LaravelGovernor\Team;
+use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
+use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
+use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
 
 class BasePolicyTest extends UnitTestCase
 {
@@ -15,6 +15,9 @@ class BasePolicyTest extends UnitTestCase
     {
         parent::setUp();
 
+        $this->userWithoutRoles = factory(User::class)->create();
+        $this->userWithoutRoles->roles()->sync([]);
+        $this->userWithoutRoles->teams()->sync([]);
         $this->otherUser = factory(User::class)->create();
         $this->otherUser->roles()->attach("SuperAdmin");
         $this->actingAs($this->otherUser);
@@ -52,6 +55,60 @@ class BasePolicyTest extends UnitTestCase
             ->where("entity_name", "author")
             ->where("action_name", $action)
             ->delete();
+    }
+
+    public function testUserWithoutRolesOrTeams()
+    {
+        (new Permission)->firstOrCreate([
+            "role_name" => "Member",
+            "entity_name" => "author",
+            "action_name" => "create",
+            "ownership_name" => "any",
+        ]);
+        (new Permission)->firstOrCreate([
+            "role_name" => "Member",
+            "entity_name" => "author",
+            "action_name" => "viewAny",
+            "ownership_name" => "any",
+        ]);
+        (new Permission)->firstOrCreate([
+            "role_name" => "Member",
+            "entity_name" => "author",
+            "action_name" => "update",
+            "ownership_name" => "any",
+        ]);
+        (new Permission)->firstOrCreate([
+            "role_name" => "Member",
+            "entity_name" => "author",
+            "action_name" => "delete",
+            "ownership_name" => "any",
+        ]);
+        (new Permission)->firstOrCreate([
+            "role_name" => "Member",
+            "entity_name" => "author",
+            "action_name" => "restore",
+            "ownership_name" => "any",
+        ]);
+        (new Permission)->firstOrCreate([
+            "role_name" => "Member",
+            "entity_name" => "author",
+            "action_name" => "view",
+            "ownership_name" => "any",
+        ]);
+        (new Permission)->firstOrCreate([
+            "role_name" => "Member",
+            "entity_name" => "author",
+            "action_name" => "forceDelete",
+            "ownership_name" => "any",
+        ]);
+
+        $this->assertFalse($this->userWithoutRoles->can("create", Author::class));
+        $this->assertFalse($this->userWithoutRoles->can("viewAny", Author::class));
+        $this->assertFalse($this->userWithoutRoles->can("update", $this->author));
+        $this->assertFalse($this->userWithoutRoles->can("delete", $this->author));
+        $this->assertFalse($this->userWithoutRoles->can("restore", $this->author));
+        $this->assertFalse($this->userWithoutRoles->can("view", $this->author));
+        $this->assertFalse($this->userWithoutRoles->can("forceDelete", $this->author));
     }
 
     public function testCannotCreateWithoutPolicy()
