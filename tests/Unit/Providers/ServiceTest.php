@@ -2,7 +2,6 @@
 
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
 
-/** @group test */
 class ServiceTest extends UnitTestCase
 {
     protected function resolveApplicationBootstrappers($app)
@@ -11,7 +10,7 @@ class ServiceTest extends UnitTestCase
         $app['config']->set('database.connections.sqlite', [
             'driver' => 'sqlite',
             "url" => null,
-            'database' => __DIR__ . '/database/testing.sqlite',
+            'database' => __DIR__ . '/database/database.sqlite',
             'prefix' => '',
             "foreign_key_constraints" => false,
         ]);

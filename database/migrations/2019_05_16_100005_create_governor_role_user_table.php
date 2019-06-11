@@ -15,7 +15,7 @@ class CreateGovernorRoleUserTable extends Migration
     public function up()
     {
         Schema::create('governor_role_user', function (Blueprint $table) {
-            $user = app(config('genealabs-laravel-governor.models.auth'));
+            $user = app()->make(config('genealabs-laravel-governor.models.auth'));
             $table->string('role_name')
                 ->index();
             $table->bigInteger('user_id')

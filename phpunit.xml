@@ -11,6 +11,9 @@
     stopOnFailure="false"
 >
     <testsuites>
+        <testsuite name="Setup">
+            <directory>./tests/AlwaysRunFirstTest.php</directory>
+        </testsuite>
         <testsuite name="UnitTests">
             <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
