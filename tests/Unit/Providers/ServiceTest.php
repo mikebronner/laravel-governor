@@ -1,11 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Tests\Unit\Providers;
 
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
-use Illuminate\Support\Facades\Gate;
-use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
-use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
-use GeneaLabs\LaravelGovernor\Tests\Fixtures\Policies\Author as AuthorPolicy;
-use GeneaLabs\LaravelGovernor\Tests\Fixtures\Policies\User as UserPolicy;
 
 class ServiceTest extends UnitTestCase
 {
