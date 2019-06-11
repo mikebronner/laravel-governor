@@ -4,20 +4,6 @@ use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
 
 class ServiceTest extends UnitTestCase
 {
-    protected function resolveApplicationBootstrappers($app)
-    {
-        $app['config']->set('database.default', 'sqlite');
-        $app['config']->set('database.connections.sqlite', [
-            'driver' => 'sqlite',
-            "url" => null,
-            'database' => __DIR__ . '/database/database.sqlite',
-            'prefix' => '',
-            "foreign_key_constraints" => false,
-        ]);
-
-        parent::resolveApplicationBootstrappers($app);
-    }
-
     public function testEntityParsing()
     {
         $this->assertTrue(true);

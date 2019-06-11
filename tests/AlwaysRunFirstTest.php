@@ -5,13 +5,21 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class AlwaysRunFirstTest extends BaseTestCase
 {
-    public function setUp() : void
+    protected function getPackageProviders($app)
     {
-        parent::setUp();
+        return [
+            'GeneaLabs\LaravelGovernor\Providers\Service',
+            'GeneaLabs\LaravelGovernor\Providers\Auth',
+            'GeneaLabs\LaravelGovernor\Providers\Route',
+            'GeneaLabs\LaravelGovernor\Providers\Nova',
+        ];
+    }
 
+    protected function resolveApplicationBootstrappers($app)
+    {
         shell_exec("cd " . __DIR__ . "/database && rm *.sqlite && touch database.sqlite");
 
-        $this->app['config']->set('genealabs-laravel-governor.models', [
+        $app['config']->set('genealabs-laravel-governor.models', [
             'auth' => User::class,
             'action' => \GeneaLabs\LaravelGovernor\Action::class,
             'assignment' => \GeneaLabs\LaravelGovernor\Assignment::class,
@@ -23,14 +31,21 @@ class AlwaysRunFirstTest extends BaseTestCase
             'team' => \GeneaLabs\LaravelGovernor\Team::class,
             'invitation' => \GeneaLabs\LaravelGovernor\TeamInvitation::class,
         ]);
-        $this->app['config']->set('database.default', 'sqlite');
-        $this->app['config']->set('database.connections.sqlite', [
+        $app['config']->set('database.default', 'sqlite');
+        $app['config']->set('database.connections.sqlite', [
             'driver' => 'sqlite',
             "url" => null,
             'database' => __DIR__ . '/database/database.sqlite',
             'prefix' => '',
             "foreign_key_constraints" => false,
         ]);
+
+        parent::resolveApplicationBootstrappers($app);
+    }
+
+    public function setUp() : void
+    {
+        parent::setUp();
 
         $this->loadLaravelMigrations();
         $this->loadMigrationsFrom(__DIR__ . "/../database/migrations");
