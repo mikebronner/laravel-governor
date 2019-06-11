@@ -25,7 +25,6 @@ class TeamInvitationTest extends UnitTestCase
 
     public function testTeamInvitationNotification()
     {
-
         $invitation = (new TeamInvitation)->create([
             "team_id" => $this->team->id,
             "email" => "test1@example.com",

@@ -44,6 +44,16 @@ trait Governing
         );
     }
 
+    public function teams() : BelongsToMany
+    {
+        return $this->belongsToMany(
+            config('genealabs-laravel-governor.models.team'),
+            "governor_team_user",
+            "user_id",
+            "team_id"
+        );
+    }
+
     public function getPermissionsAttribute() : Collection
     {
         $permissionClass = config("genealabs-laravel-governor.models.permission");

@@ -4,6 +4,6 @@ class CreatedTeamListener
 {
     public function handle($team)
     {
-        auth()->user()->teams()->save($team);
+        $team->members()->syncWithoutDetaching([auth()->user()->id]);
     }
 }
