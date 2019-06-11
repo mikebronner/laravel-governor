@@ -26,6 +26,14 @@ class PermissionController extends Controller
                 }
             })
             ->first();
+
+        if (request("owner") === "yes") {
+            return $permissible
+                ->ownedBy
+                ->effectivePermissions
+                ->toArray();
+        }
+
         $gate = app('Illuminate\Contracts\Auth\Access\Gate');
         $reflectedGate = new \ReflectionObject($gate);
         $policies = $reflectedGate->getProperty("policies");

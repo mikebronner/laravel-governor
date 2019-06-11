@@ -14,16 +14,23 @@ export default {
             ],
             permissions: [],
             permissionsIsLoading: true,
-            selectOptions: [
+            anySelectOptions: [
                 "own",
                 "any",
+                "no",
+            ],
+            ownSelectOptions: [
+                "own",
+                "no",
+            ],
+            noSelectOptions: [
                 "no",
             ],
         };
     },
 
     created: function () {
-        this.loadPermissions();
+        this.loadTeamOwnerPermissions();
     },
 
     mounted: function () {
@@ -31,6 +38,43 @@ export default {
     },
 
     methods: {
+        getOptionsFor: function (action, entity) {
+            var effectivePermission = _.filter(this.ownerPermissions, function (permission) {
+                return permission.action_name == action
+                    && permission.entity_name == entity;
+            })[0];
+
+            if (((effectivePermission || {}).ownership_name || "") == "any") {
+                if (effectivePermission.action_name == "create"
+                    || effectivePermission.action_name == "viewAny"
+                ) {
+                    return this.binarySelectOptions;
+                }
+
+                return this.anySelectOptions;
+            }
+
+            if (((effectivePermission || {}).ownership_name || "") == "own") {
+                return this.ownSelectOptions;
+            }
+
+            return this.noSelectOptions;
+        },
+
+        loadTeamOwnerPermissions: function () {
+            var self = this;
+
+            Nova.request()
+                .get("/genealabs/laravel-governor/nova/permissions?owner=yes&filter=team_id&value=" + this.resourceId)
+                .then(function (response) {
+                    self.ownerPermissions = Object.assign({}, response.data);
+                    self.loadPermissions();
+                })
+                .catch(function (error) {
+                    console.error(error.response);
+                });
+        },
+
         loadPermissions: function () {
             var self = this;
 
@@ -135,7 +179,7 @@ export default {
                                     <td>
                                         <multiselect
                                             v-model="permissions[groupName][name]['create']"
-                                            :options="binarySelectOptions"
+                                            :options="getOptionsFor('create', name)"
                                             select-label=""
                                             deselect-label=""
                                             selected-label=""
@@ -148,7 +192,7 @@ export default {
                                     <td>
                                         <multiselect
                                             v-model="permissions[groupName][name]['viewAny']"
-                                            :options="selectOptions"
+                                            :options="getOptionsFor('viewAny', name)"
                                             select-label=""
                                             deselect-label=""
                                             selected-label=""
@@ -161,7 +205,7 @@ export default {
                                     <td>
                                         <multiselect
                                             v-model="permissions[groupName][name]['view']"
-                                            :options="selectOptions"
+                                            :options="getOptionsFor('view', name)"
                                             select-label=""
                                             deselect-label=""
                                             selected-label=""
@@ -174,7 +218,7 @@ export default {
                                     <td>
                                         <multiselect
                                             v-model="permissions[groupName][name]['update']"
-                                            :options="selectOptions"
+                                            :options="getOptionsFor('update', name)"
                                             select-label=""
                                             deselect-label=""
                                             selected-label=""
@@ -187,7 +231,7 @@ export default {
                                     <td>
                                         <multiselect
                                             v-model="permissions[groupName][name]['delete']"
-                                            :options="selectOptions"
+                                            :options="getOptionsFor('delete', name)"
                                             select-label=""
                                             deselect-label=""
                                             selected-label=""
@@ -200,7 +244,7 @@ export default {
                                     <td>
                                         <multiselect
                                             v-model="permissions[groupName][name]['restore']"
-                                            :options="selectOptions"
+                                            :options="getOptionsFor('restore', name)"
                                             select-label=""
                                             deselect-label=""
                                             selected-label=""
@@ -213,7 +257,7 @@ export default {
                                     <td>
                                         <multiselect
                                             v-model="permissions[groupName][name]['forceDelete']"
-                                            :options="selectOptions"
+                                            :options="getOptionsFor('forceDelete', name)"
                                             select-label=""
                                             deselect-label=""
                                             selected-label=""
