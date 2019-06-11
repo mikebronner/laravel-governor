@@ -15,8 +15,10 @@ class AlwaysRunFirstTest extends BaseTestCase
         ];
     }
 
-    protected function resolveApplicationBootstrappers($app)
+    protected function getEnvironmentSetUp($app)
     {
+        parent::getEnvironmentSetUp($app);
+
         shell_exec("cd " . __DIR__ . "/database && rm *.sqlite && touch database.sqlite");
 
         $app['config']->set('genealabs-laravel-governor.models', [
@@ -39,8 +41,6 @@ class AlwaysRunFirstTest extends BaseTestCase
             'prefix' => '',
             "foreign_key_constraints" => false,
         ]);
-
-        parent::resolveApplicationBootstrappers($app);
     }
 
     public function setUp() : void
@@ -56,6 +56,11 @@ class AlwaysRunFirstTest extends BaseTestCase
             '--class' => 'LaravelGovernorDatabaseSeeder',
             '--no-interaction' => true,
         ]);
+    }
+
+    public function tearDown() : void
+    {
+        $this->app['config']->set('database.default', 'testing');
     }
 
     /** @test */
