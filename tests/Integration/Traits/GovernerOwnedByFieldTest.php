@@ -1,4 +1,4 @@
-<?php namespace GeneaLabs\LaravelGovernor\Tests\Unit\Traits;
+<?php namespace GeneaLabs\LaravelGovernor\Tests\Integration\Traits;
 
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\AuthorWithoutGovernable;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Policies\Author as AuthorPolicy;

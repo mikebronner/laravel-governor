@@ -18,7 +18,9 @@ class CreateGovernorTeamInvitationsTable extends Migration
             $user = app(config('genealabs-laravel-governor.models.auth'));
 
             $table->bigIncrements("id");
-            $table->bigInteger('team_id');
+            $table->unsignedBigInteger("governor_owned_by")
+                ->nullable();
+            $table->unsignedBigInteger('team_id');
             $table->timestamps();
 
             $table->string("email");

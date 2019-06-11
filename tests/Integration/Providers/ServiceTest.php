@@ -1,4 +1,4 @@
-<?php namespace GeneaLabs\LaravelGovernor\Tests\Unit\Providers;
+<?php namespace GeneaLabs\LaravelGovernor\Tests\Integration\Providers;
 
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
 

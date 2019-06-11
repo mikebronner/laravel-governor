@@ -14,8 +14,8 @@
         <testsuite name="Setup">
             <directory>./tests/AlwaysRunFirstTest.php</directory>
         </testsuite>
-        <testsuite name="UnitTests">
-            <directory suffix="Test.php">./tests/Unit</directory>
+        <testsuite name="IntegrationTests">
+            <directory suffix="Test.php">./tests/Integration</directory>
         </testsuite>
     </testsuites>
     <filter>

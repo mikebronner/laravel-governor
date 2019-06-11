@@ -5,4 +5,4 @@ Route::resource('roles', "RolesController")
 Route::resource('assignments', "AssignmentsController")
     ->only(['edit', 'update']);
 Route::resource("invitations", "InvitationController")
-    ->only(["show"]);
+    ->only(["show", "update"]);

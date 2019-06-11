@@ -13,7 +13,7 @@ class UpdateTeamRequest extends Request
         return auth()->check()
             && ($this->team
                 ? auth()->user()->can("update", $this->team)
-                : auth()->user()->can("create", $roleClass));
+                : auth()->user()->can("create", $teamClass));
     }
 
     public function rules() : array
