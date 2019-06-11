@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
 use ReflectionClass;
 
@@ -26,17 +27,13 @@ trait Governable
             $authTable = (new $authModel)->getTable();
 
             if ($query->getModel()->getTable() === $authTable) {
-                return $query->where("id", auth()->user()->getKey());
+                return $query->where($query->getModel()->getKeyName(), auth()->user()->getKey());
             }
             
             return $query->where("governor_owned_by", auth()->user()->getKey());
         }
 
-        if ($ownerships->contains("no")) {
-            return $query->whereRaw("1 = 2");
-        }
-
-        return $query;
+        return $query->whereRaw("1 = 2");
     }
 
     protected function getEntityName() : string
@@ -59,23 +56,49 @@ trait Governable
         }
 
         $permissionClass = config("genealabs-laravel-governor.models.permission");
-
-        return (new $permissionClass)
-            ->whereIn("role_name", auth()->user()->roles->pluck("name"))
+        $result = (new $permissionClass)
+            ->where(function ($query) {
+                $query->whereIn("role_name", auth()->user()->roles->pluck("name"))
+                    ->orWhereIn("team_id", auth()->user()->teams->pluck("id"));
+            })
             ->where("action_name", $ability)
             ->where("entity_name", $entityName)
             ->get()
             ->pluck("ownership_name");
+
+        return $result;
     }
 
     public function ownedBy() : BelongsTo
     {
-        return $this->belongsTo(config("genealabs-laravel-governor.models.auth"), "governor_owned_by");
+        return $this->belongsTo(
+            config("genealabs-laravel-governor.models.auth"),
+            "governor_owned_by"
+        );
+    }
+
+    public function teams() : MorphToMany
+    {
+        return $this->MorphToMany(
+            config("genealabs-laravel-governor.models.team"),
+            "teamable",
+            "governor_teamables"
+        );
     }
 
     public function scopeDeletable(Builder $query) : Builder
     {
         return $this->applyPermissionToQuery($query, "delete");
+    }
+
+    public function scopeForceDeletable(Builder $query) : Builder
+    {
+        return $this->applyPermissionToQuery($query, "forceDelete");
+    }
+
+    public function scopeRestorable(Builder $query) : Builder
+    {
+        return $this->applyPermissionToQuery($query, "restore");
     }
 
     public function scopeUpdatable(Builder $query) : Builder

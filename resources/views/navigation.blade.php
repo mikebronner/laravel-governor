@@ -1,6 +1,7 @@
-@if (auth()->user()->can("viewAny", "GeneaLabs\LaravelGovernor\Role")
-    || auth()->user()->can("viewAny", "GeneaLabs\LaravelGovernor\Group")
-    || auth()->user()->can("viewAny", "GeneaLabs\LaravelGovernor\Assignment")
+@if (auth()->user()->can("viewAny", config("genealabs-laravel-governor.models.role"))
+    || auth()->user()->can("viewAny", config("genealabs-laravel-governor.models.group"))
+    || auth()->user()->can("viewAny", config("genealabs-laravel-governor.models.team"))
+    || auth()->user()->can("viewAny", config("genealabs-laravel-governor.models.assignment"))
 )
     <h3 class="flex items-center font-normal text-white mb-4 text-base no-underline">
         <span class="text-grey" style="font-size: 20px;">
@@ -10,7 +11,7 @@
     </h3>
     <ul class="list-reset mb-8">
 
-        @if (auth()->user()->can("viewAny", "GeneaLabs\LaravelGovernor\Role"))
+        @if (auth()->user()->can("viewAny", config("genealabs-laravel-governor.models.role")))
             <li class="leading-tight mb-4 ml-8 text-sm">
                 <router-link
                     :to="{name: 'laravel-nova-governor-roles'}"
@@ -20,7 +21,7 @@
             </li>
         @endif
 
-        @if (auth()->user()->can("viewAny", "GeneaLabs\LaravelGovernor\Group"))
+        @if (auth()->user()->can("viewAny", config("genealabs-laravel-governor.models.group")))
             <li class="leading-tight mb-4 ml-8 text-sm">
                 <router-link
                     :to="{name: 'laravel-nova-governor-groups'}"
@@ -30,7 +31,17 @@
             </li>
         @endif
 
-        @if (auth()->user()->can("viewAny", "GeneaLabs\LaravelGovernor\Assignment"))
+        @if (auth()->user()->can("viewAny", config("genealabs-laravel-governor.models.team")))
+            <li class="leading-tight mb-4 ml-8 text-sm">
+                <router-link
+                    :to="{path: '/resources/teams'}"
+                    class="text-white text-justify no-underline dim">
+                    Teams
+                </router-link>
+            </li>
+        @endif
+
+        @if (auth()->user()->can("viewAny", config("genealabs-laravel-governor.models.assignment")))
             <li class="leading-tight mb-4 ml-8 text-sm">
                 <router-link
                     :to="{name: 'laravel-nova-governor-assignments'}"

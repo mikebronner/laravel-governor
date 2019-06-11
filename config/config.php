@@ -43,6 +43,8 @@ return [
         "ownership" => GeneaLabs\LaravelGovernor\Ownership::class,
         "permission" => GeneaLabs\LaravelGovernor\Permission::class,
         "role" => GeneaLabs\LaravelGovernor\Role::class,
+        "team" => GeneaLabs\LaravelGovernor\Team::class,
+        "invitation" => GeneaLabs\LaravelGovernor\TeamInvitation::class,
     ],
 
     /*

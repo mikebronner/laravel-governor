@@ -2,11 +2,11 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
+use GeneaLabs\LaravelGovernor\Role;
 
 class CreatedListener
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function handle(string $event, array $models)

@@ -352,7 +352,7 @@
                     </table>
                 </div>
             </card>
-        </loading>
+        </loading-view>
     </div>
 </template>
 

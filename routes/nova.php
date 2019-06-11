@@ -23,4 +23,5 @@ Route::resource("/entities", "EntityController");
 Route::resource("/groups", "GroupController");
 Route::resource("/permissions", "PermissionController");
 Route::resource("/roles", "RoleController");
+Route::resource("/teams", "TeamController");
 Route::resource("/users", "UserController");

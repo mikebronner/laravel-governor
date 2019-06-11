@@ -7,7 +7,6 @@ use Illuminate\Support\Collection;
 class Permission extends Model
 {
     protected $rules = [
-        'role_name' => 'required',
         'entity_name' => 'required',
         'action_name' => 'required',
         'ownership_name' => 'required',
@@ -17,6 +16,7 @@ class Permission extends Model
         'entity_name',
         'action_name',
         'ownership_name',
+        "team_id",
     ];
     protected $table = "governor_permissions";
 
@@ -41,14 +41,6 @@ class Permission extends Model
         });
     }
 
-    public function role() : BelongsTo
-    {
-        return $this->belongsTo(
-            config('genealabs-laravel-governor.models.role'),
-            'role_name'
-        );
-    }
-
     public function entity() : BelongsTo
     {
         return $this->belongsTo(
@@ -70,6 +62,21 @@ class Permission extends Model
         return $this->belongsTo(
             config('genealabs-laravel-governor.models.ownership'),
             'ownership_name'
+        );
+    }
+
+    public function role() : BelongsTo
+    {
+        return $this->belongsTo(
+            config('genealabs-laravel-governor.models.role'),
+            'role_name'
+        );
+    }
+
+    public function team() : BelongsTo
+    {
+        return $this->belongsTo(
+            config('genealabs-laravel-governor.models.team')
         );
     }
 

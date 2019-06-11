@@ -11,7 +11,7 @@ class Group extends Resource
 {
     use SearchesRelations;
 
-    public static $model = 'GeneaLabs\\LaravelGovernor\\Group';
+    public static $model;
     public static $title = "name";
     public static $search = [
         "name",
