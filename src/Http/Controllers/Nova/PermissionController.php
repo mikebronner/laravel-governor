@@ -50,7 +50,7 @@ class PermissionController extends Controller
                     ]);
             });
         $entities = (new $entityClass)
-            ->whereNotIn('name', ['governor_permission', 'governor_entity', "governor_action", "governor_ownership"])
+            ->whereNotIn('name', ['permission', 'entity', "action", "ownership", "teaminvitation"])
             ->orderBy("group_name")
             ->orderBy("name")
             ->get();

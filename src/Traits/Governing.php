@@ -69,7 +69,7 @@ trait Governing
             ->groupBy(function ($permission) {
                 return $permission->entity_name . "|" . $permission->action_name;
             });
-        
+
         foreach ($groupedPermissions as $entityAction => $permissions) {
             $permission = $permissions->first();
             $permission->role_name = null;
