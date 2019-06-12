@@ -10,7 +10,7 @@ class Role extends BasePolicy
             return false;
         }
 
-        return parent::delete($user, $Model);
+        return parent::delete($user, $model);
     }
 
     public function forceDelete(Model $user, Model $model) : bool
@@ -19,7 +19,7 @@ class Role extends BasePolicy
             return false;
         }
 
-        return parent::forceDelete($user, $Model);
+        return parent::forceDelete($user, $model);
     }
 
     public function restore(Model $user, Model $model) : bool
@@ -28,7 +28,7 @@ class Role extends BasePolicy
             return false;
         }
 
-        return parent::restore($user, $Model);
+        return parent::restore($user, $model);
     }
 
     public function update(Model $user, Model $model) : bool
@@ -37,7 +37,7 @@ class Role extends BasePolicy
             return false;
         }
 
-        return parent::update($user, $Model);
+        return parent::update($user, $model);
     }
 
     public function view(Model $user, Model $model) : bool
@@ -46,7 +46,6 @@ class Role extends BasePolicy
             return false;
         }
 
-        return parent::view($user, $Model);
+        return parent::view($user, $model);
     }
-
 }
