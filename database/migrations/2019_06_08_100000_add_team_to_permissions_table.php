@@ -14,14 +14,7 @@ class AddTeamToPermissionsTable extends Migration
 
     public function up()
     {
-        Schema::table("governor_permissions", function (Blueprint $table) {
-            $table->dropUnique([
-                'role_name',
-                'entity_name',
-                'action_name',
-                'ownership_name',
-            ]);
-        });
+        Schema::dropIndexIfExists("governor_permissions_role_name_entity_name_action_name_ownership_name_unique");
         Schema::table("governor_permissions", function (Blueprint $table) {
             $table->string("role_name")
                 ->nullable()
