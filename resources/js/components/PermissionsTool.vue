@@ -37,6 +37,43 @@ export default {
         //
     },
 
+    computed: {
+        filteredPermissions: function () {
+            var self = this;
+            var results = _.mapValues(this.permissions, function (group) {
+                var results = _.mapValues(group, function (permission, permissionName) {
+                    var result = {};
+                    var foundPermission = _.find(self.ownerPermissions, function (ownerPermission) {
+                        return ownerPermission.entity_name == permissionName;
+                    });
+
+                    if ((foundPermission || false) == false) {
+                        return null;
+                    }
+
+                    result[permissionName] = _.filter(group, function (permission) {
+                        return _.some(permission, function (ownership) {
+                            return _.includes(["any", "own"], ownership);
+                        });
+                    })[0];
+
+                    return result;
+                });
+
+                results = _.omitBy(results, function (permission) {
+                    return permission == null;
+                });
+
+                return results;
+            });
+            results = _.omitBy(results, function (group) {
+                return _.keys(group).length == 0;
+            });
+
+            return results;
+        },
+    },
+
     methods: {
         getOptionsFor: function (action, entity) {
             var effectivePermission = _.filter(this.ownerPermissions, function (permission) {
@@ -127,7 +164,7 @@ export default {
                 higher permissions granted through their role.
             </p>
             <div
-                v-for="(group, groupName) in permissions"
+                v-for="(group, groupName) in filteredPermissions"
                 :key="'group-' + groupName"
             >
                 <h2 class="mt-6 mb-3 text-70 font-normal text-2xl"
