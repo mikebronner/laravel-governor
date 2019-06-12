@@ -21,7 +21,7 @@ Nova.booting((Vue, router) => {
         {
             name: 'laravel-nova-governor-permissions',
             path: '/laravel-nova-governor/permissions/:role',
-            component: "permissions",
+            component: require('./components/Permissions').default,
         },
         {
             name: 'laravel-nova-governor-groups',
