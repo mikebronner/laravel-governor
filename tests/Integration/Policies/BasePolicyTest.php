@@ -42,7 +42,7 @@ class BasePolicyTest extends UnitTestCase
     {
         $permission = (new Permission)->firstOrNew([
             "role_name" => $role,
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => $action,
         ]);
         $permission->ownership_name = $ownership;

@@ -33,6 +33,7 @@ trait CreatesApplication
             'GeneaLabs\LaravelGovernor\Providers\Auth',
             'GeneaLabs\LaravelGovernor\Providers\Route',
             'GeneaLabs\LaravelGovernor\Providers\Nova',
+            "GeneaLabs\LaravelOptimizedPostgres\Providers\LaravelOptimizedPostgresService",
         ];
     }
     
