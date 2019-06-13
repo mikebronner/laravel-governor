@@ -1,9 +1,12 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers\Nova;
 
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
+use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 
 class PermissionController extends Controller
 {
+    use EntityManagement;
+
     public function index() : array
     {
         $actionClass = config("genealabs-laravel-governor.models.action");
@@ -34,23 +37,10 @@ class PermissionController extends Controller
                 ->toArray();
         }
 
-        $gate = app('Illuminate\Contracts\Auth\Access\Gate');
-        $reflectedGate = new \ReflectionObject($gate);
-        $policies = $reflectedGate->getProperty("policies");
-        $policies->setAccessible(true);
-        $policies = $policies->getValue($gate);
+        $this->parsePolicies();
 
-        collect(array_keys($policies))
-            ->each(function ($entity) use ($entityClass) {
-                $entity = strtolower(collect(explode('\\', $entity))->last());
-
-                return (new $entityClass)
-                    ->firstOrCreate([
-                        'name' => $entity,
-                    ]);
-            });
         $entities = (new $entityClass)
-            ->whereNotIn('name', ['permission', 'entity', "action", "ownership", "teaminvitation"])
+            ->whereNotIn('name', ['Permission (Laravel Governor)', 'Entity (Laravel Governor)', "Action (Laravel Governor)", "Ownership (Laravel Governor)", "Team Invitation (Laravel Governor)"])
             ->orderBy("group_name")
             ->orderBy("name")
             ->get();

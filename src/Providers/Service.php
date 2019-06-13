@@ -45,11 +45,6 @@ class Service extends AggregateServiceProvider
             __DIR__ . '/../../database/migrations' => base_path('database/migrations')
         ], 'migrations');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
-        // $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
-
-        if (Schema::hasTable('governor_entities')) {
-            $this->parsePolicies($gate);
-        }
     }
 
     public function register()
@@ -63,70 +58,5 @@ class Service extends AggregateServiceProvider
     public function provides() : array
     {
         return [];
-    }
-
-    protected function parsePolicies(GateContract $gate)
-    {
-        $actionClass = config("genealabs-laravel-governor.models.action");
-        $entityClass = config("genealabs-laravel-governor.models.entity");
-        $ownershipClass = config("genealabs-laravel-governor.models.ownership");
-        $permissionClass = config("genealabs-laravel-governor.models.permission");
-        $roleClass = config("genealabs-laravel-governor.models.role");
-
-        $reflection = new ReflectionClass($gate);
-        $property = $reflection->getProperty('policies');
-        $property->setAccessible(true);
-        collect($property->getValue($gate))
-            ->transform(function ($policyClass) {
-                return $this->newEntity($policyClass);
-            })
-            ->values()
-            ->filter()
-            ->each(function ($entity) use ($actionClass, $entityClass, $ownershipClass, $permissionClass, $roleClass) {
-                (new $entityClass)->firstOrCreate(['name' => $entity]);
-                $superadmin = (new $roleClass)->whereName('SuperAdmin')->first();
-                $ownership = (new $ownershipClass)->whereName('any')->first();
-                (new $actionClass)->all()->each(function ($action) use ($entity, $superadmin, $ownership, $permissionClass) {
-                    $permission = new $permissionClass;
-                    $permission->role()->associate($superadmin);
-                    $permission->action()->associate($action);
-                    $permission->ownership()->associate($ownership);
-                    $permission->entity()->associate($entity);
-                    $permission->save();
-                });
-            });
-        (new $entityClass)
-            ->with("permissions")
-            ->whereDoesntHave("permissions", function ($query) {
-                $query->where("role_name", "SuperAdmin");
-            })
-            ->get()
-            ->each(function ($entity) use ($actionClass, $permissionClass) {
-                (new $actionClass)->all()
-                    ->each(function ($action) use ($entity, $permissionClass) {
-                        (new $permissionClass)->firstOrCreate([
-                            "role_name" => "SuperAdmin",
-                            "action_name" => $action->name,
-                            "ownership_name" => "any",
-                            "entity_name" => $entity->name,
-                        ]);
-                    });
-            });
-    }
-
-    protected function newEntity(string $policyClass)
-    {
-        $entityClass = config("genealabs-laravel-governor.models.entity");
-        $entityClass = new $entityClass;
-        $policyClass = collect(explode('\\', $policyClass))->last();
-        $entity = str_replace('policy', '', strtolower($policyClass));
-
-        if (in_array($entity, ['assignment', 'entity', 'permission', 'role', 'action', 'ownership'])) {
-            return;
-        }
-
-        if (! app('db')->table($entityClass->getTable())->where('name', $entity)->exists()) {
-            return $entity;
-        }
     }
 }
