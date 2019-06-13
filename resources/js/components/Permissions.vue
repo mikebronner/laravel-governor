@@ -207,7 +207,9 @@
             :key="'group-' + groupName"
             :loading="permissionsIsLoading"
         >
-            <h2 class="mt-6 mb-3 text-80 font-normal text-2xl"
+            <h2
+                v-if="permissions.length > 1"
+                class="mt-6 mb-3 text-80 font-normal text-2xl"
                 v-text="groupName"
             ></h2>
 
