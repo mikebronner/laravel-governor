@@ -55,7 +55,8 @@ class Team extends Resource
             HasMany::make("Invitations", "invitations", "GeneaLabs\LaravelGovernor\Nova\TeamInvitation"),
             PermissionsTool::make()
                 ->canSee(function () {
-                    return $this->governor_owned_by === auth()->user()->id;
+                    return $this->governor_owned_by === auth()->user()->id
+                        || auth()->user()->hasRole("SuperAdmin");
                 }),
         ];
     }
