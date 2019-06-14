@@ -81,7 +81,7 @@ trait Governing
             }
 
             if ($permissions->pluck("ownership_name")->contains("own")) {
-                $permission->ownership_name = "any";
+                $permission->ownership_name = "own";
                 $results = $results->push($permission);
             }
         }

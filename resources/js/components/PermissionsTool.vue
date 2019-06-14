@@ -105,6 +105,7 @@ export default {
                 .get("/genealabs/laravel-governor/nova/permissions?owner=yes&filter=team_id&value=" + this.resourceId)
                 .then(function (response) {
                     self.ownerPermissions = Object.assign({}, response.data);
+                    console.log(self.ownerPermissions);
                     self.loadPermissions();
                 })
                 .catch(function (error) {
