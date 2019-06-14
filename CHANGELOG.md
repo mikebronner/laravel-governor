@@ -1,9 +1,60 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
-## [Unversioned]
+## [0.11.10] - 2019-06-14
+### Fixed
+- when permission group headings were displayed.
+- access to team permissions by SuperAdmins.
+
+## [0.11.9] - 2019-06-13
+### Fixed
+- determination of effective permissions of team owner used in team permissions.
+- available permission options of viewAny permissions to only no and any.
+
+## [0.11.8] - 2019-06-12
+### Changed
+- Permission groups will now only show if there are more than one set up.
+- Entities are now named to indicate if they are part of a package.
+
+### Fixed
+- Updated tests to complete successfully according to the updated functionality.
+
+## [0.11.7] - 2019-06-12
+### Fixed
+- how index in migration is dropped.
+
+## [0.11.6] - 2019-06-12
+### Fixed
+- Nova menu item Vue component registration.
+- migration to drop index only if it exists.
+
+## [0.11.5] - 2019-06-11
 ### Added
-- team migrations.
+- team management functionality.
+- team permissions functionality.
+
+## [0.11.4] - 1 Jun 2019
+### Fixed
+- attaching new registrant to Member role.
+
+## [0.11.3] - 29 May 2019
+### Added
+- caching of Permissions.
+- caching of existence of governor_owned_by field existing in a given table.
+
+### Fixed
+- creation of governor_owned_by field in tables of governed models, if missing.
+
+## [0.11.2] - 29 May 2019
+### Added
+- auth model primary key data type for creating the governor_owned_by fields.
+
+### Fixed
+- filtering of auth model records for "own" permissions.
+
+## [0.11.1] - 28 May 2019
+### Fixed
+- Nova navigation menu items to only display if the user has the appropriate permissions.
 
 ## [0.11.0] - 26 May 2019
 ### Added
