@@ -30,6 +30,12 @@
             this.loadPermissions();
         },
 
+        computed: {
+            hasMoreThanOne: function () {
+                return (_.keys(this.permissions).length > 1);
+            },
+        },
+
         methods: {
             closeDeleteModal: function () {
                 this.deleteModalOpen = false;
@@ -208,14 +214,12 @@
             :loading="permissionsIsLoading"
         >
             <h2
-                v-if="permissions.length > 1"
+                v-show="hasMoreThanOne"
                 class="mt-6 mb-3 text-80 font-normal text-2xl"
                 v-text="groupName"
             ></h2>
 
-            <card
-                :loading="permissionsIsLoading"
-            >
+            <card>
                 <div class="relative">
                     <table cellpadding="0"
                         cellspacing="0"
