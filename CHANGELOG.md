@@ -4,6 +4,7 @@
 ## [0.11.11] - 2019-06-15
 ### Fixed
 - resolution of entity names in permission checks.
+- resolution of teams in permission checks.
 
 ## [0.11.10] - 2019-06-14
 ### Fixed
