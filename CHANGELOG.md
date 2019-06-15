@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.11.12] - 2019-06-15
+### Fixed
+- resolution of user-teams in permission checks.
+
 ## [0.11.11] - 2019-06-15
 ### Fixed
 - resolution of entity names in permission checks.

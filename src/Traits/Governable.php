@@ -32,7 +32,7 @@ trait Governable
                 if ($query->getModel()->getTable() === $authTable) {
                     return $query
                         ->whereHas("teams", function ($query) {
-                            $query->whereIn("id", auth()->user()->teams->pluck("id"));
+                            $query->whereIn("governor_team_user.user_id", auth()->user()->teams->pluck("id"));
                         })
                         ->orWhere($query->getModel()->getKeyName(), auth()->user()->getKey());
                 }
