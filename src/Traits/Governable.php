@@ -29,21 +29,27 @@ trait Governable
 
             if (method_exists($query->getModel(), "teams")) {
                 $query->whereHas("teams", function ($query) {
-                    $query->whereIn("teams.id", auth()->user()->teams->pluck("id"));
+                    $query->whereIn("governor_teamables.team_id", auth()->user()->teams->pluck("id"));
                 });
 
                 if ($query->getModel()->getTable() === $authTable) {
                     return $query->orWhere($query->getModel()->getKeyName(), auth()->user()->getKey());
                 }
 
-                return $query->orWhere("governor_owned_by", auth()->user()->getKey());
+                return $query->orWhere(
+                    "{$query->getModel()->getTable()}.governor_owned_by",
+                    auth()->user()->getKey()
+                );
             }
 
             if ($query->getModel()->getTable() === $authTable) {
                 return $query->where($query->getModel()->getKeyName(), auth()->user()->getKey());
             }
             
-            return $query->where("governor_owned_by", auth()->user()->getKey());
+            return $query->where(
+                "{$query->getModel()->getTable()}.governor_owned_by",
+                auth()->user()->getKey()
+            );
         }
 
         return $query->whereRaw("1 = 2");
