@@ -66,7 +66,7 @@ class GovernableTest extends UnitTestCase
     {
         (new Permission)->create([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "delete",
             "ownership_name" => "any"
         ]);
@@ -83,7 +83,7 @@ class GovernableTest extends UnitTestCase
     {
         $permission = (new Permission)->firstOrNew([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "delete",
         ]);
         $permission->ownership_name = "own";
@@ -110,7 +110,7 @@ class GovernableTest extends UnitTestCase
     {
         (new Permission)->create([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "update",
             "ownership_name" => "any"
         ]);
@@ -127,7 +127,7 @@ class GovernableTest extends UnitTestCase
     {
         $permission = (new Permission)->firstOrNew([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "update",
         ]);
         $permission->ownership_name = "own";
@@ -154,7 +154,7 @@ class GovernableTest extends UnitTestCase
     {
         (new Permission)->create([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "view",
             "ownership_name" => "any"
         ]);
@@ -167,17 +167,19 @@ class GovernableTest extends UnitTestCase
         $this->assertTrue($results->contains($this->otherAuthor));
     }
 
+    /** @group test */
     public function testScopeViewableWithOwnPermission()
     {
-        (new Permission)->create([
+        (new Permission)->firstOrCreate([
             "role_name" => "Member",
-            "entity_name" => "user",
+            "entity_name" => "User (Laravel Governor)",
             "action_name" => "view",
             "ownership_name" => "own"
         ]);
+
         $permission = (new Permission)->firstOrNew([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "view",
         ]);
         $permission->ownership_name = "own";
@@ -210,7 +212,7 @@ class GovernableTest extends UnitTestCase
     {
         (new Permission)->create([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "viewAny",
             "ownership_name" => "any"
         ]);
@@ -227,7 +229,7 @@ class GovernableTest extends UnitTestCase
     {
         $permission = (new Permission)->firstOrNew([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "viewAny",
         ]);
         $permission->ownership_name = "own";
@@ -254,7 +256,7 @@ class GovernableTest extends UnitTestCase
     {
         (new Permission)->create([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "restore",
             "ownership_name" => "any"
         ]);
@@ -271,7 +273,7 @@ class GovernableTest extends UnitTestCase
     {
         $permission = (new Permission)->firstOrNew([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "restore",
         ]);
         $permission->ownership_name = "own";
@@ -298,7 +300,7 @@ class GovernableTest extends UnitTestCase
     {
         (new Permission)->create([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "forceDelete",
             "ownership_name" => "any"
         ]);
@@ -315,7 +317,7 @@ class GovernableTest extends UnitTestCase
     {
         $permission = (new Permission)->firstOrNew([
             "role_name" => "Member",
-            "entity_name" => "author",
+            "entity_name" => "Author (Laravel Governor)",
             "action_name" => "forceDelete",
         ]);
         $permission->ownership_name = "own";

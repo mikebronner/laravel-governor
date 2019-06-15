@@ -13,7 +13,7 @@ trait Governable
     {
         $entityName = $this->getEntityFromModel(get_class($this));
         $ownerships = $this->getOwnershipsForEntity($entityName, $ability);
-
+        
         return $this->filterQuery($query, $ownerships);
     }
 
@@ -28,18 +28,23 @@ trait Governable
             $authTable = (new $authModel)->getTable();
 
             if (method_exists($query->getModel(), "teams")) {
-                $query->whereHas("teams", function ($query) {
-                    $query->whereIn("governor_teamables.team_id", auth()->user()->teams->pluck("id"));
-                });
 
                 if ($query->getModel()->getTable() === $authTable) {
-                    return $query->orWhere($query->getModel()->getKeyName(), auth()->user()->getKey());
+                    return $query
+                        ->whereHas("teams", function ($query) {
+                            $query->whereIn("id", auth()->user()->teams->pluck("id"));
+                        })
+                        ->orWhere($query->getModel()->getKeyName(), auth()->user()->getKey());
                 }
 
-                return $query->orWhere(
-                    "{$query->getModel()->getTable()}.governor_owned_by",
-                    auth()->user()->getKey()
-                );
+                return $query
+                    ->whereHas("teams", function ($query) {
+                        $query->whereIn("governor_teamables.team_id", auth()->user()->teams->pluck("id"));
+                    })
+                    ->orWhere(
+                        "{$query->getModel()->getTable()}.governor_owned_by",
+                        auth()->user()->getKey()
+                    );
             }
 
             if ($query->getModel()->getTable() === $authTable) {
