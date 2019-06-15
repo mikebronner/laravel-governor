@@ -4,13 +4,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
-use ReflectionClass;
 
 trait Governable
 {
+    use EntityManagement;
+
     protected function applyPermissionToQuery(Builder $query, string $ability) : Builder
     {
-        $entityName = $this->getEntityName();
+        $entityName = $this->getEntityFromModel(get_class($this));
         $ownerships = $this->getOwnershipsForEntity($entityName, $ability);
 
         return $this->filterQuery($query, $ownerships);
@@ -26,6 +27,18 @@ trait Governable
             $authModel = config("genealabs-laravel-governor.models.auth");
             $authTable = (new $authModel)->getTable();
 
+            if (method_exists($query->getModel(), "teams")) {
+                $query->whereHas("teams", function ($query) {
+                    $query->whereIn("teams.id", auth()->user()->teams->pluck("id"));
+                });
+
+                if ($query->getModel()->getTable() === $authTable) {
+                    return $query->orWhere($query->getModel()->getKeyName(), auth()->user()->getKey());
+                }
+
+                return $query->orWhere("governor_owned_by", auth()->user()->getKey());
+            }
+
             if ($query->getModel()->getTable() === $authTable) {
                 return $query->where($query->getModel()->getKeyName(), auth()->user()->getKey());
             }
@@ -34,19 +47,6 @@ trait Governable
         }
 
         return $query->whereRaw("1 = 2");
-    }
-
-    protected function getEntityName() : string
-    {
-        $gate = app("Illuminate\Contracts\Auth\Access\Gate");
-        $reflection = new ReflectionClass($gate);
-        $property = $reflection->getProperty('policies');
-        $property->setAccessible(true);
-        $policies = collect($property->getValue($gate));
-        $policyClass = $policies->get(get_class($this), "");
-        $policyClass = collect(explode('\\', $policyClass))->last();
-
-        return str_replace('policy', '', strtolower($policyClass));
     }
 
     protected function getOwnershipsForEntity(string $entityName, string $ability) : Collection

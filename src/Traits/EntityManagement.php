@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
+use Illuminate\Support\Collection;
 use ReflectionObject;
 
 trait EntityManagement
@@ -26,15 +27,24 @@ trait EntityManagement
         return $entity->name;
     }
 
-    protected function parsePolicies()
+    protected function getEntityFromModel(string $modelClass) : string
+    {
+        return $this->getEntity($this->getPolicies()->get($modelClass, ""));
+    }
+
+    protected function getPolicies() : Collection
     {
         $gate = app('Illuminate\Contracts\Auth\Access\Gate');
         $reflectedGate = new ReflectionObject($gate);
         $policies = $reflectedGate->getProperty("policies");
         $policies->setAccessible(true);
-        $policies = $policies->getValue($gate);
 
-        collect($policies)
+        return collect($policies->getValue($gate));
+    }
+
+    protected function parsePolicies()
+    {
+        $this->getPolicies()
             ->each(function ($policyClassName) {
                 $this->getEntity($policyClassName);
             });
