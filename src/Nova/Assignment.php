@@ -11,7 +11,7 @@ class Assignment extends Resource
     public static $model;
     public static $title = "name";
     public static $search = [
-        "name",
+        // not searchable
     ];
 
     public function fields(Request $request)

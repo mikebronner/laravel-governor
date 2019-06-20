@@ -13,10 +13,7 @@ class Permission extends Resource
     public static $model;
     public static $perPageViaRelationship = 25;
     public static $search = [
-        "role_name",
-        "entity_name",
-        "action_name",
-        "ownership_name",
+        // not searchable
     ];
     public static $displayInPermissions = false;
     public static $title = "entity";

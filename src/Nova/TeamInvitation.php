@@ -15,7 +15,7 @@ class TeamInvitation extends Resource
     public static $displayInPermissions = false;
     public static $title = "email";
     public static $search = [
-        "email",
+        // not searchable
     ];
 
     public function fields(Request $request) : array

@@ -13,7 +13,7 @@ class Entity extends Resource
     public static $model;
     public static $title = "name";
     public static $search = [
-        "name",
+        // not searchable
     ];
     public static $displayInPermissions = false;
 
