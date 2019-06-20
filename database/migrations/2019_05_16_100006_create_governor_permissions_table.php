@@ -16,10 +16,13 @@ class CreateGovernorPermissionsTable extends Migration
     {
         Schema::create('governor_permissions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('role_name');
+            $table->string('role_name')
+                ->nullable();
             $table->string('entity_name');
             $table->string('action_name');
             $table->string('ownership_name');
+            $table->unsignedBigInteger("team_id")
+                ->nullable();
             $table->timestamps();
 
             $table->unique(['role_name', 'entity_name', 'action_name', 'ownership_name']);
@@ -42,6 +45,11 @@ class CreateGovernorPermissionsTable extends Migration
                 ->references('name')
                 ->on('governor_ownerships')
                 ->onDelete('CASCADE')
+                ->onUpdate('CASCADE');
+            $table->foreign('team_id')
+                ->references('id')
+                ->on('governor_teams')
+                ->onDelete('SET NULL')
                 ->onUpdate('CASCADE');
         });
     }

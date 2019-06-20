@@ -70,14 +70,25 @@ composer require genealabs/laravel-governor
 ## Upgrading
 The following upgrade guides should help navigate updates with breaking changes.
 
+### From 0.11.5+ to 0.12 [Breaking]
+The role_user pivot table has replaced the composite key with a primary key, as Laravel does not fully support composite keys. Run:
+```sh
+php artisan db:seed --class="LaravelGovernorUpgradeTo0120"
+```
+
+### From 0.11 to 0.11.5 [Breaking]
+The primary keys of the package's tables have been renamed. (This should have been a minor version change, instead of a patch, as this was a breaking change.) Run:
+```sh
+php artisan db:seed --class="LaravelGovernorUpgradeTo0115"
+```
+
 ### From 0.10 to 0.11 [Breaking]
 The following traits have changed:
 - `Governable` has been renamed to `Governing`.
 - `Governed` has been renamed to `Governable`.
-- the `governor_created_by` has been renamed to `governor_owned_by`. Run
-    migrations to update your tables.
+- the `governor_created_by` has been renamed to `governor_owned_by`. Run migrations to update your tables.
     ```sh
-    php artisan migrate --path="vendor/genealabs/laravel-governor/database/migrations"
+    php artisan db:seed --class="LaravelGovernorUpgradeTo0110"
     ```
 - replace any reference in your app from `governor_created_by` to
     `governor_owned_by`.

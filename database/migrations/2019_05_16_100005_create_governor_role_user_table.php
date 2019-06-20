@@ -16,11 +16,12 @@ class CreateGovernorRoleUserTable extends Migration
     {
         Schema::create('governor_role_user', function (Blueprint $table) {
             $user = app()->make(config('genealabs-laravel-governor.models.auth'));
-            $table->string('role_name')
-                ->index();
-            $table->bigInteger('user_id')
-                ->unsigned()
-                ->index();
+            $table->bigIncrements("id");
+            $table->string('role_name');
+            $table->unsignedBigInteger('user_id');
+            $table->timestamps();
+
+            $table->unique(["role_name", "user_id"]);
             $table->foreign('role_name')
                 ->references('name')
                 ->on('governor_roles')
