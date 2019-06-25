@@ -16,7 +16,6 @@ class CreatingListener
         if (str_contains($event, "Hyn\Tenancy\Models\Website")
             || str_contains($event, "Hyn\Tenancy\Models\Hostname")
             || ! Schema::hasTable('governor_roles')
-            || auth()->guest()
         ) {
             return;
         }
@@ -25,13 +24,18 @@ class CreatingListener
             ->filter(function ($model) {
                 return $model instanceof Model
                     && in_array(
-                        "GeneaLabs\LaravelGovernor\Traits\Governable",
+                        "GeneaLabs\\LaravelGovernor\\Traits\\Governable",
                         class_uses_recursive($model)
                     );
             })
             ->each(function ($model) {
+                \Log::debug("test1");
                 $this->createGovernorOwnedByFields($model);
-                $model->governor_owned_by = auth()->user()->id;
+                \Log::debug("test2");
+
+                if (auth()->check()) {
+                    $model->governor_owned_by = auth()->user()->id;
+                }
             });
     }
 }

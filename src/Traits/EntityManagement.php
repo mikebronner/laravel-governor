@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\Collection;
 use ReflectionObject;
 
@@ -29,7 +30,10 @@ trait EntityManagement
 
     protected function getEntityFromModel(string $modelClass) : string
     {
-        return $this->getEntity($this->getPolicies()->get($modelClass, ""));
+        $policy = app(Gate::class)
+            ->getPolicyFor($modelClass);
+
+        return $this->getEntity($policy);
     }
 
     protected function getPolicies() : Collection
