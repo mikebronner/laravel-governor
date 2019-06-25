@@ -1,6 +1,24 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.13.0] - 2019-06-25
+### Added
+- details for optional creation of superuser to config file.
+
+### Fixed
+- migration order.
+- automatic creation of `governor_owned_by` field.
+
+## [0.12.0] - 2019-06-20
+### Changed
+- governor_role_user pivot table to use primary key instead of composite key, as Laravel does not fully support composite keys.
+
+### Removed
+- migrations that performed updates on tables, in favor of upgrade seeders.
+
+### Added
+- upgrade seeders to make the upgrade process a bit easier, as well as to keep the migration files clean for testing.
+
 ## [0.11.12] - 2019-06-15
 ### Fixed
 - resolution of user-teams in permission checks.
