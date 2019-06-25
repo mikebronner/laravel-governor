@@ -29,9 +29,7 @@ class CreatingListener
                     );
             })
             ->each(function ($model) {
-                \Log::debug("test1");
                 $this->createGovernorOwnedByFields($model);
-                \Log::debug("test2");
 
                 if (auth()->check()) {
                     $model->governor_owned_by = auth()->user()->id;

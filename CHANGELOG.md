@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.13.2] - 2019-06-25
+### Removed
+- remnant log debug output.
+
 ## [0.13.1] - 2019-06-25
 ### Fixed
 - some failing tests (which also fixed a bug).
