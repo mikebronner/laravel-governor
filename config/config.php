@@ -69,4 +69,17 @@ return [
     */
     'url-prefix' => '/genealabs/laravel-governor/',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Default SuperAdmin User
+    |--------------------------------------------------------------------------
+    |
+    | You may optionally specify a SuperAdmin user that will be created if they
+    | don't already exist.
+    */
+    "superadmin" => [
+        "email" => env("GOVERNOR_SUPERADMIN_EMAIL"),
+        "name" => env("GOVERNOR_SUPERADMIN_NAME", "SuperAdmin User"),
+        "password" => env("GOVERNOR_SUPERADMIN_PASSWORD", "password"),
+    ],
 ];
