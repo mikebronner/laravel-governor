@@ -33,7 +33,7 @@ trait EntityManagement
         $policy = app(Gate::class)
             ->getPolicyFor($modelClass);
 
-        return $this->getEntity($policy);
+        return $this->getEntity(get_class($policy));
     }
 
     protected function getPolicies() : Collection

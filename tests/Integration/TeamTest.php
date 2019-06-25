@@ -29,7 +29,7 @@ class TeamTest extends UnitTestCase
 
     public function testOwnedByRelationship()
     {
-        $this->assertEquals($this->team->ownedBy->toArray(), $this->user->toArray());
+        $this->assertEquals($this->team->ownedBy->email, $this->user->email);
     }
 
     public function testInvitationsRelationship()
