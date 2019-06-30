@@ -19,7 +19,7 @@ class LaravelGovernorRolesTableSeeder extends Seeder
             if (! $superuser->exists) {
                 $superuser->fill([
                     "name" => config('genealabs-laravel-governor.superadmin.name'),
-                    "password" => config('genealabs-laravel-governor.superadmin.password'),
+                    "password" => bcrypt(config('genealabs-laravel-governor.superadmin.password')),
                 ]);
                 $superuser->save();
             }
