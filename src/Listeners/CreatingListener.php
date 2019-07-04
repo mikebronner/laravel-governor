@@ -31,7 +31,9 @@ class CreatingListener
             ->each(function ($model) {
                 $this->createGovernorOwnedByFields($model);
 
-                if (auth()->check()) {
+                if (! $model->governor_owned_by
+                    && auth()->check()
+                ) {
                     $model->governor_owned_by = auth()->user()->id;
                 }
             });
