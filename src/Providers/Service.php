@@ -28,10 +28,10 @@ class Service extends AggregateServiceProvider
         $invitationClass = config("genealabs-laravel-governor.models.invitation");
         app('events')->listen('eloquent.created: *', CreatedListener::class);
         app('events')->listen('eloquent.creating: *', CreatingListener::class);
+        app('events')->listen('eloquent.saving: *', CreatingListener::class);
         app('events')->listen("eloquent.created: {$invitationClass}", CreatedInvitationListener::class);
         app('events')->listen("eloquent.created: {$teamClass}", CreatedTeamListener::class);
         app('events')->listen("eloquent.creating: {$invitationClass}", CreatingInvitationListener::class);
-
         $this->publishes([
             __DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')
         ], 'config');
