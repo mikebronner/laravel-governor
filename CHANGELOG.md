@@ -1,6 +1,15 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.13.4] - 2019-07-14
+### Fixed
+- navigation menu icon to no longer require FontAwesome to be installed.
+- updating of `ownedBy` relationship to also happen on `saving` event, to catch systems that don't trigger the `creating` event, like Nova.
+
+## [0.13.3] - 2019-06-30
+### Fixed
+- seeding of superadmin user password is now hashed with bcrypt.
+
 ## [0.13.2] - 2019-06-25
 ### Removed
 - remnant log debug output.
