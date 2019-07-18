@@ -62,4 +62,22 @@ abstract class Resource extends NovaResource
     {
         return parent::relatableQuery($request, $query);
     }
+
+    public static function redirectAfterCreate(NovaRequest $request, $resource)
+    {
+        if ($request->viaResource) {
+            return "/resources/{$request->viaResource}/{$request->viaResourceId}";
+        }
+
+        return parent::redirectAfterCreate($request, $resource);
+    }
+
+    public static function redirectAfterUpdate(NovaRequest $request, $resource)
+    {
+        if ($request->viaResource) {
+            return "/resources/{$request->viaResource}/{$request->viaResourceId}";
+        }
+
+        return parent::redirectAfterUpdate($request, $resource);
+    }
 }

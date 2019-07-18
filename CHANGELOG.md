@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.13.5] - 2019-07-18
+### Added
+- automatic redirect to parent detail view in Nova after creating or updating a Resource.
+
 ## [0.13.4] - 2019-07-14
 ### Fixed
 - navigation menu icon to no longer require FontAwesome to be installed.
