@@ -15,7 +15,6 @@ class CreatingListener
     {
         if (str_contains($event, "Hyn\Tenancy\Models\Website")
             || str_contains($event, "Hyn\Tenancy\Models\Hostname")
-            || ! Schema::hasTable('governor_roles')
         ) {
             return;
         }

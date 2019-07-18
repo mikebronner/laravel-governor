@@ -13,7 +13,6 @@ class CreatedListener
     {
         if (str_contains($event, "Hyn\Tenancy\Models\Website")
             || str_contains($event, "Hyn\Tenancy\Models\Hostname")
-            || ! Schema::hasTable('governor_roles')
         ) {
             return;
         }
@@ -24,7 +23,16 @@ class CreatedListener
                     && get_class($model) === config('genealabs-laravel-governor.models.auth');
             })
             ->each(function ($model) {
-                $model->roles()->attach('Member');
+                try {
+                    $model->roles()->attach('Member');
+                } catch (Exception $exception) {
+                    $roleClass = config("genealabs-laravel-governor.models.role");
+                    (new $roleClass)->firstOrCreate([
+                        'name' => 'Member',
+                        'description' => 'Represents the baseline registered user. Customize permissions as best suits your site.',
+                    ]);
+                    $model->roles()->attach('Member');
+                }
             });
     }
 }
