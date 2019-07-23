@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.13.7] - 2019-07-23
+### Fixed
+- creation of new member.
+
 ## [0.13.6] - 2019-07-18
 ### Changed
 - listeners to not check database for governor tables to improve performance.
