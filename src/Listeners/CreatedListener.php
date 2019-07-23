@@ -24,7 +24,7 @@ class CreatedListener
             })
             ->each(function ($model) {
                 try {
-                    $model->roles()->attach('Member');
+                    $model->roles()->syncWithoutDetaching('Member');
                 } catch (Exception $exception) {
                     $roleClass = config("genealabs-laravel-governor.models.role");
                     (new $roleClass)->firstOrCreate([
