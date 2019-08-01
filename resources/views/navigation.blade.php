@@ -32,7 +32,7 @@
         @if (auth()->user()->can("viewAny", config("genealabs-laravel-governor.models.team")))
             <li class="leading-tight mb-4 ml-8 text-sm">
                 <router-link
-                    :to="{path: '/resources/teams'}"
+                    :to="{path: '/resources/governor-teams'}"
                     class="text-white text-justify no-underline dim">
                     Teams
                 </router-link>
