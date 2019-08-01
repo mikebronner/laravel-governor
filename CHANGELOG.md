@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.13.8] - 2019-08-01
+### Changed
+- Nova resource class names to avoid conflicts with app's registered resources.
+
 ## [0.13.7] - 2019-07-23
 ### Fixed
 - creation of new member.

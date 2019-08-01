@@ -6,10 +6,9 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Titasgailius\SearchRelations\SearchesRelations;
 
-class Team extends Resource
+class GovernorTeam extends Resource
 {
     use SearchesRelations;
 
@@ -26,7 +25,7 @@ class Team extends Resource
             Text::make("Name")
                 ->sortable(),
             Text::make("Description"),
-            BelongsTo::make("Owner", "ownedBy", "GeneaLabs\LaravelGovernor\Nova\User")
+            BelongsTo::make("Owner", "ownedBy", "GeneaLabs\LaravelGovernor\Nova\GovernorUser")
                 ->withMeta([
                     "belongsToId" => $this->governor_owned_by
                         ?: auth()->user()->id,
@@ -51,8 +50,8 @@ class Team extends Resource
                 ->onlyOnIndex()
                 ->sortable(),
 
-            BelongsToMany::make("Members", "members", "GeneaLabs\LaravelGovernor\Nova\User"),
-            HasMany::make("Invitations", "invitations", "GeneaLabs\LaravelGovernor\Nova\TeamInvitation"),
+            BelongsToMany::make("Members", "members", "GeneaLabs\LaravelGovernor\Nova\GovernorUser"),
+            HasMany::make("Invitations", "invitations", "GeneaLabs\LaravelGovernor\Nova\GovernorTeamInvitation"),
             PermissionsTool::make()
                 ->canSee(function () {
                     return $this->governor_owned_by === auth()->user()->id

@@ -1,13 +1,14 @@
 <?php namespace GeneaLabs\LaravelGovernor\Nova;
 
-use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\HasMany;
+use Titasgailius\SearchRelations\SearchesRelations;
 
-class Assignment extends Resource
+class GovernorRole extends Resource
 {
+    use SearchesRelations;
+
     public static $model;
     public static $title = "name";
     public static $search = [
@@ -19,7 +20,8 @@ class Assignment extends Resource
         return [
             Text::make("name")
                 ->sortable(),
-            BelongsToMany::make("Users"),
+            Text::make("description"),
+            HasMany::make("Permissions", "GeneaLabs\LaravelGovernor\Nova\GovernorPermission"),
         ];
     }
 

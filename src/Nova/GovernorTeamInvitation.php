@@ -1,13 +1,11 @@
 <?php namespace GeneaLabs\LaravelGovernor\Nova;
 
-use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\HasMany;
 use Titasgailius\SearchRelations\SearchesRelations;
 
-class TeamInvitation extends Resource
+class GovernorTeamInvitation extends Resource
 {
     use SearchesRelations;
 
@@ -23,7 +21,7 @@ class TeamInvitation extends Resource
         return [
             Text::make("Email")
                 ->sortable(),
-            BelongsTo::make("Team"),
+            BelongsTo::make("Team", "team", "GeneaLabs\LaravelGovernor\Nova\GovernorTeam"),
         ];
     }
 

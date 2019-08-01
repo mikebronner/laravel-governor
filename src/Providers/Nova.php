@@ -18,30 +18,30 @@ class Nova extends ServiceProvider
         });
 
         if (class_exists("Laravel\Nova\Resource")) {
-            \GeneaLabs\LaravelGovernor\Nova\Action::$model = config("genealabs-laravel-governor.models.action");
-            \GeneaLabs\LaravelGovernor\Nova\Assignment::$model = config("genealabs-laravel-governor.models.assignment");
-            \GeneaLabs\LaravelGovernor\Nova\Entity::$model = config("genealabs-laravel-governor.models.entity");
-            \GeneaLabs\LaravelGovernor\Nova\Group::$model = config("genealabs-laravel-governor.models.group");
-            \GeneaLabs\LaravelGovernor\Nova\Ownership::$model = config("genealabs-laravel-governor.models.ownership");
-            \GeneaLabs\LaravelGovernor\Nova\Permission::$model = config("genealabs-laravel-governor.models.permission");
-            \GeneaLabs\LaravelGovernor\Nova\Role::$model = config("genealabs-laravel-governor.models.role");
-            \GeneaLabs\LaravelGovernor\Nova\Team::$model = config("genealabs-laravel-governor.models.team");
-            \GeneaLabs\LaravelGovernor\Nova\TeamInvitation::$model = config("genealabs-laravel-governor.models.invitation");
-            \GeneaLabs\LaravelGovernor\Nova\User::$model = config("genealabs-laravel-governor.models.auth");
+            \GeneaLabs\LaravelGovernor\Nova\GovernorAction::$model = config("genealabs-laravel-governor.models.action");
+            \GeneaLabs\LaravelGovernor\Nova\GovernorAssignment::$model = config("genealabs-laravel-governor.models.assignment");
+            \GeneaLabs\LaravelGovernor\Nova\GovernorEntity::$model = config("genealabs-laravel-governor.models.entity");
+            \GeneaLabs\LaravelGovernor\Nova\GovernorGroup::$model = config("genealabs-laravel-governor.models.group");
+            \GeneaLabs\LaravelGovernor\Nova\GovernorOwnership::$model = config("genealabs-laravel-governor.models.ownership");
+            \GeneaLabs\LaravelGovernor\Nova\GovernorPermission::$model = config("genealabs-laravel-governor.models.permission");
+            \GeneaLabs\LaravelGovernor\Nova\GovernorRole::$model = config("genealabs-laravel-governor.models.role");
+            \GeneaLabs\LaravelGovernor\Nova\GovernorTeam::$model = config("genealabs-laravel-governor.models.team");
+            \GeneaLabs\LaravelGovernor\Nova\GovernorTeamInvitation::$model = config("genealabs-laravel-governor.models.invitation");
+            \GeneaLabs\LaravelGovernor\Nova\GovernorUser::$model = config("genealabs-laravel-governor.models.auth");
             \Laravel\Nova\Nova::serving(function (ServingNova $event) {
                 \Laravel\Nova\Nova::script('genealabs-laravel-governor', __DIR__ . '/../../dist/js/tool.js');
                 \Laravel\Nova\Nova::style('genealabs-laravel-governor', __DIR__ . '/../../dist/css/tool.css');
                 \Laravel\Nova\Nova::resources([
-                    \GeneaLabs\LaravelGovernor\Nova\Action::class,
-                    \GeneaLabs\LaravelGovernor\Nova\Assignment::class,
-                    \GeneaLabs\LaravelGovernor\Nova\Entity::class,
-                    \GeneaLabs\LaravelGovernor\Nova\Group::class,
-                    \GeneaLabs\LaravelGovernor\Nova\Ownership::class,
-                    \GeneaLabs\LaravelGovernor\Nova\Permission::class,
-                    \GeneaLabs\LaravelGovernor\Nova\Role::class,
-                    \GeneaLabs\LaravelGovernor\Nova\User::class,
-                    \GeneaLabs\LaravelGovernor\Nova\Team::class,
-                    \GeneaLabs\LaravelGovernor\Nova\TeamInvitation::class,
+                    \GeneaLabs\LaravelGovernor\Nova\GovernorAction::class,
+                    \GeneaLabs\LaravelGovernor\Nova\GovernorAssignment::class,
+                    \GeneaLabs\LaravelGovernor\Nova\GovernorEntity::class,
+                    \GeneaLabs\LaravelGovernor\Nova\GovernorGroup::class,
+                    \GeneaLabs\LaravelGovernor\Nova\GovernorOwnership::class,
+                    \GeneaLabs\LaravelGovernor\Nova\GovernorPermission::class,
+                    \GeneaLabs\LaravelGovernor\Nova\GovernorRole::class,
+                    \GeneaLabs\LaravelGovernor\Nova\GovernorUser::class,
+                    \GeneaLabs\LaravelGovernor\Nova\GovernorTeam::class,
+                    \GeneaLabs\LaravelGovernor\Nova\GovernorTeamInvitation::class,
                 ]);
             });
         }

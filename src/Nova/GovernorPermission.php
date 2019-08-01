@@ -1,14 +1,10 @@
 <?php namespace GeneaLabs\LaravelGovernor\Nova;
 
-use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\BelongsTo;
 
-class Permission extends Resource
+class GovernorPermission extends Resource
 {
     public static $model;
     public static $perPageViaRelationship = 25;
@@ -21,28 +17,28 @@ class Permission extends Resource
     public function fields(Request $request)
     {
         return [
-            Text::make("Role", "role_name")
+            Text::make("Role", "role_name", "GeneaLabs\LaravelGovernor\Nova\GovernorRole")
                 ->onlyOnIndex()
                 ->sortable(),
-            Text::make("Action", "action_name")
+            Text::make("Action", "action_name", "GeneaLabs\LaravelGovernor\Nova\GovernorAction")
                 ->resolveUsing(function ($actionName) {
                     return "can {$actionName}";
                 })
                 ->onlyOnIndex()
                 ->sortable(),
-            Text::make("Ownership", "ownership_name")
+            Text::make("Ownership", "ownership_name", "GeneaLabs\LaravelGovernor\Nova\GovernorOwnership")
                 ->onlyOnIndex()
                 ->sortable(),
-            Text::make("Entity", "entity_name")
+            Text::make("Entity", "entity_name", "GeneaLabs\LaravelGovernor\Nova\GovernorEntity")
                 ->onlyOnIndex()
                 ->sortable(),
-            BelongsTo::make("Role")
+            BelongsTo::make("Role", "GeneaLabs\LaravelGovernor\Nova\GovernorRole")
                 ->hideFromIndex(),
-            BelongsTo::make("Action")
+            BelongsTo::make("Action", "GeneaLabs\LaravelGovernor\Nova\GovernorAction")
                 ->hideFromIndex(),
-            BelongsTo::make("Ownership")
+            BelongsTo::make("Ownership", "GeneaLabs\LaravelGovernor\Nova\GovernorOwnership")
                 ->hideFromIndex(),
-            BelongsTo::make("Entity")
+            BelongsTo::make("Entity", "GeneaLabs\LaravelGovernor\Nova\GovernorEntity")
                 ->hideFromIndex(),
         ];
     }

@@ -1,25 +1,23 @@
 <?php namespace GeneaLabs\LaravelGovernor\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\BelongsToMany;
 
-class User extends Resource
+class GovernorAssignment extends Resource
 {
     public static $model;
     public static $title = "name";
     public static $search = [
-        "name",
+        // not searchable
     ];
-    public static $displayInPermissions = false;
 
     public function fields(Request $request)
     {
         return [
-            Gravatar::make(),
-            Text::make('Name')
-                ->sortable()
-                ->rules('required', 'max:255'),
+            Text::make("name")
+                ->sortable(),
+            BelongsToMany::make("Users", "GeneaLabs\LaravelGovernor\Nova\GovernorUser"),
         ];
     }
 

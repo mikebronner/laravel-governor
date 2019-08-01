@@ -1,28 +1,25 @@
 <?php namespace GeneaLabs\LaravelGovernor\Nova;
 
-use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\HasMany;
-use Titasgailius\SearchRelations\SearchesRelations;
 
-class Group extends Resource
+class GovernorUser extends Resource
 {
-    use SearchesRelations;
-
     public static $model;
     public static $title = "name";
     public static $search = [
-        // not searchable
+        "name",
     ];
+    public static $displayInPermissions = false;
 
     public function fields(Request $request)
     {
         return [
-            Text::make("name")
-                ->sortable(),
-            HasMany::make("Entities"),
+            Gravatar::make(),
+            Text::make('Name')
+                ->sortable()
+                ->rules('required', 'max:255'),
         ];
     }
 
