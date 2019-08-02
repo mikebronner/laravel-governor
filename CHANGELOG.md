@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.13.11] - 2019-08-01
+### Fixed
+- parsing of superadmin JSON in superadmin seeder.
+
 ## [0.13.10] - 2019-08-01
 ### Changed
 - automatic configuration of single superadmin user to multiple superadmin users.
