@@ -30,7 +30,7 @@
         "nunomaduro/collision": "*",
         "orchestra/testbench": "3.8.*",
         "php-coveralls/php-coveralls": "*",
-        "phpunit/phpunit": "^7.5",
+        "phpunit/phpunit": "^8.3",
         "symfony/thanks": "*"
     },
     "autoload": {
