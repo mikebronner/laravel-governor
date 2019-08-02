@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use function GuzzleHttp\json_decode;
 
 class LaravelGovernorSuperAdminSeeder extends Seeder
 {
@@ -20,26 +19,23 @@ class LaravelGovernorSuperAdminSeeder extends Seeder
         ]);
 
         $superadmins = config('genealabs-laravel-governor.superadmins');
+        $superadmins = json_decode($superadmins);
 
-        if (! is_array($superadmins)) {
+        if (!is_array($superadmins)) {
             return;
         }
 
-        $superadmins = json_decode($superadmins);
-
         foreach ($superadmins as $superadmin) {
-            $superUserEmail = array_get($superadmin, "email");
-
-            if ($superUserEmail) {
+            if ($superadmin->email) {
                 $superuser = $users
                     ->firstOrNew([
-                        "email" => $superUserEmail,
+                        "email" => $superadmin->email,
                     ]);
 
                 if (!$superuser->exists) {
                     $superuser->fill([
-                        "name" => array_get($superadmin, "name"),
-                        "password" => bcrypt(array_get($superadmin, "password")),
+                        "name" => $superadmin->name,
+                        "password" => bcrypt($superadmin->password),
                     ]);
                     $superuser->save();
                 }
