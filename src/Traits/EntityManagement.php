@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
+use GeneaLabs\LaravelGovernor\Entity;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\Collection;
 use ReflectionObject;
@@ -21,9 +22,16 @@ trait EntityManagement
             $entityName .= " ({$packageName})";
         }
 
-        $entity = (new $entityClass)->firstOrCreate([
-            "name" => ucwords($entityName),
-        ]);
+        $entity = (new Entity)
+            ->getCached()
+            ->where("name", ucwords($entityName))
+            ->first();
+
+        if (! $entity) {
+            $entity = (new $entityClass)->create([
+                "name" => ucwords($entityName),
+            ]);
+        }
 
         return $entity->name;
     }

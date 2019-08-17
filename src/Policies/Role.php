@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Policies;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends BasePolicy

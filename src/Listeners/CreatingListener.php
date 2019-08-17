@@ -2,7 +2,6 @@
 
 use GeneaLabs\LaravelGovernor\Traits\GovernorOwnedByField;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Schema;
 
 class CreatingListener
 {

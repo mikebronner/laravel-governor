@@ -28,7 +28,6 @@ class GovernableTest extends UnitTestCase
         ]);
         $this->otherAuthor = factory(Author::class)->create();
         $this->otherAuthor->teams()->attach($this->team);
-        $this->otherUser->load("roles", "teams");
 
         $this->user = factory(User::class)->create();
         $this->actingAs($this->user);
@@ -38,7 +37,6 @@ class GovernableTest extends UnitTestCase
         ]);
         $this->author = factory(Author::class)->create();
         $this->author->teams()->attach($this->team);
-        $this->user->load("roles", "teams");
     }
 
     public function testOwnedByRelationship()
@@ -187,7 +185,8 @@ class GovernableTest extends UnitTestCase
         $authorResults = (new Author)
             ->viewable()
             ->get();
-        $userResults = (new User)
+        $userClass = app(config('genealabs-laravel-governor.models.auth'));
+        $userResults = (new $userClass)
             ->viewable()
             ->get();
 

@@ -9,6 +9,27 @@ class Assignment extends Model
     protected $table ="governor_role_user";
     protected $users;
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function () {
+            app("cache")->forget("governor-assignments");
+        });
+
+        static::deleted(function () {
+            app("cache")->forget("governor-assignments");
+        });
+
+        static::saved(function () {
+            app("cache")->forget("governor-assignments");
+        });
+
+        static::updated(function () {
+            app("cache")->forget("governor-assignments");
+        });
+    }
+
     public function __construct()
     {
         parent::__construct();

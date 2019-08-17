@@ -10,14 +10,13 @@ trait Governing
     
     public function hasRole(string $name) : bool
     {
-        $roleClass = config("genealabs-laravel-governor.models.role");
-        $this->load('roles');
-
         if ($this->roles->isEmpty()) {
             return false;
         }
 
+        $roleClass = config("genealabs-laravel-governor.models.role");
         $role = (new $roleClass)
+            ->getCached()
             ->where('name', $name)
             ->first();
 
@@ -87,5 +86,15 @@ trait Governing
         }
 
         return $results;
+    }
+
+    public function getCached() : Collection
+    {
+        return app("cache")->remember("governor-users", 300, function () {
+            $userClass = app(config('genealabs-laravel-governor.models.auth'));
+            
+            return (new $userClass)
+                ->get();
+        });
     }
 }

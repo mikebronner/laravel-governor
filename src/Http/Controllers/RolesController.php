@@ -2,6 +2,7 @@
 
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateRoleRequest;
 use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
+use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -15,9 +16,9 @@ class RolesController extends Controller
     public function index() : View
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
-
         $this->authorize('view', (new $roleClass));
-        $roles = (new $roleClass)->orderBy('name')->get();
+        $roles = (new Role)
+            ->getCached();
 
         return view('genealabs-laravel-governor::roles.index', compact('roles'));
     }

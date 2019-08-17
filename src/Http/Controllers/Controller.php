@@ -1,5 +1,7 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers;
 
+use GeneaLabs\LaravelGovernor\Action;
+use GeneaLabs\LaravelGovernor\Entity;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -16,13 +18,12 @@ abstract class Controller extends BaseController
 
     protected function resetSuperAdminPermissions()
     {
-        $actionClass = config("genealabs-laravel-governor.models.action");
-        $entityClass = config("genealabs-laravel-governor.models.entity");
         $permissionClass = config("genealabs-laravel-governor.models.permission");
-
         (new $permissionClass)->where('role_name', 'SuperAdmin')->delete();
-        $entities = (new $entityClass)->all();
-        $actions = (new $actionClass)->all();
+        $entities = (new Entity)
+            ->getCached();
+        $actions = (new Action)
+            ->getCached();
 
         foreach ($entities as $entity) {
             foreach ($actions as $action) {

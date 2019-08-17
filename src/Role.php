@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,6 +19,27 @@ class Role extends Model
     protected $table = "governor_roles";
 
     public $incrementing = false;
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function () {
+            app("cache")->forget("governor-roles");
+        });
+
+        static::deleted(function () {
+            app("cache")->forget("governor-roles");
+        });
+
+        static::saved(function () {
+            app("cache")->forget("governor-roles");
+        });
+
+        static::updated(function () {
+            app("cache")->forget("governor-roles");
+        });
+    }
 
     public function entities() : HasMany
     {
@@ -43,5 +65,16 @@ class Role extends Model
             'role_name',
             'user_id'
         );
+    }
+
+    public function getCached() : Collection
+    {
+        return app("cache")->remember("governor-roles", 300, function () {
+            $roleClass = config("genealabs-laravel-governor.models.role");
+            
+            return (new $roleClass)
+                ->orderBy("name")
+                ->get();
+        });
     }
 }

@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers\Nova;
 
+use GeneaLabs\LaravelGovernor\Entity;
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
 use GeneaLabs\LaravelGovernor\Http\Requests\StoreRoleRequest;
 use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
@@ -15,8 +16,8 @@ class EntityController extends Controller
     {
         $this->middleware([]);
         // $this->middleware(["nova"]);
-        $this->entities = config("genealabs-laravel-governor.models.entity");
-        $this->entities = new $this->entities;
+        $this->entities = (new Entity)
+            ->getCached();
     }
 
     public function index() : Collection

@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers\Nova;
 
+use GeneaLabs\LaravelGovernor\Action;
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
 use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 
@@ -9,7 +10,6 @@ class PermissionController extends Controller
 
     public function index() : array
     {
-        $actionClass = config("genealabs-laravel-governor.models.action");
         $entityClass = config("genealabs-laravel-governor.models.entity");
         $roleClass = config("genealabs-laravel-governor.models.role");
         $teamClass = config("genealabs-laravel-governor.models.team");
@@ -44,8 +44,8 @@ class PermissionController extends Controller
             ->orderBy("group_name")
             ->orderBy("name")
             ->get();
-        $actions = (new $actionClass)
-            ->all();
+        $actions = (new Action)
+            ->getCached();
         $permissionMatrix = [];
 
         foreach ($entities as $entity) {

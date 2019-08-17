@@ -19,6 +19,27 @@ class Team extends Model
     ];
     protected $table = "governor_teams";
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function () {
+            app("cache")->forget("governor-teams");
+        });
+
+        static::deleted(function () {
+            app("cache")->forget("governor-teams");
+        });
+
+        static::saved(function () {
+            app("cache")->forget("governor-teams");
+        });
+
+        static::updated(function () {
+            app("cache")->forget("governor-teams");
+        });
+    }
+
     public function members() : BelongsToMany
     {
         return $this->belongsToMany(
@@ -42,5 +63,15 @@ class Team extends Model
         return $this->hasMany(
             config('genealabs-laravel-governor.models.permission')
         );
+    }
+
+    public function getCached() : Collection
+    {
+        return app("cache")->remember("governor-teams", 300, function () {
+            $teamClass = app(config('genealabs-laravel-governor.models.team'));
+            
+            return (new $teamClass)
+                ->get();
+        });
     }
 }

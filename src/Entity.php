@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,6 +18,27 @@ class Entity extends Model
 
     public $incrementing = false;
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function () {
+            app("cache")->forget("governor-entities");
+        });
+
+        static::deleted(function () {
+            app("cache")->forget("governor-entities");
+        });
+
+        static::saved(function () {
+            app("cache")->forget("governor-entities");
+        });
+
+        static::updated(function () {
+            app("cache")->forget("governor-entities");
+        });
+    }
+
     public function group() : BelongsTo
     {
         return $this->belongsTo(
@@ -30,5 +52,15 @@ class Entity extends Model
             config('genealabs-laravel-governor.models.permission'),
             'entity_name'
         );
+    }
+
+    public function getCached() : Collection
+    {
+        return app("cache")->remember("governor-entities", 300, function () {
+            $entityClass = app(config('genealabs-laravel-governor.models.entity'));
+            
+            return (new $entityClass)
+                ->get();
+        });
     }
 }

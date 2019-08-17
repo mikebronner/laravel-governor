@@ -23,4 +23,15 @@ class Ownership extends Model
             'ownership_name'
         );
     }
+
+    public function getCached() : Collection
+    {
+        return app("cache")->remember("governor-ownerships", 300, function () {
+            $ownershipClass = app(config('genealabs-laravel-governor.models.ownership'));
+            
+            return (new $ownershipClass)
+                ->orderBy("name")
+                ->get();
+        });
+    }
 }

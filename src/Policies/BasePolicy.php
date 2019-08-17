@@ -22,7 +22,7 @@ abstract class BasePolicy
     
     protected function getPermissions() : Collection
     {
-        return app("cache")->remember("governorpermissions", 5, function () {
+        return app("cache")->remember("governor-permissions", 300, function () {
             $permissionClass = config("genealabs-laravel-governor.models.permission");
             
             return (new $permissionClass)->get();
@@ -102,51 +102,48 @@ abstract class BasePolicy
         string $action,
         string $entity,
         Model $model = null
-        ) : bool {
-            $user->load("roles", "teams");
-            
-            if ($user->hasRole("SuperAdmin")) {
-                return true;
-            }
-            
-            if ($user->roles->isEmpty()
+    ) : bool {
+        if ($user->hasRole("SuperAdmin")) {
+            return true;
+        }
+        
+        if ($user->roles->isEmpty()
             && $user->teams->isEmpty()
-            ) {
-                return false;
-            }
-            
-            $ownership = 'other';
-            
-            if ($model
-            && $user->getKey() === $model->governor_owned_by
-            ) {
-                $ownership = 'own';
-            }
-            
-            $filteredPermissions = $this->filterPermissions($action, $entity, $ownership);
-            
-            foreach ($filteredPermissions as $permission) {
-                if ($user->roles->contains($permission->role)
-                || $user->teams->contains($permission->team)
-                ) {
-                    return true;
-                }
-            }
-            
+        ) {
             return false;
         }
         
-        protected function filterPermissions($action, $entity, $ownership)
-        {
-            $filteredPermissions = $this
+        $ownership = 'other';
+        
+        if ($model
+            && $user->getKey() === $model->governor_owned_by
+        ) {
+            $ownership = 'own';
+        }
+        
+        $filteredPermissions = $this->filterPermissions($action, $entity, $ownership);
+        
+        foreach ($filteredPermissions as $permission) {
+            if ($user->roles->contains($permission->role)
+                || $user->teams->contains($permission->team)
+            ) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    protected function filterPermissions($action, $entity, $ownership)
+    {
+        $filteredPermissions = $this
             ->permissions
             ->filter(function ($permission) use ($action, $entity, $ownership) {
                 return ($permission->action_name === $action
-                && $permission->entity_name === $entity
-                && in_array($permission->ownership_name, [$ownership, 'any']));
+                    && $permission->entity_name === $entity
+                    && in_array($permission->ownership_name, [$ownership, 'any']));
             });
-            
-            return $filteredPermissions;
-        }
+        
+        return $filteredPermissions;
     }
-    
+}

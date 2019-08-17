@@ -1,8 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Listeners;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Schema;
-use GeneaLabs\LaravelGovernor\Role;
 
 class CreatedListener
 {

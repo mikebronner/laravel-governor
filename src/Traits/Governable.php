@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
+use GeneaLabs\LaravelGovernor\Permission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -66,15 +67,10 @@ trait Governable
             return collect();
         }
 
-        $permissionClass = config("genealabs-laravel-governor.models.permission");
-        $result = (new $permissionClass)
-            ->where(function ($query) {
-                $query->whereIn("role_name", auth()->user()->roles->pluck("name"))
-                    ->orWhereIn("team_id", auth()->user()->teams->pluck("id"));
-            })
+        $result = (new Permission)
+            ->getCached()
             ->where("action_name", $ability)
             ->where("entity_name", $entityName)
-            ->get()
             ->pluck("ownership_name");
 
         return $result;

@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Requests;
 
+use GeneaLabs\LaravelGovernor\Team;
 use Illuminate\Foundation\Http\FormRequest as Request;
 
 class UpdateTeamRequest extends Request
@@ -7,7 +8,8 @@ class UpdateTeamRequest extends Request
     public function authorize() : bool
     {
         $teamClass = config("genealabs-laravel-governor.models.team");
-        $this->team = (new $teamClass)
+        $this->team = (new Team)
+            ->getCached()
             ->find($this->team);
 
         return auth()->check()
