@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.13.13] - 2019-08-20
+### Added
+- guest user functionality.
+
 ## [0.13.12] - 2019-08-17
 ### Added
 - caching to improve performance and reduce number of database queries.

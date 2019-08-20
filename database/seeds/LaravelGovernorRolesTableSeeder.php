@@ -15,5 +15,9 @@ class LaravelGovernorRolesTableSeeder extends Seeder
             'name' => 'Member',
             'description' => 'Represents the baseline registered user. Customize permissions as best suits your site.',
         ]);
+        (new $roleClass)->firstOrCreate([
+            'name' => 'Guest',
+            'description' => 'Represents the any user visiting the site that is not logged in.',
+        ]);
     }
 }

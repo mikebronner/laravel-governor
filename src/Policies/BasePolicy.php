@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Policies;
 
+use GeneaLabs\LaravelGovernor\Role;
 use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 use GeneaLabs\LaravelGovernor\Traits\GovernorOwnedByField;
 use Illuminate\Database\Eloquent\Collection;
@@ -29,7 +30,7 @@ abstract class BasePolicy
         });
     }
     
-    public function create(Model $user) : bool
+    public function create(?Model $user) : bool
     {
         return $this->validatePermissions(
             $user,
@@ -38,7 +39,7 @@ abstract class BasePolicy
         );
     }
     
-    public function update(Model $user, Model $model) : bool
+    public function update(?Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
@@ -48,7 +49,7 @@ abstract class BasePolicy
         );
     }
     
-    public function viewAny(Model $user) : bool
+    public function viewAny(?Model $user) : bool
     {
         return $this->validatePermissions(
             $user,
@@ -57,7 +58,7 @@ abstract class BasePolicy
         );
     }
     
-    public function view(Model $user, Model $model) : bool
+    public function view(?Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
@@ -67,7 +68,7 @@ abstract class BasePolicy
         );
     }
     
-    public function delete(Model $user, Model $model) : bool
+    public function delete(?Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
@@ -77,7 +78,7 @@ abstract class BasePolicy
         );
     }
     
-    public function restore(Model $user, Model $model) : bool
+    public function restore(?Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
@@ -87,7 +88,7 @@ abstract class BasePolicy
         );
     }
     
-    public function forceDelete(Model $user, Model $model) : bool
+    public function forceDelete(?Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
@@ -98,11 +99,24 @@ abstract class BasePolicy
     }
     
     protected function validatePermissions(
-        Model $user,
+        ?Model $user,
         string $action,
         string $entity,
         Model $model = null
     ) : bool {
+        if (! $user) {
+            $roleClass = config("genealabs-laravel-governor.models.role");
+            $userClass = config("genealabs-laravel-governor.models.auth");
+            $user = new $userClass;
+            $guest = (new $roleClass)->find("Guest");
+
+            if ($guest) {
+                $user->roles = collect($guest);
+            }
+
+            auth()->setUser($user);
+        }
+
         if ($user->hasRole("SuperAdmin")) {
             return true;
         }
