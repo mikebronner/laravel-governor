@@ -105,16 +105,7 @@ abstract class BasePolicy
         Model $model = null
     ) : bool {
         if (! $user) {
-            $roleClass = config("genealabs-laravel-governor.models.role");
-            $userClass = config("genealabs-laravel-governor.models.auth");
-            $user = new $userClass;
-            $guest = (new $roleClass)->find("Guest");
-
-            if ($guest) {
-                $user->roles = collect($guest);
-            }
-
-            auth()->setUser($user);
+            $user = $this->createGuestUser();
         }
 
         if ($user->hasRole("SuperAdmin")) {
@@ -126,7 +117,7 @@ abstract class BasePolicy
         ) {
             return false;
         }
-        
+
         $ownership = 'other';
         
         if ($model
@@ -136,7 +127,7 @@ abstract class BasePolicy
         }
         
         $filteredPermissions = $this->filterPermissions($action, $entity, $ownership);
-        
+
         foreach ($filteredPermissions as $permission) {
             if ($user->roles->contains($permission->role)
                 || $user->teams->contains($permission->team)
@@ -144,7 +135,7 @@ abstract class BasePolicy
                 return true;
             }
         }
-        
+
         return false;
     }
     
@@ -159,5 +150,23 @@ abstract class BasePolicy
             });
         
         return $filteredPermissions;
+    }
+
+    protected function createGuestUser()
+    {
+        if (! auth()->user()) {
+            $roleClass = config("genealabs-laravel-governor.models.role");
+            $userClass = config("genealabs-laravel-governor.models.auth");
+            $user = new $userClass;
+            $guest = (new $roleClass)->find("Guest");
+
+            if ($guest) {
+                $user->roles = collect([$guest]);
+            }
+
+            auth()->setUser($user);
+
+            return $user;
+        }
     }
 }
