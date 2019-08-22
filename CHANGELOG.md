@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.13.14] - 2019-08-22
+### Fixed
+- guest user role assignment.
+
 ## [0.13.13] - 2019-08-20
 ### Added
 - guest user functionality.
