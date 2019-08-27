@@ -26,7 +26,7 @@ abstract class BasePolicy
         return app("cache")->remember("governor-permissions", 300, function () {
             $permissionClass = config("genealabs-laravel-governor.models.permission");
             
-            return (new $permissionClass)->get();
+            return (new $permissionClass)->with("role")->get();
         });
     }
     
