@@ -1,6 +1,7 @@
 <?php namespace GeneaLabs\LaravelGovernor\Listeners;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class CreatedListener
 {
@@ -9,8 +10,8 @@ class CreatedListener
      */
     public function handle(string $event, array $models)
     {
-        if (str_contains($event, "Hyn\Tenancy\Models\Website")
-            || str_contains($event, "Hyn\Tenancy\Models\Hostname")
+        if (Str::contains($event, "Hyn\Tenancy\Models\Website")
+            || Str::contains($event, "Hyn\Tenancy\Models\Hostname")
         ) {
             return;
         }

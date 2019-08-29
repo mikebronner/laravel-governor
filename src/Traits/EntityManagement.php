@@ -3,6 +3,7 @@
 use GeneaLabs\LaravelGovernor\Entity;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use ReflectionObject;
 
 trait EntityManagement
@@ -15,7 +16,7 @@ trait EntityManagement
         $entityName = str_replace('Policy', '', $policyClass);
         $entityName = trim(implode(" ", preg_split('/(?=[A-Z])/', $entityName)));
 
-        if (! str_contains($policyClassName, "App")) {
+        if (! Str::contains($policyClassName, "App")) {
             $nameSpaceParts->shift();
             $packageName = $nameSpaceParts->shift();
             $packageName = trim(implode(" ", preg_split('/(?=[A-Z])/', $packageName)));
