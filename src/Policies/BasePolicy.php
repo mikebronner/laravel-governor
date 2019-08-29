@@ -129,7 +129,7 @@ abstract class BasePolicy
         $filteredPermissions = $this->filterPermissions($action, $entity, $ownership);
 
         foreach ($filteredPermissions as $permission) {
-            if ($user->roles->contains($permission->role)
+            if ($user->roles->pluck("name")->contains($permission->role_name)
                 || $user->teams->contains($permission->team)
             ) {
                 return true;

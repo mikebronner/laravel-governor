@@ -56,7 +56,7 @@ class TeamInvitationTest extends UnitTestCase
             function ($notification, $channels, $notifyable) use ($invitation) {
                 $mailData = $notification->toMail($notifyable)->toArray();
 
-                $this->assertContains($invitation->token->toString(), $mailData["actionUrl"]);
+                $this->assertStringContainsString($invitation->token->toString(), $mailData["actionUrl"]);
 
                 return true;
             }

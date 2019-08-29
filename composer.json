@@ -15,22 +15,21 @@
         }
     ],
     "require": {
-        "php": ">=7.1.3",
         "genealabs/laravel-casts": "*",
-        "genealabs/laravel-optimized-postgres": "^0.2.0",
-        "illuminate/support": "5.5 - 5.8",
+        "genealabs/laravel-optimized-postgres": "*",
+        "illuminate/support": "5.5 - 6.0",
         "ramsey/uuid": "*",
         "titasgailius/search-relations": "*"
     },
     "require-dev": {
-        "doctrine/dbal": "^2.5",
+        "doctrine/dbal": "*",
         "fzaninotto/faker": "*",
         "laravel/nova": "*",
         "mockery/mockery": "*",
         "nunomaduro/collision": "*",
-        "orchestra/testbench": "3.8.*",
+        "orchestra/testbench": "3.9.x-dev@dev",
         "php-coveralls/php-coveralls": "*",
-        "phpunit/phpunit": "^7.5",
+        "phpunit/phpunit": "*",
         "symfony/thanks": "*"
     },
     "autoload": {
