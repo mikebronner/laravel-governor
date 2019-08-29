@@ -1,51 +1,58 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers\Nova;
 
+use GeneaLabs\LaravelGovernor\Action;
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
+use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 
 class PermissionController extends Controller
 {
+    use EntityManagement;
+
     public function index() : array
     {
-        $actionClass = config("genealabs-laravel-governor.models.action");
         $entityClass = config("genealabs-laravel-governor.models.entity");
         $roleClass = config("genealabs-laravel-governor.models.role");
+        $teamClass = config("genealabs-laravel-governor.models.team");
 
-        $roleKey = request("filter") === "role_name"
-            ? request("value")
-            : null;
-        $role = (new $roleClass)
+        $permissibleClass = request("filter") === "team_id"
+            ? $teamClass
+            : $roleClass;
+        $permissible = (new $permissibleClass)
             ->with("permissions.action", "permissions.entity", "permissions.ownership")
-            ->where("name", $roleKey)
+            ->where(function ($query) {
+                if (request("filter") === "team_id") {
+                    $query->where("id", request("value"));
+                }
+
+                if (request("filter") === "role_name") {
+                    $query->where("name", request("value"));
+                }
+            })
             ->first();
-        $gate = app('Illuminate\Contracts\Auth\Access\Gate');
-        $reflectedGate = new \ReflectionObject($gate);
-        $policies = $reflectedGate->getProperty("policies");
-        $policies->setAccessible(true);
-        $policies = $policies->getValue($gate);
 
-        collect(array_keys($policies))
-            ->each(function ($entity) use ($entityClass) {
-                $entity = strtolower(collect(explode('\\', $entity))->last());
+        if (request("owner") === "yes") {
+            return $permissible
+                ->ownedBy
+                ->effectivePermissions
+                ->toArray();
+        }
 
-                return (new $entityClass)
-                    ->firstOrCreate([
-                        'name' => $entity,
-                    ]);
-            });
+        $this->parsePolicies();
+
         $entities = (new $entityClass)
-            ->whereNotIn('name', ['governor_permission', 'governor_entity', "governor_action", "governor_ownership"])
+            ->whereNotIn('name', ['Permission (Laravel Governor)', 'Entity (Laravel Governor)', "Action (Laravel Governor)", "Ownership (Laravel Governor)", "Team Invitation (Laravel Governor)"])
             ->orderBy("group_name")
             ->orderBy("name")
             ->get();
-        $actions = (new $actionClass)
-            ->all();
+        $actions = (new Action)
+            ->getCached();
         $permissionMatrix = [];
 
         foreach ($entities as $entity) {
             foreach ($actions as $action) {
                 $selectedOwnership = 'no';
 
-                foreach ($role->permissions as $permissioncheck) {
+                foreach ($permissible->permissions as $permissioncheck) {
                     if (($permissioncheck->entity->name === $entity->name)
                         && ($permissioncheck->action->name === $action->name)) {
                         $selectedOwnership = $permissioncheck->ownership->name;

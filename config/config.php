@@ -32,7 +32,7 @@ return [
     | Here you can customize what model should be used for authorization checks
     | in the event that you have customized your authentication processes.
     */
-    // 'auth-model' => config('auth.providers.users.model') ?? config('auth.model'),
+    'auth-model-primary-key-type' => 'bigInteger',
     "models" => [
         "auth" => config('auth.providers.users.model')
             ?? config('auth.model'),
@@ -43,6 +43,8 @@ return [
         "ownership" => GeneaLabs\LaravelGovernor\Ownership::class,
         "permission" => GeneaLabs\LaravelGovernor\Permission::class,
         "role" => GeneaLabs\LaravelGovernor\Role::class,
+        "team" => GeneaLabs\LaravelGovernor\Team::class,
+        "invitation" => GeneaLabs\LaravelGovernor\TeamInvitation::class,
     ],
 
     /*
@@ -66,5 +68,16 @@ return [
     | existing URLs of your app when doing so.
     */
     'url-prefix' => '/genealabs/laravel-governor/',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default SuperAdmin User
+    |--------------------------------------------------------------------------
+    |
+    | You may optionally specify a set of SuperAdmin users that will be created
+    | if they don't already exist, formatted as JSON.
+    | Example: [{"name":"Joe Doe","email":"joe@example.com","password":"secret1"},{"name":"Jane Doe","email":"jane@example.com","password":"shhhhh1"}]
+    */
+    "superadmins" => env("GOVERNOR_SUPERADMINS"),
 
 ];

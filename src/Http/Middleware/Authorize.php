@@ -15,7 +15,7 @@ class Authorize
     {
         return resolve(Governor::class)
             ->authorize($request)
-            ? $next($request)
-            : abort(403);
+                ? $next($request)
+                : abort(403);
     }
 }

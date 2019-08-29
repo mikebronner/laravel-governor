@@ -3,6 +3,7 @@
 use GeneaLabs\LaravelGovernor\Group;
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
 use GeneaLabs\LaravelGovernor\Http\Requests\StoreGroupRequest;
+use Illuminate\Database\Eloquent\Collection as IlluminateCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
@@ -14,16 +15,14 @@ class GroupController extends Controller
     {
         $this->middleware([]);
         // $this->middleware(["nova"]);
-        $this->groups = config("genealabs-laravel-governor.models.group");
-        $this->groups = new $this->groups;
+        $this->groups = (new Group)
+            ->getCached();
     }
 
-    public function index() : Collection
+    public function index() : IlluminateCollection
     {
-        return $this->groups
-            ->with("entities")
-            ->orderBy("name")
-            ->get();
+        return (new Group)
+            ->getCached();
     }
 
     public function store(StoreGroupRequest $request) : Response
@@ -35,8 +34,8 @@ class GroupController extends Controller
 
     public function show($id) : Group
     {
-        return $this->groups
-            ->with("entities")
+        return (new Group)
+            ->getCached()
             ->find($id);
     }
 
@@ -49,9 +48,8 @@ class GroupController extends Controller
 
     public function destroy($id) : Response
     {
-        $this->groups
-            ->find($id)
-            ->delete();
+        (new $groupClass)
+            ->destroy($id);
 
         return response(null, 204);
     }

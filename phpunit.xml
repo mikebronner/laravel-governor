@@ -11,8 +11,11 @@
     stopOnFailure="false"
 >
     <testsuites>
-        <testsuite name="Governor for Laravel Test Suite">
-            <directory suffix="Test.php">./tests</directory>
+        <testsuite name="Setup">
+            <directory>./tests/AlwaysRunFirstTest.php</directory>
+        </testsuite>
+        <testsuite name="IntegrationTests">
+            <directory suffix="Test.php">./tests/Integration</directory>
         </testsuite>
     </testsuites>
     <filter>
@@ -28,8 +31,8 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="file"/>
         <env name="QUEUE_DRIVER" value="sync"/>
-        <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/>
+        <!-- <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/> -->
         <!-- <env name="DB_DATABASE" value="test.sqlite"/> -->
     </php>
 </phpunit>

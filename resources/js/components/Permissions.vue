@@ -30,6 +30,12 @@
             this.loadPermissions();
         },
 
+        computed: {
+            hasMoreThanOne: function () {
+                return (_.keys(this.permissions).length > 1);
+            },
+        },
+
         methods: {
             closeDeleteModal: function () {
                 this.deleteModalOpen = false;
@@ -207,13 +213,13 @@
             :key="'group-' + groupName"
             :loading="permissionsIsLoading"
         >
-            <h2 class="mt-6 mb-3 text-80 font-normal text-2xl"
+            <h2
+                v-show="hasMoreThanOne"
+                class="mt-6 mb-3 text-80 font-normal text-2xl"
                 v-text="groupName"
             ></h2>
 
-            <card
-                :loading="permissionsIsLoading"
-            >
+            <card>
                 <div class="relative">
                     <table cellpadding="0"
                         cellspacing="0"
@@ -272,7 +278,7 @@
                                 <td>
                                     <multiselect
                                         v-model="permissions[groupName][name]['viewAny']"
-                                        :options="selectOptions"
+                                        :options="binarySelectOptions"
                                         select-label=""
                                         deselect-label=""
                                         selected-label=""
@@ -352,7 +358,7 @@
                     </table>
                 </div>
             </card>
-        </loading>
+        </loading-view>
     </div>
 </template>
 

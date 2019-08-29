@@ -1,5 +1,8 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Requests;
 
+use GeneaLabs\LaravelGovernor\Action;
+use GeneaLabs\LaravelGovernor\Entity;
+use GeneaLabs\LaravelGovernor\Ownership;
 use Illuminate\Foundation\Http\FormRequest as Request;
 
 class UpdateGroupRequest extends Request
@@ -25,9 +28,6 @@ class UpdateGroupRequest extends Request
 
     public function process()
     {
-        $actionClass = config("genealabs-laravel-governor.models.action");
-        $entityClass = config("genealabs-laravel-governor.models.entity");
-        $ownershipClass = config("genealabs-laravel-governor.models.ownership");
         $permissionClass = config("genealabs-laravel-governor.models.permission");
         $roleClass = config("genealabs-laravel-governor.models.role");
         $role = $this->id
@@ -36,9 +36,12 @@ class UpdateGroupRequest extends Request
         $role->fill($this->all());
 
         if ($this->filled('permissions')) {
-            $allActions = (new $actionClass)->all();
-            $allOwnerships = (new $ownershipClass)->all();
-            $allEntities = (new $entityClass)->all();
+            $allActions = (new Action)
+                ->getCached();
+            $allOwnerships = (new Ownership)
+                ->getCached();
+            $allEntities = (new Entity)
+                ->getCached();
             $role->permissions()->delete();
 
             foreach ($this->permissions as $entity => $actions) {

@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Requests;
 
+use GeneaLabs\LaravelGovernor\Role;
 use Illuminate\Foundation\Http\FormRequest as Request;
 
 class UpdateRoleRequest extends Request
@@ -7,7 +8,8 @@ class UpdateRoleRequest extends Request
     public function authorize() : bool
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
-        $this->role = (new $roleClass)
+        $this->role = (new Role)
+            ->getCached()
             ->find($this->role);
 
         return auth()->check()

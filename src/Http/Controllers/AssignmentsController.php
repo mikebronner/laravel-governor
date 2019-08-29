@@ -1,10 +1,11 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers;
 
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateAssignmentRequest;
+use GeneaLabs\LaravelGovernor\Role;
+use GeneaLabs\LaravelGovernor\User;
 
 class AssignmentsController extends Controller
 {
-    protected $user;
     protected $displayNameField;
 
     public function __construct()
@@ -12,7 +13,6 @@ class AssignmentsController extends Controller
         parent::__construct();
 
         $this->displayNameField = config('genealabs-laravel-governor.user-name-property');
-        $this->user = app(config('genealabs-laravel-governor.models.auth'));
     }
 
     /**
@@ -21,14 +21,14 @@ class AssignmentsController extends Controller
     public function edit()
     {
         $assignmentClass = config("genealabs-laravel-governor.models.assignment");
-        $roleClass = config("genealabs-laravel-governor.models.role");
+        $userClass = app(config('genealabs-laravel-governor.models.auth'));
         $assignment = new $assignmentClass;
         $this->authorize('view', $assignment);
         $displayNameField = $this->displayNameField;
-        $users = $this->user->all();
-        $roles = (new $roleClass)
-            ->with('users')
-            ->get();
+        $users = (new $userClass)
+            ->getCached();
+        $roles = (new Role)
+            ->getCached();
 
         return view('genealabs-laravel-governor::assignments.edit')->with(
             compact('users', 'roles', 'displayNameField', 'assignment')

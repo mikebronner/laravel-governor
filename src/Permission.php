@@ -1,13 +1,12 @@
 <?php namespace GeneaLabs\LaravelGovernor;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Collection;
 
 class Permission extends Model
 {
     protected $rules = [
-        'role_name' => 'required',
         'entity_name' => 'required',
         'action_name' => 'required',
         'ownership_name' => 'required',
@@ -17,15 +16,29 @@ class Permission extends Model
         'entity_name',
         'action_name',
         'ownership_name',
+        "team_id",
     ];
     protected $table = "governor_permissions";
 
-    public function role() : BelongsTo
+    public static function boot()
     {
-        return $this->belongsTo(
-            config('genealabs-laravel-governor.models.role'),
-            'role_name'
-        );
+        parent::boot();
+
+        static::created(function () {
+            app("cache")->forget("governor-permissions");
+        });
+
+        static::deleted(function () {
+            app("cache")->forget("governor-permissions");
+        });
+
+        static::saved(function () {
+            app("cache")->forget("governor-permissions");
+        });
+
+        static::updated(function () {
+            app("cache")->forget("governor-permissions");
+        });
     }
 
     public function entity() : BelongsTo
@@ -52,6 +65,21 @@ class Permission extends Model
         );
     }
 
+    public function role() : BelongsTo
+    {
+        return $this->belongsTo(
+            config('genealabs-laravel-governor.models.role'),
+            'role_name'
+        );
+    }
+
+    public function team() : BelongsTo
+    {
+        return $this->belongsTo(
+            config('genealabs-laravel-governor.models.team')
+        );
+    }
+
     public function getFilteredBy(string $filter = null, string $value = null) : Collection
     {
         return $this
@@ -61,5 +89,22 @@ class Permission extends Model
                 }
             })
             ->get();
+    }
+
+    public function getCached() : Collection
+    {
+        return app("cache")->remember("governor-permissions", 300, function () {
+            $permissionClass = app(config('genealabs-laravel-governor.models.permission'));
+            
+            return (new $permissionClass)
+                ->where(function ($query) {
+                    $roleNames = auth()->user()->roles->pluck("name")->toArray();
+                    $teamIds = auth()->user()->teams->pluck("id")->toArray();
+
+                    $query->whereIn("role_name", $roleNames)
+                        ->orWhereIn("team_id", $teamIds);
+                })
+                ->get();
+        });
     }
 }

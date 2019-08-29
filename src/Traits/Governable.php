@@ -1,43 +1,125 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use GeneaLabs\LaravelGovernor\Permission;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
 
 trait Governable
 {
-    public function hasRole(string $name) : bool
+    use EntityManagement;
+
+    protected function applyPermissionToQuery(Builder $query, string $ability) : Builder
     {
-        $roleClass = config("genealabs-laravel-governor.models.role");
-        $this->load('roles');
-
-        if ($this->roles->isEmpty()) {
-            return false;
-        }
-
-        $role = (new $roleClass)
-            ->where('name', $name)
-            ->first();
-
-        if (! $role) {
-            return false;
-        }
-
-        return $this->roles->contains($role->name)
-            || $this->roles->contains("SuperAdmin");
+        $entityName = $this->getEntityFromModel(get_class($this));
+        $ownerships = $this->getOwnershipsForEntity($entityName, $ability);
+        
+        return $this->filterQuery($query, $ownerships);
     }
 
-    public function roles() : BelongsToMany
+    protected function filterQuery(Builder $query, Collection $ownerships) : Builder
     {
-        $roleClass = config("genealabs-laravel-governor.models.role");
+        if ($ownerships->contains("any")) {
+            return $query;
+        }
 
-        return $this->belongsToMany($roleClass, 'governor_role_user', 'user_id', 'role_name');
+        if ($ownerships->contains("own")) {
+            $authModel = config("genealabs-laravel-governor.models.auth");
+            $authTable = (new $authModel)->getTable();
+
+            if (method_exists($query->getModel(), "teams")) {
+
+                if ($query->getModel()->getTable() === $authTable) {
+                    return $query
+                        ->whereHas("teams", function ($query) {
+                            $query->whereIn("governor_team_user.user_id", auth()->user()->teams->pluck("id"));
+                        })
+                        ->orWhere($query->getModel()->getKeyName(), auth()->user()->getKey());
+                }
+
+                return $query
+                    ->whereHas("teams", function ($query) {
+                        $query->whereIn("governor_teamables.team_id", auth()->user()->teams->pluck("id"));
+                    })
+                    ->orWhere(
+                        "{$query->getModel()->getTable()}.governor_owned_by",
+                        auth()->user()->getKey()
+                    );
+            }
+
+            if ($query->getModel()->getTable() === $authTable) {
+                return $query->where($query->getModel()->getKeyName(), auth()->user()->getKey());
+            }
+            
+            return $query->where(
+                "{$query->getModel()->getTable()}.governor_owned_by",
+                auth()->user()->getKey()
+            );
+        }
+
+        return $query->whereRaw("1 = 2");
     }
 
-    public function getPermissionsAttribute() : Collection
+    protected function getOwnershipsForEntity(string $entityName, string $ability) : Collection
     {
-        $permissionClass = config("genealabs-laravel-governor.models.permission");
-        $roleNames = $this->roles->pluck('name');
+        if (! $entityName) {
+            return collect();
+        }
 
-        return (new $permissionClass)->whereIn('role_name', $roleNames)->get();
+        $result = (new Permission)
+            ->getCached()
+            ->where("action_name", $ability)
+            ->where("entity_name", $entityName)
+            ->pluck("ownership_name");
+
+        return $result;
+    }
+
+    public function ownedBy() : BelongsTo
+    {
+        return $this->belongsTo(
+            config("genealabs-laravel-governor.models.auth"),
+            "governor_owned_by"
+        );
+    }
+
+    public function teams() : MorphToMany
+    {
+        return $this->MorphToMany(
+            config("genealabs-laravel-governor.models.team"),
+            "teamable",
+            "governor_teamables"
+        );
+    }
+
+    public function scopeDeletable(Builder $query) : Builder
+    {
+        return $this->applyPermissionToQuery($query, "delete");
+    }
+
+    public function scopeForceDeletable(Builder $query) : Builder
+    {
+        return $this->applyPermissionToQuery($query, "forceDelete");
+    }
+
+    public function scopeRestorable(Builder $query) : Builder
+    {
+        return $this->applyPermissionToQuery($query, "restore");
+    }
+
+    public function scopeUpdatable(Builder $query) : Builder
+    {
+        return $this->applyPermissionToQuery($query, "update");
+    }
+
+    public function scopeViewable(Builder $query) : Builder
+    {
+        return $this->applyPermissionToQuery($query, "view");
+    }
+
+    public function scopeViewAnyable(Builder $query) : Builder
+    {
+        return $this->applyPermissionToQuery($query, "viewAny");
     }
 }

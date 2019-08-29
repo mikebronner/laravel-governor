@@ -1,7 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest as Request;
-use Illuminate\Support\Facades\Gate;
 
 class CreateRoleRequest extends Request
 {

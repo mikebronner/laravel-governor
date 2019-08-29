@@ -1,7 +1,12 @@
 global._ = require('lodash');
 
 Nova.booting((Vue, router) => {
+    Vue.component('index-permission', require('./components/PermissionIndexField'))
+    Vue.component('detail-permission', require('./components/PermissionDetailField'))
+    Vue.component('form-permission', require('./components/PermissionFormField'))
     Vue.component("multiselect", require("vue-multiselect").default);
+    Vue.component('permissions-tool', require('./components/PermissionsTool').default);
+    Vue.component("permissions", require('./components/Permissions').default);
     router.addRoutes([
         {
             name: 'laravel-nova-governor-roles',

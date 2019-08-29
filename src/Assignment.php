@@ -5,18 +5,37 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Assignment extends Model
 {
-    protected $primaryKey = ["role", "user_id"];
     protected $roles;
     protected $table ="governor_role_user";
-    protected $user;
+    protected $users;
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function () {
+            app("cache")->forget("governor-assignments");
+        });
+
+        static::deleted(function () {
+            app("cache")->forget("governor-assignments");
+        });
+
+        static::saved(function () {
+            app("cache")->forget("governor-assignments");
+        });
+
+        static::updated(function () {
+            app("cache")->forget("governor-assignments");
+        });
+    }
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->user = app(config('genealabs-laravel-governor.models.auth'));
-        $this->roles = config('genealabs-laravel-governor.models.role');
-        $this->roles = new $this->roles;
+        $this->users = app(config('genealabs-laravel-governor.models.auth'));
+        $this->roles = app(config('genealabs-laravel-governor.models.role'));
     }
 
     public function role() : BelongsTo
@@ -31,7 +50,7 @@ class Assignment extends Model
 
     public function addAllUsersToMemberRole()
     {
-        $this->user
+        $this->users
             ->with('roles')
             ->get()
             ->each(function ($user) {
@@ -49,14 +68,14 @@ class Assignment extends Model
             $users = $assignedUsers[$role];
 
             foreach ($users as $id) {
-                $this->user
+                $this->users
                     ->with('roles')
                     ->find($id)
                     ->roles()
                     ->detach();
             }
 
-            (new $this->roles)
+            $this->roles
                 ->with('users')
                 ->find($role)
                 ->users()
@@ -71,7 +90,7 @@ class Assignment extends Model
                 continue;
             }
 
-            (new $this->roles)
+            $this->roles
                 ->with('users')
                 ->find($role)
                 ->users()
@@ -81,7 +100,7 @@ class Assignment extends Model
 
     public function removeAllUsersFromRoles()
     {
-        (new $this->roles)
+        $this->roles
             ->with('users')
             ->get()
             ->each(function ($role) {
@@ -92,7 +111,7 @@ class Assignment extends Model
 
     public function getAllUsersOfRole($role)
     {
-        return (new $this->roles)
+        return $this->roles
             ->with('users')
             ->find($role)
             ->users;
