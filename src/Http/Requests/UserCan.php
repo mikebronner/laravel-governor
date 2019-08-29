@@ -7,8 +7,8 @@ class UserCan extends Request
 {
     public function authorize() : bool
     {
-        $ability = request("ability");
-        $model = request("model");
+        $ability = $this->ability;
+        $model = $this->model;
         $primaryKey = request("primary-key");
 
         if ($primaryKey) {

@@ -11,12 +11,12 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="{{ str_contains(request()->route()->getName(), 'genealabs.laravel-governor.roles.') ? 'active' : '' }}">
+                <li class="{{ Str::contains(request()->route()->getName(), 'genealabs.laravel-governor.roles.') ? 'active' : '' }}">
                     <a href="{{ route('genealabs.laravel-governor.roles.index') }}">
                         Roles
                     </a>
                 </li>
-                <li class="{{ str_contains(request()->route()->getName(), 'genealabs.laravel-governor.assignments.') ? 'active' : '' }}">
+                <li class="{{ Str::contains(request()->route()->getName(), 'genealabs.laravel-governor.assignments.') ? 'active' : '' }}">
                     <a href="{{ route('genealabs.laravel-governor.assignments.edit', 0) }}">
                         Assignments
                     </a>

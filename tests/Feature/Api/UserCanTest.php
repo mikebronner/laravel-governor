@@ -38,7 +38,7 @@ class UserCanTest extends TestCase
             'password' => 'not hashed but who cares',
         ]);
         $user->roles()->sync(["SuperAdmin"]);
-        $user->save();
+        $user->load("roles");
 
         $response = $this
             ->actingAs($user, "api")

@@ -15,16 +15,15 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         $this->loadLaravelMigrations();
-        $this->artisan('migrate')
-            ->run();
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->artisan("db:seed --class=LaravelGovernorDatabaseSeeder");
+    }
 
-        // (new DatabaseSeeder)->call(new LaravelGovernorDatabaseSeeder);
-        // $this->artisan('make:auth', ['--no-interaction' => true]);
-        // $this->artisan('db:seed', [
-        //     '--class' => 'LaravelGovernorDatabaseSeeder',
-        //     '--no-interaction' => true
-        // ]);
-        // $this->withoutExceptionHandling();
+    protected function getPackageAliases($app)
+    {
+        return [
+            'Str' => 'Illuminate\Support\Str',
+        ];
     }
 
     protected function getPackageProviders($app)
@@ -33,12 +32,12 @@ abstract class TestCase extends BaseTestCase
             'GeneaLabs\LaravelGovernor\Providers\Service',
             'GeneaLabs\LaravelGovernor\Providers\Auth',
             'GeneaLabs\LaravelGovernor\Providers\Route',
-            // 'GeneaLabs\LaravelGovernor\Providers\Tool',
         ];
     }
 
     protected function getEnvironmentSetUp($app)
     {
+        $app["config"]->set('genealabs-laravel-governor.layout-view', "genealabs-laravel-governor::layouts.app");
         $app["router"]->get('login', 'Auth\LoginController@showLoginForm')->name('login');
         $app["router"]->post('login', 'Auth\LoginController@login');
         $app["router"]->post('logout', 'Auth\LoginController@logout')->name('logout');
@@ -49,5 +48,4 @@ abstract class TestCase extends BaseTestCase
         $app["router"]->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
         $app["router"]->post('password/reset', 'Auth\ResetPasswordController@reset');
     }
-
 }
