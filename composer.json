@@ -27,7 +27,7 @@
         "laravel/nova": "2.*",
         "mockery/mockery": "*",
         "nunomaduro/collision": "*",
-        "orchestra/testbench": "3.9.x-dev@dev",
+        "orchestra/testbench": "3.8.4@dev",
         "php-coveralls/php-coveralls": "*",
         "phpunit/phpunit": "*",
         "symfony/thanks": "*"
