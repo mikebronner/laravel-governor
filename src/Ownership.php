@@ -8,6 +8,7 @@ class Ownership extends Model
 {
     public $incrementing = false;
 
+    protected $keyType = 'string';
     protected $primaryKey = 'name';
     protected $rules = [
         'name' => 'required|min:3|unique:governor_ownerships,name',
