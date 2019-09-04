@@ -24,7 +24,7 @@
     "require-dev": {
         "doctrine/dbal": "*",
         "fzaninotto/faker": "*",
-        "laravel/nova": "*",
+        "laravel/nova": "2.*",
         "mockery/mockery": "*",
         "nunomaduro/collision": "*",
         "orchestra/testbench": "3.9.x-dev@dev",

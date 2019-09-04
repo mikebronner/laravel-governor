@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Entity extends Model
 {
+    protected $keyType = 'string';
     protected $primaryKey = 'name';
     protected $rules = [
         'name' => 'required|min:3|unique:governor_entities,name',
