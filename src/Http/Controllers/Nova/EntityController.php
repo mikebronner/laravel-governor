@@ -22,7 +22,8 @@ class EntityController extends Controller
 
     public function index() : Collection
     {
-        return $this->entities
+        return $this
+            ->entities()
             ->with("group")
             ->orderBy("name")
             ->get();
