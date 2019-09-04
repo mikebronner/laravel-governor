@@ -1,6 +1,15 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.14.1] - 2019-09-02
+### Fixed
+- `keyType` property on models with string primary keys.
+- typo in controller.
+
+## [0.14.0] - 2019-08-28
+### Added
+- Laravel 6.0 compatibility.
+
 ## [0.13.14] - 2019-08-22
 ### Fixed
 - guest user role assignment.
