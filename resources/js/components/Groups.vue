@@ -142,11 +142,11 @@
                                 </span>
                             </td>
                             <td>
-                                <span class="whitespace-no-wrap text-left">
+                                <span class="text-left">
                                     {{ entityNames(group) }}
                                 </span>
                             </td>
-                            <td>
+                            <td class="whitespace-no-wrap hover:text-gray-darker">
                                 <span>
                                     <router-link
                                         tag="a"
@@ -163,7 +163,17 @@
                                     type="button"
                                     @click="showDeleteModalFor(group)"
                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" aria-labelledby="delete" role="presentation" class="fill-current"><path fill-rule="nonzero" d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path></svg>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 20 20"
+                                        aria-labelledby="delete"
+                                        role="presentation"
+                                        class="fill-current"
+                                    >
+                                        <path fill-rule="nonzero" d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path>
+                                    </svg>
                                 </button>
                             </td>
                         </tr>
@@ -198,10 +208,17 @@
                                 @click="deleteGroup"
                                 :disabled="isDeleting"
                             >
-                                <i
-                                    class="fas fa-circle-notch fa-spin"
+                                <svg
                                     v-show="isDeleting"
-                                ></i>
+                                    class="icon"
+                                    aria-hidden="true"
+                                    focusable="false"
+                                    role="img"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512"
+                                >
+                                    <path fill="currentColor" d="M288 28.977v16.391c0 7.477 5.182 13.945 12.474 15.598C389.568 81.162 456 160.742 456 256c0 110.532-89.451 200-200 200-110.532 0-200-89.451-200-200 0-95.244 66.422-174.837 155.526-195.034C218.818 59.313 224 52.845 224 45.368V28.981c0-10.141-9.322-17.76-19.246-15.675C91.959 37.004 7.373 137.345 8.004 257.332c.72 137.052 111.477 246.956 248.531 246.667C393.255 503.711 504 392.788 504 256c0-119.349-84.308-219.003-196.617-242.665C297.403 11.232 288 18.779 288 28.977z"></path>
+                                </svg>
                                 Delete
                             </button>
                         </div>
@@ -215,5 +232,17 @@
 <style scoped lang="scss">
     tr.disabled {
         pointer-events: none;
+    }
+
+    svg.icon {
+        width: 1em;
+        height: 1em;
+        vertical-align: -.125em;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(360deg);}
     }
 </style>

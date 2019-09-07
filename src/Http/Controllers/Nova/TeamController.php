@@ -6,12 +6,6 @@ use Illuminate\Http\Response;
 
 class TeamController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware([]);
-        // $this->middleware(["nova"]);
-    }
-
     public function update(UpdateTeamRequest $request) : Response
     {
         $request->process();

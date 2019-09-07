@@ -5,20 +5,9 @@ use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
 use GeneaLabs\LaravelGovernor\Http\Requests\StoreGroupRequest;
 use Illuminate\Database\Eloquent\Collection as IlluminateCollection;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 
 class GroupController extends Controller
 {
-    protected $groups;
-
-    public function __construct()
-    {
-        $this->middleware([]);
-        // $this->middleware(["nova"]);
-        $this->groups = (new Group)
-            ->getCached();
-    }
-
     public function index() : IlluminateCollection
     {
         return (new Group)
@@ -48,6 +37,7 @@ class GroupController extends Controller
 
     public function destroy($id) : Response
     {
+        $groupClass = config("genealabs-laravel-governor.models.group");
         (new $groupClass)
             ->destroy($id);
 

@@ -59,8 +59,10 @@ class Entity extends Model
     {
         return app("cache")->remember("governor-entities", 300, function () {
             $entityClass = app(config('genealabs-laravel-governor.models.entity'));
-            
+
             return (new $entityClass)
+                ->with("group")
+                ->orderBy("name")
                 ->get();
         });
     }

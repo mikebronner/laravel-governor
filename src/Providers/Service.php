@@ -9,8 +9,6 @@ use GeneaLabs\LaravelGovernor\Listeners\CreatedTeamListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingInvitationListener;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Support\AggregateServiceProvider;
-use Illuminate\Support\Facades\Schema;
-use ReflectionClass;
 
 class Service extends AggregateServiceProvider
 {

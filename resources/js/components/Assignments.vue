@@ -2,7 +2,8 @@
     module.exports = {
         data: function () {
             return {
-                isLoading: true,
+                rolesAreLoading: true,
+                usersAreLoading: true,
                 roles: [],
                 users: [],
             };
@@ -13,6 +14,13 @@
             this.loadUsers();
         },
 
+        computed: {
+            isLoading: function () {
+                return this.rolesAreLoading === true
+                    || this.usersAreLoading === true;
+            },
+        },
+
         methods: {
             loadRoles: function () {
                 var self = this;
@@ -20,10 +28,7 @@
                 Nova.request().get("/genealabs/laravel-governor/nova/roles")
                     .then(function (response) {
                         self.roles = Object.assign({}, response.data);
-
-                        if (self.users.length > 0) {
-                            self.isLoading = false;
-                        }
+                        self.rolesAreLoading = false;
                     });
             },
 
@@ -33,10 +38,7 @@
                 Nova.request().get("/genealabs/laravel-governor/nova/users")
                     .then(function (response) {
                         self.users = Object.assign([], response.data);
-
-                        if (self.roles.length > 0) {
-                            self.isLoading = false;
-                        }
+                        self.usersAreLoading = false;
                     });
             },
 
@@ -82,7 +84,7 @@
                                 label="name"
                                 :multiple="true"
                                 :hideSelected="true"
-                                :clearOnSelect="true"
+                                :closeOnSelect="false"
                                 @input="updateAssignment($event, role)"
                             ></multiselect>
                         </div>

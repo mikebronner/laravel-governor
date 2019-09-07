@@ -72,8 +72,9 @@ class Role extends Model
     {
         return app("cache")->remember("governor-roles", 300, function () {
             $roleClass = config("genealabs-laravel-governor.models.role");
-            
+
             return (new $roleClass)
+                ->with("users")
                 ->orderBy("name")
                 ->get();
         });

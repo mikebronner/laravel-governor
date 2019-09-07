@@ -9,12 +9,6 @@ use Illuminate\Support\Collection;
 
 class RoleController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware([]);
-        // $this->middleware(["nova"]);
-    }
-
     public function index() : Collection
     {
         return (new Role)

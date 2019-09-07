@@ -71,7 +71,7 @@
                         self.isLoadingGroup = false;
                     });
             },
-            
+
             save: function(redirectUrl) {
                 var self = this;
 
@@ -135,7 +135,7 @@
                                 label="name"
                                 :multiple="true"
                                 :hideSelected="true"
-                                :clearOnSelect="true"
+                                :closeOnSelect="false"
                             ></multiselect>
                         </div>
                     </div>
