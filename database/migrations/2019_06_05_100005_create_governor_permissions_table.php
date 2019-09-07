@@ -25,7 +25,7 @@ class CreateGovernorPermissionsTable extends Migration
                 ->nullable();
             $table->timestamps();
 
-            $table->unique(['role_name', 'entity_name', 'action_name', 'ownership_name']);
+            $table->unique(['role_name', 'entity_name', 'action_name', 'ownership_name'], 'governor_permissions_unique_key');
             $table->foreign('role_name')
                 ->references('name')
                 ->on('governor_roles')
