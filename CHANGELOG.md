@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.15.1] - 2019-09-07
+### Fixed
+- remnant occurrences of removed dependencies.
+
 ## [0.15.0] - 2019-09-07
 ### Removed
 - non-Nova views. An updated version of these will be added down the line. For
