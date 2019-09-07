@@ -15,8 +15,8 @@ class CreateGovernorTeamablesTable extends Migration
     public function up()
     {
         Schema::create('governor_teamables', function (Blueprint $table) {
-            $table->bigUnsignedInteger('team_id');
-            $table->bigUnsignedInteger('teamable_id');
+            $table->unsignedBigInteger('team_id');
+            $table->unsignedBigInteger('teamable_id');
             $table->string("teamable_type");
             $table->timestamps();
 
