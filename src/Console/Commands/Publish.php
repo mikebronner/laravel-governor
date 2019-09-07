@@ -6,14 +6,10 @@ use Illuminate\Console\Command;
 class Publish extends Command
 {
     protected $signature = 'governor:publish {--assets} {--config} {--views} {--migrations}';
-    protected $description = 'Publish various assets of the Laravel Casts package.';
+    protected $description = 'Publish various assets of the Laravel Governor package.';
 
     public function handle()
     {
-        if ($this->option('assets')) {
-            $this->call('casts:publish', ['--assets' => true]);
-        }
-
         if ($this->option('config')) {
             $this->call('vendor:publish', [
                 '--provider' => LaravelGovernorService::class,

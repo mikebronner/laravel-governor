@@ -1,6 +1,5 @@
 <?php namespace GeneaLabs\LaravelGovernor\Providers;
 
-use GeneaLabs\LaravelCasts\Providers\Service as LaravelCastsService;
 use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedInvitationListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
@@ -13,9 +12,6 @@ use Illuminate\Support\AggregateServiceProvider;
 class Service extends AggregateServiceProvider
 {
     protected $defer = false;
-    protected $providers = [
-        LaravelCastsService::class,
-    ];
 
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
