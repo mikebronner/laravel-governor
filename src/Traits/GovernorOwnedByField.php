@@ -17,6 +17,11 @@ trait GovernorOwnedByField
         $protectedClass = collect($property->getValue($gate))
             ->flip()
             ->get(get_class($policy));
+
+        if (! $protectedClass) {
+            return false;
+        }
+
         $model = new $protectedClass;
 
         return $this->createGovernorOwnedByFields($model);
