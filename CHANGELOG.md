@@ -1,6 +1,24 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.14.5] - 2019-09-07
+### Fixed
+- rendering of groups in Nova.
+- rendering of user assignments in Nova.
+- errors in Nova API controllers.
+
+## [0.14.4] - 2019-09-06
+### Fixed
+- unique key length when running in MySQL.
+
+## [0.14.3] - 2019-09-06
+### Fixed
+- typo in data type.
+
+## [0.14.2] - 2019-09-06
+### Fixed
+- database migration foreign key data type.
+
 ## [0.14.1] - 2019-09-02
 ### Fixed
 - `keyType` property on models with string primary keys.
