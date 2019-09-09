@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.15.3] - 2019-09-08
+### Fixed
+- Nova resource relationship fields.
+
 ## [0.15.2] - 2019-09-07
 ### Fixed
 - Nova navigation menu.

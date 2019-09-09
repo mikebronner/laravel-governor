@@ -32,58 +32,14 @@ class GovernorPermission extends Resource
             Text::make("Entity", "entity_name", "GeneaLabs\LaravelGovernor\Nova\GovernorEntity")
                 ->onlyOnIndex()
                 ->sortable(),
-            BelongsTo::make("Role", "GeneaLabs\LaravelGovernor\Nova\GovernorRole")
+            BelongsTo::make("Role", "role", "GeneaLabs\LaravelGovernor\Nova\GovernorRole")
                 ->hideFromIndex(),
-            BelongsTo::make("Action", "GeneaLabs\LaravelGovernor\Nova\GovernorAction")
+            BelongsTo::make("Action", "action", "GeneaLabs\LaravelGovernor\Nova\GovernorAction")
                 ->hideFromIndex(),
-            BelongsTo::make("Ownership", "GeneaLabs\LaravelGovernor\Nova\GovernorOwnership")
+            BelongsTo::make("Ownership", "ownership", "GeneaLabs\LaravelGovernor\Nova\GovernorOwnership")
                 ->hideFromIndex(),
-            BelongsTo::make("Entity", "GeneaLabs\LaravelGovernor\Nova\GovernorEntity")
+            BelongsTo::make("Entity", "entity", "GeneaLabs\LaravelGovernor\Nova\GovernorEntity")
                 ->hideFromIndex(),
         ];
-    }
-
-    /**
-     * Get the cards available for the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function cards(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * Get the filters available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function filters(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function lenses(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * Get the actions available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function actions(Request $request)
-    {
-        return [];
     }
 }
