@@ -42,6 +42,10 @@ trait EntityManagement
         $policy = app(Gate::class)
             ->getPolicyFor($modelClass);
 
+        if (! $policy) {
+            return "";
+        }
+
         return $this->getEntity(get_class($policy));
     }
 
