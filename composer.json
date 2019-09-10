@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "illuminate/support": "6.0",
+        "illuminate/support": "^6.0",
         "ramsey/uuid": "^3.8",
         "titasgailius/search-relations": "^1.0"
     },
