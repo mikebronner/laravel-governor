@@ -27,8 +27,10 @@ class CreatingListener
                         class_uses_recursive($model)
                     );
             })
+            ->filter()
             ->each(function ($model) {
                 $this->createGovernorOwnedByFields($model);
+                $model->getEntityFromModel(get_class($model));
 
                 if (! $model->governor_owned_by
                     && auth()->check()

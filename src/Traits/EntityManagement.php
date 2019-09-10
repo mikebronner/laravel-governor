@@ -1,6 +1,5 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
-use GeneaLabs\LaravelGovernor\Entity;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -23,13 +22,13 @@ trait EntityManagement
             $entityName .= " ({$packageName})";
         }
 
-        $entity = (new Entity)
+        $entity = (new $entityClass)
             ->getCached()
             ->where("name", ucwords($entityName))
             ->first();
 
         if (! $entity) {
-            $entity = (new $entityClass)->create([
+            $entity = (new $entityClass)->firstOrCreate([
                 "name" => ucwords($entityName),
             ]);
         }
@@ -37,7 +36,7 @@ trait EntityManagement
         return $entity->name;
     }
 
-    protected function getEntityFromModel(string $modelClass) : string
+    public function getEntityFromModel(string $modelClass) : string
     {
         $policy = app(Gate::class)
             ->getPolicyFor($modelClass);
@@ -59,7 +58,7 @@ trait EntityManagement
         return collect($policies->getValue($gate));
     }
 
-    protected function parsePolicies()
+    public function parsePolicies()
     {
         $this->getPolicies()
             ->each(function ($policyClassName) {
