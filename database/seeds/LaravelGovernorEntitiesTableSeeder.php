@@ -1,6 +1,6 @@
 <?php
 
-use App\Governor\Team;
+use GeneaLabs\LaravelGovernor\Team;
 use Illuminate\Database\Seeder;
 
 class LaravelGovernorEntitiesTableSeeder extends Seeder
