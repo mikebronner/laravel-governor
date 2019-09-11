@@ -1,7 +1,7 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
-## [0.15.4] - 2019-09-11
+## [0.15.8] - 2019-09-11
 ### Added
 - minor performance optimizations.
 
