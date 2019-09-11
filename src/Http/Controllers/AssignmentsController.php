@@ -21,14 +21,17 @@ class AssignmentsController extends Controller
     public function edit()
     {
         $assignmentClass = config("genealabs-laravel-governor.models.assignment");
-        $userClass = app(config('genealabs-laravel-governor.models.auth'));
         $assignment = new $assignmentClass;
         $this->authorize('view', $assignment);
         $displayNameField = $this->displayNameField;
+        $userClass = app(config('genealabs-laravel-governor.models.auth'));
         $users = (new $userClass)
-            ->getCached();
-        $roles = (new Role)
-            ->getCached();
+            ->get();
+        $roleClass = config("genealabs-laravel-governor.models.role");
+        $roles = (new $roleClass)
+            ->with("users")
+            ->orderBy("name")
+            ->get();
 
         return view('genealabs-laravel-governor::assignments.edit')->with(
             compact('users', 'roles', 'displayNameField', 'assignment')

@@ -8,7 +8,6 @@ class EntityController extends Controller
 {
     public function index() : Collection
     {
-        return (new Entity)
-            ->getCached();
+        return app("governor-entities");
     }
 }

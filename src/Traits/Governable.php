@@ -1,6 +1,5 @@
 <?php namespace GeneaLabs\LaravelGovernor\Traits;
 
-use GeneaLabs\LaravelGovernor\Permission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -67,8 +66,7 @@ trait Governable
             return collect();
         }
 
-        $result = (new Permission)
-            ->getCached()
+        $result = app("governor-permissions")
             ->where("action_name", $ability)
             ->where("entity_name", $entityName)
             ->pluck("ownership_name");

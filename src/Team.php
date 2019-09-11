@@ -65,14 +65,4 @@ class Team extends Model
             config('genealabs-laravel-governor.models.permission')
         );
     }
-
-    public function getCached() : Collection
-    {
-        return app("cache")->remember("governor-teams", 300, function () {
-            $teamClass = app(config('genealabs-laravel-governor.models.team'));
-            
-            return (new $teamClass)
-                ->get();
-        });
-    }
 }

@@ -36,12 +36,15 @@ class UpdateGroupRequest extends Request
         $role->fill($this->all());
 
         if ($this->filled('permissions')) {
-            $allActions = (new Action)
-                ->getCached();
-            $allOwnerships = (new Ownership)
-                ->getCached();
-            $allEntities = (new Entity)
-                ->getCached();
+            $actionClass = app(config('genealabs-laravel-governor.models.action'));
+            $allActions = (new $actionClass)
+                ->orderBy("name")
+                ->get();
+            $ownershipClass = app(config('genealabs-laravel-governor.models.ownership'));
+            $allOwnerships = (new $ownershipClass)
+                ->orderBy("name")
+                ->get();
+            $allEntities = app("governor-entities");
             $role->permissions()->delete();
 
             foreach ($this->permissions as $entity => $actions) {

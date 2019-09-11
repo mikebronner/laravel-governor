@@ -11,8 +11,12 @@ class RoleController extends Controller
 {
     public function index() : Collection
     {
-        return (new Role)
-            ->getCached();
+        $roleClass = config("genealabs-laravel-governor.models.role");
+
+        return (new $roleClass)
+            ->with("users")
+            ->orderBy("name")
+            ->get();
     }
 
     public function store(StoreRoleRequest $request) : Response
@@ -24,11 +28,10 @@ class RoleController extends Controller
 
     public function show($id) : Role
     {
-        $role = (new Role)
-            ->getCached()
-            ->find($id);
+        $roleClass = config("genealabs-laravel-governor.models.role");
 
-        return $role;
+        return (new $roleClass)
+            ->find($id);
     }
 
     public function update(UpdateRoleRequest $request) : Response
@@ -40,8 +43,9 @@ class RoleController extends Controller
 
     public function destroy($id) : Response
     {
-        (new Role)
-            ->getCached()
+        $roleClass = config("genealabs-laravel-governor.models.role");
+
+        (new $roleClass)
             ->find($id)
             ->delete();
 

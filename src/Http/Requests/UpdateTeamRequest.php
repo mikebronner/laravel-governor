@@ -8,8 +8,8 @@ class UpdateTeamRequest extends Request
     public function authorize() : bool
     {
         $teamClass = config("genealabs-laravel-governor.models.team");
-        $this->team = (new Team)
-            ->getCached()
+        $this->team = (new $teamClass)
+            ->get()
             ->find($this->team);
 
         return auth()->check()

@@ -20,10 +20,11 @@ abstract class Controller extends BaseController
     {
         $permissionClass = config("genealabs-laravel-governor.models.permission");
         (new $permissionClass)->where('role_name', 'SuperAdmin')->delete();
-        $entities = (new Entity)
-            ->getCached();
-        $actions = (new Action)
-            ->getCached();
+        $entities = app("governor-entities");
+        $actionClass = app(config('genealabs-laravel-governor.models.action'));
+        $actions = (new $actionClass)
+            ->orderBy("name")
+            ->get();
 
         foreach ($entities as $entity) {
             foreach ($actions as $action) {

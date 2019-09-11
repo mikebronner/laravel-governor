@@ -8,8 +8,7 @@ class UpdateRoleRequest extends Request
     public function authorize() : bool
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
-        $this->role = (new Role)
-            ->getCached()
+        $this->role = (new $roleClass)
             ->find($this->role);
 
         return auth()->check()

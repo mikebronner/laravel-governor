@@ -45,6 +45,34 @@ class Service extends AggregateServiceProvider
     {
         parent::register();
 
+        $this->app->singleton(
+            'governor-entities',
+            function () {
+                $entityClass = app(config('genealabs-laravel-governor.models.entity'));
+
+                return (new $entityClass)
+                    ->with("group")
+                    ->orderBy("name")
+                    ->get();
+            }
+        );
+        $this->app->singleton(
+            'governor-permissions',
+            function () {
+                $permissionClass = app(config('genealabs-laravel-governor.models.permission'));
+            
+                return (new $permissionClass)
+                    ->where(function ($query) {
+                        $roleNames = auth()->user()->roles->pluck("name")->toArray();
+                        $teamIds = auth()->user()->teams->pluck("id")->toArray();
+    
+                        $query->whereIn("role_name", $roleNames)
+                            ->orWhereIn("team_id", $teamIds);
+                    })
+                    ->get();
+            }
+        );
+
         $this->mergeConfigFrom(__DIR__ . '/../../config/config.php', 'genealabs-laravel-governor');
         $this->commands(Publish::class);
     }

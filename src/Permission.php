@@ -90,21 +90,4 @@ class Permission extends Model
             })
             ->get();
     }
-
-    public function getCached() : Collection
-    {
-        return app("cache")->remember("governor-permissions", 300, function () {
-            $permissionClass = app(config('genealabs-laravel-governor.models.permission'));
-            
-            return (new $permissionClass)
-                ->where(function ($query) {
-                    $roleNames = auth()->user()->roles->pluck("name")->toArray();
-                    $teamIds = auth()->user()->teams->pluck("id")->toArray();
-
-                    $query->whereIn("role_name", $roleNames)
-                        ->orWhereIn("team_id", $teamIds);
-                })
-                ->get();
-        });
-    }
 }

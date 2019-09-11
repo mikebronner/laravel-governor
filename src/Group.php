@@ -46,16 +46,4 @@ class Group extends Model
             'group_name'
         );
     }
-
-    public function getCached() : Collection
-    {
-        return app("cache")->remember("governor-groups", 300, function () {
-            $groupClass = app(config('genealabs-laravel-governor.models.group'));
-            
-            return (new $groupClass)
-                ->with("entities")
-                ->orderBy("name")
-                ->get();
-        });
-    }
 }

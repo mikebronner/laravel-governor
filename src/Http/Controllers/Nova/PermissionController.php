@@ -44,8 +44,10 @@ class PermissionController extends Controller
             ->orderBy("group_name")
             ->orderBy("name")
             ->get();
-        $actions = (new Action)
-            ->getCached();
+        $actionClass = app(config('genealabs-laravel-governor.models.action'));
+        $actions = (new $actionClass)
+            ->orderBy("name")
+            ->get();
         $permissionMatrix = [];
 
         foreach ($entities as $entity) {

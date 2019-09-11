@@ -46,16 +46,4 @@ class Action extends Model
             'action_name'
         );
     }
-
-
-    public function getCached() : Collection
-    {
-        return app("cache")->remember("governor-actions", 300, function () {
-            $actionClass = app(config('genealabs-laravel-governor.models.action'));
-            
-            return (new $actionClass)
-                ->orderBy("name")
-                ->get();
-        });
-    }
 }

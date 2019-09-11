@@ -8,8 +8,11 @@ class AssignmentController extends Controller
 {
     public function update(string $role) : Response
     {
-        $role = (new Role)
-            ->getCached()
+        $roleClass = config("genealabs-laravel-governor.models.role");
+        (new $roleClass)
+            ->with("users")
+            ->orderBy("name")
+            ->get()
             ->where("name", $role)
             ->first()
             ->users()

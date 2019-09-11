@@ -22,8 +22,7 @@ trait EntityManagement
             $entityName .= " ({$packageName})";
         }
 
-        $entity = (new $entityClass)
-            ->getCached()
+        $entity = app("governor-entities")
             ->where("name", ucwords($entityName))
             ->first();
 

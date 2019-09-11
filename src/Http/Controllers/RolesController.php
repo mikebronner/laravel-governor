@@ -16,9 +16,11 @@ class RolesController extends Controller
     public function index() : View
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
-        $this->authorize('view', (new $roleClass));
-        $roles = (new Role)
-            ->getCached();
+        $this->authorize('viewAny', $roleClass);
+        $roles = (new $roleClass)
+            ->with("users")
+            ->orderBy("name")
+            ->get();
 
         return view('genealabs-laravel-governor::roles.index', compact('roles'));
     }

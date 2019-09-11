@@ -10,8 +10,12 @@ class GroupController extends Controller
 {
     public function index() : IlluminateCollection
     {
-        return (new Group)
-            ->getCached();
+        $groupClass = app(config('genealabs-laravel-governor.models.group'));
+            
+        return (new $groupClass)
+            ->with("entities")
+            ->orderBy("name")
+            ->get();
     }
 
     public function store(StoreGroupRequest $request) : Response
@@ -23,8 +27,12 @@ class GroupController extends Controller
 
     public function show($id) : Group
     {
-        return (new Group)
-            ->getCached()
+        $groupClass = app(config('genealabs-laravel-governor.models.group'));
+            
+        return (new $groupClass)
+            ->with("entities")
+            ->orderBy("name")
+            ->get()
             ->find($id);
     }
 
