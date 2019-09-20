@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.15.10] - 2019-09-20
+### Fixed
+- superadmin and admin user seeders.
+
 ## [0.15.9] - 2019-09-20
 ### Added
 - importing of default admin users from .env file.
