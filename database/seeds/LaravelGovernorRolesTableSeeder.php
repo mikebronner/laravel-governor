@@ -9,7 +9,11 @@ class LaravelGovernorRolesTableSeeder extends Seeder
         $roleClass = config("genealabs-laravel-governor.models.role");
         (new $roleClass)->firstOrCreate([
             'name' => 'SuperAdmin',
-            'description' => 'This role is for the main administrator of your site. They will be able to do absolutely everything. (This role cannot be edited.)',
+            'description' => 'This role is for the main super-administrator of your site. They will be able to do absolutely everything. (This role cannot be edited.)',
+        ]);
+        (new $roleClass)->firstOrCreate([
+            'name' => 'Admin',
+            'description' => 'This role is for the administrators of your site. You can configure what they have access to.',
         ]);
         (new $roleClass)->firstOrCreate([
             'name' => 'Member',

@@ -74,10 +74,11 @@ return [
     | Default SuperAdmin User
     |--------------------------------------------------------------------------
     |
-    | You may optionally specify a set of SuperAdmin users that will be created
-    | if they don't already exist, formatted as JSON.
+    | You may optionally specify a set of SuperAdmin and Admin users that will
+    | be created if they don't already exist, formatted as JSON.
     | Example: [{"name":"Joe Doe","email":"joe@example.com","password":"secret1"},{"name":"Jane Doe","email":"jane@example.com","password":"shhhhh1"}]
     */
     "superadmins" => env("GOVERNOR_SUPERADMINS"),
+    "admins" => env("GOVERNOR_ADMINS"),
 
 ];
