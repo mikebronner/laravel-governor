@@ -4,7 +4,7 @@
 [![Latest StableVersion](https://poser.pugx.org/genealabs/laravel-governor/v/stable.png)](https://packagist.org/packages/genealabs/laravel-governor)
 [![Total Downloads](https://poser.pugx.org/genealabs/laravel-governor/downloads.png)](https://packagist.org/packages/genealabs/laravel-governor)
 
-![Governor for Laravel](/assets/images/governor.jpg)
+![Governor for Laravel](https://repository-images.githubusercontent.com/41706753/37d93d00-f1b1-11e9-9f67-067c80849466)
 
 **Manage authorization with granular role-based permissions in your Laravel apps.**
 
