@@ -1,11 +1,3 @@
----
-title: Governor for Laravel
-description: Building a navigation menu for your site
-extends: _layouts.docs
-section: content
-repository_url: https://github.com/GeneaLabs/laravel-governor
----
-
 # Governor For Laravel
 [![Build Status](https://travis-ci.org/GeneaLabs/laravel-governor.svg?branch=master)](https://travis-ci.org/GeneaLabs/laravel-governor)
 [![Coverage Status](https://coveralls.io/repos/github/GeneaLabs/laravel-governor/badge.svg?branch=master)](https://coveralls.io/github/GeneaLabs/laravel-governor?branch=master)
