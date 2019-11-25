@@ -8,10 +8,8 @@ class GovernorUser extends Resource
 {
     public static $model;
     public static $title = "name";
-    public static $search = [
-        "name",
-    ];
     public static $displayInPermissions = false;
+    public static $globallySearchable = false;
 
     public function fields(Request $request)
     {

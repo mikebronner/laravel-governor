@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.15.13] - 2019-11-24
+### Fixed
+- governor users to not be searchable in Nova.
+
 ## [0.15.12] - 2019-11-24
 ### Fixed
 - belongsto relationship on assigments.
