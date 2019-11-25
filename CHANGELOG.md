@@ -1,6 +1,11 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.15.11] - 2019-11-24
+### Fixed
+- belongsto relationship on assigments.
+- disabling of governor resources in Nova global search results.
+
 ## [0.15.10] - 2019-09-20
 ### Fixed
 - superadmin and admin user seeders.

@@ -8,10 +8,8 @@ class GovernorPermission extends Resource
 {
     public static $model;
     public static $perPageViaRelationship = 25;
-    public static $search = [
-        // not searchable
-    ];
     public static $displayInPermissions = false;
+    public static $globallySearchable = false;
     public static $title = "entity";
 
     public function fields(Request $request)

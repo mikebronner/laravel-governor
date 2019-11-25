@@ -2,22 +2,20 @@
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\BelongsTo;
 
 class GovernorAssignment extends Resource
 {
     public static $model;
     public static $title = "name";
-    public static $search = [
-        // not searchable
-    ];
+    public static $globallySearchable = false;
 
     public function fields(Request $request)
     {
         return [
             Text::make("name")
                 ->sortable(),
-            BelongsToMany::make("Users", "GeneaLabs\LaravelGovernor\Nova\GovernorUser"),
+            BelongsTo::make("User", "user", GovernorUser::class),
         ];
     }
 }
