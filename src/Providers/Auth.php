@@ -6,7 +6,7 @@ class Auth extends AuthServiceProvider
 {
     protected $policies = [];
 
-    public function register()
+    public function boot()
     {
         $actionClass = config("genealabs-laravel-governor.models.action");
         $assignmentClass = config("genealabs-laravel-governor.models.assignment");
