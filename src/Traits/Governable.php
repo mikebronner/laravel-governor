@@ -19,7 +19,9 @@ trait Governable
 
     protected function filterQuery(Builder $query, Collection $ownerships) : Builder
     {
-        if ($ownerships->contains("any")) {
+        if ($ownerships->contains("any")
+            || auth()->user()->hasRole("SuperAdmin")
+        ) {
             return $query;
         }
 
