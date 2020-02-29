@@ -1,6 +1,10 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.16.13] - 2020-02-29
+### Added
+- Laravel 7 compatibility.
+
 ## [0.15.13] - 2019-11-24
 ### Fixed
 - governor users to not be searchable in Nova.

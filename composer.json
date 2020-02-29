@@ -15,20 +15,17 @@
         }
     ],
     "require": {
-        "illuminate/support": "^6.0",
+        "illuminate/support": "^7.0",
         "ramsey/uuid": "^3.8",
         "titasgailius/search-relations": "^1.0"
     },
     "require-dev": {
         "doctrine/dbal": "^2.9",
         "fzaninotto/faker": "^1.4",
-        "laravel/nova": "^2.1",
-        "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^3.0",
-        "orchestra/testbench": "^3.9",
+        "orchestra/testbench": "^5.0",
         "php-coveralls/php-coveralls": "^2.1",
-        "phpunit/phpunit": "^8.0",
-        "symfony/thanks": "^1.0"
+        "phpunit/phpunit": "^8.5",
+        "symfony/thanks": "^1.2"
     },
     "autoload": {
         "classmap": [
