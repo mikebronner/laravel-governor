@@ -1,7 +1,7 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
-## [0.16.13] - 2020-02-29
+## [0.16.0] - 2020-02-29
 ### Added
 - Laravel 7 compatibility.
 
