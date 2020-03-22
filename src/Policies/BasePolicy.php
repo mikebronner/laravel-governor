@@ -121,7 +121,7 @@ abstract class BasePolicy
         $ownership = 'other';
         
         if ($model
-            && $user->getKey() === $model->governor_owned_by
+            && $user->getKey() == $model->governor_owned_by
         ) {
             $ownership = 'own';
         }
