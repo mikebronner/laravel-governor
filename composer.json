@@ -16,7 +16,7 @@
     ],
     "require": {
         "illuminate/support": "^7.0",
-        "ramsey/uuid": "^3.8",
+        "ramsey/uuid": "^4.0",
         "titasgailius/search-relations": "^1.0"
     },
     "require-dev": {
