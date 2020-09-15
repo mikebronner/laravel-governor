@@ -1,5 +1,7 @@
 <?php
 
+namespace GeneaLabs\LaravelGovernor\Database\Seeders;
+
 use GeneaLabs\LaravelGovernor\Entity;
 use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Role;
@@ -34,7 +36,7 @@ class LaravelGovernorUpgradeTo0100 extends Seeder
                     ]);
                 });
         }
-        
+
         if (Schema::hasTable('role_user')) {
             app("db")
                 ->table("role_user")
@@ -54,15 +56,15 @@ class LaravelGovernorUpgradeTo0100 extends Seeder
         if (Schema::hasTable('permissions')) {
             Schema::drop('permissions');
         }
-        
+
         if (Schema::hasTable('roles')) {
             Schema::drop('roles');
         }
-        
+
         if (Schema::hasTable('actions')) {
             Schema::drop('actions');
         }
-        
+
         if (Schema::hasTable('entities')) {
             Schema::drop('entities');
         }

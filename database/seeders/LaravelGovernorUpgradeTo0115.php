@@ -1,5 +1,7 @@
 <?php
 
+namespace GeneaLabs\LaravelGovernor\Database\Seeders;
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Seeder;
 use GeneaLabs\LaravelOptimizedPostgres\Schema;

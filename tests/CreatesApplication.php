@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Tests;
 
+use GeneaLabs\LaravelGovernor\Database\Seeders\LaravelGovernorDatabaseSeeder;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Policies\Author as AuthorPolicy;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Policies\User as UserPolicy;
@@ -12,7 +13,7 @@ trait CreatesApplication
     {
         Gate::policy(Author::class, AuthorPolicy::class);
         Gate::policy(User::class, UserPolicy::class);
-        
+
         $app['config']->set('database.default', 'testing');
         $app['config']->set('genealabs-laravel-governor.models.auth', User::class);
         $app["router"]->get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -25,7 +26,7 @@ trait CreatesApplication
         $app["router"]->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
         $app["router"]->post('password/reset', 'Auth\ResetPasswordController@reset');
     }
-    
+
     protected function getPackageProviders($app)
     {
         return [
@@ -35,18 +36,18 @@ trait CreatesApplication
             'GeneaLabs\LaravelGovernor\Providers\Nova',
         ];
     }
-    
+
     protected function setUp() : void
     {
         parent::setUp();
-        
+
         $this->withFactories(__DIR__ . "/database/factories");
         $this->loadLaravelMigrations();
         $this->loadMigrationsFrom(__DIR__ . "/../database/migrations");
         $this->loadMigrationsFrom(__DIR__ . "/database/migrations");
         $this->artisan('migrate');
         $this->artisan('db:seed', [
-            '--class' => 'LaravelGovernorDatabaseSeeder',
+            '--class' => LaravelGovernorDatabaseSeeder::class,
             '--no-interaction' => true
             ]);
     }

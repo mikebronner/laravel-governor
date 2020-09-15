@@ -1,38 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    backupGlobals="false"
-    backupStaticAttributes="false"
-    bootstrap="vendor/autoload.php"
-    colors="true"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
-    processIsolation="false"
-    stopOnFailure="false"
->
-    <testsuites>
-        <testsuite name="Setup">
-            <directory>./tests/AlwaysRunFirstTest.php</directory>
-        </testsuite>
-        <testsuite name="IntegrationTests">
-            <directory suffix="Test.php">./tests/Integration</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src</directory>
-        </whitelist>
-    </filter>
-    <php>
-        <env name="APP_ENV" value="testing"/>
-        <env name="APP_KEY" value="base64:Xgs1LQt1GdVHhD6qyYCXnyq61DE3UKqJ5k2SJc+Nw2g="/>
-        <env name="APP_DEBUG" value="true"/>
-        <env name="APP_LOG_LEVEL" value="debug"/>
-        <env name="CACHE_DRIVER" value="array"/>
-        <env name="SESSION_DRIVER" value="file"/>
-        <env name="QUEUE_DRIVER" value="sync"/>
-        <!-- <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/> -->
-        <!-- <env name="DB_DATABASE" value="test.sqlite"/> -->
-    </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" backupStaticAttributes="false" bootstrap="vendor/autoload.php" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">./src</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="Setup">
+      <directory>./tests/AlwaysRunFirstTest.php</directory>
+    </testsuite>
+    <testsuite name="IntegrationTests">
+      <directory suffix="Test.php">./tests/Integration</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <env name="APP_ENV" value="testing"/>
+    <env name="APP_KEY" value="base64:Xgs1LQt1GdVHhD6qyYCXnyq61DE3UKqJ5k2SJc+Nw2g="/>
+    <env name="APP_DEBUG" value="true"/>
+    <env name="APP_LOG_LEVEL" value="debug"/>
+    <env name="CACHE_DRIVER" value="array"/>
+    <env name="SESSION_DRIVER" value="file"/>
+    <env name="QUEUE_DRIVER" value="sync"/>
+    <env name="MAIL_MAILER" value="log"/>
+  </php>
 </phpunit>

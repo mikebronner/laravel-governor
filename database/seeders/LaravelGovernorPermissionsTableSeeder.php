@@ -1,5 +1,7 @@
 <?php
 
+namespace GeneaLabs\LaravelGovernor\Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class LaravelGovernorPermissionsTableSeeder extends Seeder

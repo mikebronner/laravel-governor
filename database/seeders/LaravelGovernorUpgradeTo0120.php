@@ -1,5 +1,7 @@
 <?php
 
+namespace GeneaLabs\LaravelGovernor\Database\Seeders;
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Seeder;
 
@@ -16,7 +18,7 @@ class LaravelGovernorUpgradeTo0120 extends Seeder
                 ->change();
             $table->unsignedBigInteger('user_id')
                 ->change();
-            
+
             if (! Schema::hasColumn("governor_role_user", "created_at")) {
                 $table->timestamps();
             }

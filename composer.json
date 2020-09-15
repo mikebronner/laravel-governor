@@ -15,25 +15,28 @@
         }
     ],
     "require": {
-        "illuminate/support": "^7.0",
-        "ramsey/uuid": "^3.8",
+        "php": ">=7.3",
+        "illuminate/support": "^8.0",
+        "ramsey/uuid": "^4.0",
         "titasgailius/search-relations": "^1.0"
     },
     "require-dev": {
         "doctrine/dbal": "^2.9",
         "fzaninotto/faker": "^1.4",
-        "orchestra/testbench": "^5.0",
+        "laravel/legacy-factories": "^1.0",
+        "orchestra/testbench": "^6.0",
         "php-coveralls/php-coveralls": "^2.1",
-        "phpunit/phpunit": "^8.5",
+        "phpunit/phpunit": "^9.0",
         "symfony/thanks": "^1.2"
     },
     "autoload": {
         "classmap": [
-            "database/migrations",
-            "database/seeds"
+            "database/migrations"
         ],
         "psr-4": {
-            "GeneaLabs\\LaravelGovernor\\": "src/"
+            "GeneaLabs\\LaravelGovernor\\": "src/",
+            "GeneaLabs\\LaravelGovernor\\Database\\Factories\\": "database/factories/",
+            "GeneaLabs\\LaravelGovernor\\Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {

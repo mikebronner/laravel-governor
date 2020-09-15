@@ -1,7 +1,8 @@
 <?php namespace GeneaLabs\LaravelGovernor\Tests;
 
-use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
+use GeneaLabs\LaravelGovernor\Database\Seeders\LaravelGovernorDatabaseSeeder;
 
 class AlwaysRunFirstTest extends BaseTestCase
 {
@@ -53,7 +54,7 @@ class AlwaysRunFirstTest extends BaseTestCase
         $this->artisan('migrate');
         $this->artisan('db:seed', [
             "--database" => "sqlite",
-            '--class' => 'LaravelGovernorDatabaseSeeder',
+            '--class' => LaravelGovernorDatabaseSeeder::class,
             '--no-interaction' => true,
         ]);
     }
