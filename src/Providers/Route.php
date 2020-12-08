@@ -18,7 +18,6 @@ class Route extends ServiceProvider
             ->prefix(config('genealabs-laravel-governor.url-prefix'))
             ->middleware('web')
             ->as('genealabs.laravel-governor.')
-            ->namespace($this->namespace)
             ->group(__DIR__ . '/../../routes/web.php');
     }
 

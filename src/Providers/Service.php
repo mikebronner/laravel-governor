@@ -1,12 +1,14 @@
-<?php namespace GeneaLabs\LaravelGovernor\Providers;
+<?php
+
+namespace GeneaLabs\LaravelGovernor\Providers;
 
 use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedInvitationListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
-use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedTeamListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingInvitationListener;
-use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
+use GeneaLabs\LaravelGovernor\View\Components\MenuBar;
 use Illuminate\Support\AggregateServiceProvider;
 
 class Service extends AggregateServiceProvider
@@ -16,7 +18,7 @@ class Service extends AggregateServiceProvider
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function boot(GateContract $gate)
+    public function boot()
     {
         $teamClass = config("genealabs-laravel-governor.models.team");
         $invitationClass = config("genealabs-laravel-governor.models.invitation");
@@ -30,7 +32,7 @@ class Service extends AggregateServiceProvider
             __DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')
         ], 'config');
         $this->publishes([
-            __DIR__ . '/../../public' => public_path('genealabs-laravel-governor')
+            __DIR__ . '/../../dist' => public_path('vendor/genealabs/laravel-governor')
         ], 'assets');
         $this->publishes([
             __DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs-laravel-governor')
@@ -39,6 +41,9 @@ class Service extends AggregateServiceProvider
             __DIR__ . '/../../database/migrations' => base_path('database/migrations')
         ], 'migrations');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
+        $this->loadViewComponentsAs('governor', [
+            MenuBar::class,
+        ]);
     }
 
     public function register()
@@ -60,12 +65,12 @@ class Service extends AggregateServiceProvider
             'governor-permissions',
             function () {
                 $permissionClass = app(config('genealabs-laravel-governor.models.permission'));
-            
+
                 return (new $permissionClass)
                     ->where(function ($query) {
                         $roleNames = auth()->user()->roles->pluck("name")->toArray();
                         $teamIds = auth()->user()->teams->pluck("id")->toArray();
-    
+
                         $query->whereIn("role_name", $roleNames)
                             ->orWhereIn("team_id", $teamIds);
                     })
@@ -77,7 +82,7 @@ class Service extends AggregateServiceProvider
         $this->commands(Publish::class);
     }
 
-    public function provides() : array
+    public function provides(): array
     {
         return [];
     }

@@ -33,5 +33,13 @@ class Publish extends Command
                 '--force' => true,
             ]);
         }
+
+        if ($this->option('assets')) {
+            $this->call('vendor:publish', [
+                '--provider' => LaravelGovernorService::class,
+                '--tag' => ['assets'],
+                '--force' => true,
+            ]);
+        }
     }
 }

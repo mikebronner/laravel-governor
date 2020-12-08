@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,10 +12,6 @@ use Illuminate\Support\Facades\Route;
 | by your tool's "Authorize" middleware by default. Now, go build!
 |
 */
-
-// Route::get('/endpoint', function (Request $request) {
-//     //
-// });
 
 Route::resource("/assignments", "AssignmentController");
 Route::resource("/entities", "EntityController");

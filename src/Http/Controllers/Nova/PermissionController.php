@@ -1,6 +1,5 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers\Nova;
 
-use GeneaLabs\LaravelGovernor\Action;
 use GeneaLabs\LaravelGovernor\Http\Controllers\Controller;
 use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 

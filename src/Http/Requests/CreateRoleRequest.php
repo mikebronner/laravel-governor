@@ -1,4 +1,6 @@
-<?php namespace GeneaLabs\LaravelGovernor\Http\Requests;
+<?php
+
+namespace GeneaLabs\LaravelGovernor\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest as Request;
 

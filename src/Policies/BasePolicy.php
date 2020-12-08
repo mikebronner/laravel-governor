@@ -1,6 +1,7 @@
-<?php namespace GeneaLabs\LaravelGovernor\Policies;
+<?php
 
-use GeneaLabs\LaravelGovernor\Role;
+namespace GeneaLabs\LaravelGovernor\Policies;
+
 use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 use GeneaLabs\LaravelGovernor\Traits\GovernorOwnedByField;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,27 +11,27 @@ abstract class BasePolicy
 {
     use EntityManagement;
     use GovernorOwnedByField;
-    
+
     protected $entity;
     protected $permissions;
-    
+
     public function __construct()
     {
         $this->createGovernorOwnedByFieldsByPolicy($this);
         $this->entity = $this->getEntity(get_class($this));
         $this->permissions = $this->getPermissions();
     }
-    
-    protected function getPermissions() : Collection
+
+    protected function getPermissions(): Collection
     {
         return app("cache")->remember("governor-permissions", 300, function () {
             $permissionClass = config("genealabs-laravel-governor.models.permission");
-            
+
             return (new $permissionClass)->with("role")->get();
         });
     }
-    
-    public function create(?Model $user) : bool
+
+    public function create(?Model $user): bool
     {
         return $this->validatePermissions(
             $user,
@@ -38,8 +39,8 @@ abstract class BasePolicy
             $this->entity
         );
     }
-    
-    public function update(?Model $user, Model $model) : bool
+
+    public function update(?Model $user, Model $model): bool
     {
         return $this->validatePermissions(
             $user,
@@ -48,8 +49,8 @@ abstract class BasePolicy
             $model
         );
     }
-    
-    public function viewAny(?Model $user) : bool
+
+    public function viewAny(?Model $user): bool
     {
         return $this->validatePermissions(
             $user,
@@ -57,8 +58,8 @@ abstract class BasePolicy
             $this->entity
         );
     }
-    
-    public function view(?Model $user, Model $model) : bool
+
+    public function view(?Model $user, Model $model): bool
     {
         return $this->validatePermissions(
             $user,
@@ -67,8 +68,8 @@ abstract class BasePolicy
             $model
         );
     }
-    
-    public function delete(?Model $user, Model $model) : bool
+
+    public function delete(?Model $user, Model $model): bool
     {
         return $this->validatePermissions(
             $user,
@@ -77,8 +78,8 @@ abstract class BasePolicy
             $model
         );
     }
-    
-    public function restore(?Model $user, Model $model) : bool
+
+    public function restore(?Model $user, Model $model): bool
     {
         return $this->validatePermissions(
             $user,
@@ -87,8 +88,8 @@ abstract class BasePolicy
             $model
         );
     }
-    
-    public function forceDelete(?Model $user, Model $model) : bool
+
+    public function forceDelete(?Model $user, Model $model): bool
     {
         return $this->validatePermissions(
             $user,
@@ -97,13 +98,13 @@ abstract class BasePolicy
             $model
         );
     }
-    
+
     protected function validatePermissions(
         ?Model $user,
         string $action,
         string $entity,
         Model $model = null
-    ) : bool {
+    ): bool {
         if (! $user) {
             $user = $this->createGuestUser();
         }
@@ -111,7 +112,7 @@ abstract class BasePolicy
         if ($user->hasRole("SuperAdmin")) {
             return true;
         }
-        
+
         if ($user->roles->isEmpty()
             && $user->teams->isEmpty()
         ) {
@@ -119,13 +120,13 @@ abstract class BasePolicy
         }
 
         $ownership = 'other';
-        
+
         if ($model
             && $user->getKey() == $model->governor_owned_by
         ) {
             $ownership = 'own';
         }
-        
+
         $filteredPermissions = $this->filterPermissions($action, $entity, $ownership);
 
         foreach ($filteredPermissions as $permission) {
@@ -138,7 +139,7 @@ abstract class BasePolicy
 
         return false;
     }
-    
+
     protected function filterPermissions($action, $entity, $ownership)
     {
         $filteredPermissions = $this
@@ -148,7 +149,7 @@ abstract class BasePolicy
                     && $permission->entity_name === $entity
                     && in_array($permission->ownership_name, [$ownership, 'any']));
             });
-        
+
         return $filteredPermissions;
     }
 

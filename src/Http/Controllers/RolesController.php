@@ -1,19 +1,24 @@
-<?php namespace GeneaLabs\LaravelGovernor\Http\Controllers;
+<?php
+
+namespace GeneaLabs\LaravelGovernor\Http\Controllers;
 
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateRoleRequest;
-use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
+use GeneaLabs\LaravelGovernor\Http\Requests\RoleUpdateRequest;
 use GeneaLabs\LaravelGovernor\Role;
+use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class RolesController extends Controller
 {
+    use EntityManagement;
+
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    public function index() : View
+    public function index(): View
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
         $this->authorize('viewAny', $roleClass);
@@ -25,7 +30,7 @@ class RolesController extends Controller
         return view('genealabs-laravel-governor::roles.index', compact('roles'));
     }
 
-    public function create() : View
+    public function create(): View
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
         $this->authorize('create', new $roleClass);
@@ -33,7 +38,7 @@ class RolesController extends Controller
         return view('genealabs-laravel-governor::roles.create', compact('role'));
     }
 
-    public function store(CreateRoleRequest $request) : RedirectResponse
+    public function store(CreateRoleRequest $request): RedirectResponse
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
         (new $roleClass)->create($request->except(['_token']));
@@ -41,32 +46,53 @@ class RolesController extends Controller
         return redirect()->route('genealabs.laravel-governor.roles.index');
     }
 
-    public function edit(Role $role) : View
+    public function edit(Role $role): View
     {
-        $actionClass = config("genealabs-laravel-governor.models.action");
+        $this->authorize('update', $role);
+
         $entityClass = config("genealabs-laravel-governor.models.entity");
         $ownershipClass = config("genealabs-laravel-governor.models.ownership");
-        $this->authorize('edit', $role);
+        $roleClass = config("genealabs-laravel-governor.models.role");
+        $teamClass = config("genealabs-laravel-governor.models.team");
 
-        $gate = app('Illuminate\Contracts\Auth\Access\Gate');
-        $reflectedGate = new \ReflectionObject($gate);
-        $policies = $reflectedGate->getProperty("policies");
-        $policies->setAccessible(true);
-        $policies = $policies->getValue($gate);
+        $ownerships = (new $ownershipClass)
+            ->all()
+            ->pluck('name', 'name');
+        $permissibleClass = request("filter") === "team_id"
+            ? $teamClass
+            : $roleClass;
+        $role->load("permissions.action", "permissions.entity", "permissions.ownership");
+        // $permissible = (new $permissibleClass)
+        //     ->with("permissions.action", "permissions.entity", "permissions.ownership")
+            // ->where(function ($query) {
+            //     if (request("filter") === "team_id") {
+            //         $query->where("id", request("value"));
+            //     }
 
-        collect(array_keys($policies))
-            ->each(function ($entity) use ($entityClass) {
-                $entity = strtolower(collect(explode('\\', $entity))->last());
+            //     if (request("filter") === "role_name") {
+            //         $query->where("name", request("value"));
+            //     }
+            // })
+            // ->first();
 
-                return (new $entityClass)
-                    ->firstOrCreate([
-                        'name' => $entity,
-                    ]);
-            });
+        if (request("owner") === "yes") {
+            return $role
+                ->ownedBy
+                ->effectivePermissions
+                ->toArray();
+        }
 
-        $entities = (new $entityClass)->whereNotIn('name', ['permission', 'entity'])->get();
-        $actions = (new $actionClass)->all();
-        $ownerships = (new $ownershipClass)->all();
+        $this->parsePolicies();
+
+        $entities = (new $entityClass)
+            ->whereNotIn('name', ['Permission (Laravel Governor)', 'Entity (Laravel Governor)', "Action (Laravel Governor)", "Ownership (Laravel Governor)", "Team Invitation (Laravel Governor)"])
+            ->orderBy("group_name")
+            ->orderBy("name")
+            ->get();
+        $actionClass = app(config('genealabs-laravel-governor.models.action'));
+        $actions = (new $actionClass)
+            ->orderBy("name")
+            ->get();
         $permissionMatrix = [];
 
         foreach ($entities as $entity) {
@@ -75,22 +101,28 @@ class RolesController extends Controller
 
                 foreach ($role->permissions as $permissioncheck) {
                     if (($permissioncheck->entity->name === $entity->name)
-                        && ($permissioncheck->action->name === $action->name)
-                    ) {
+                        && ($permissioncheck->action->name === $action->name)) {
                         $selectedOwnership = $permissioncheck->ownership->name;
                     }
                 }
 
-                $permissionMatrix[$entity->name][$action->name] = $selectedOwnership;
+                $groupName = ucwords($entity->group_name)
+                    ?: "Ungrouped";
+                $permissionMatrix[$groupName][$entity->name][$action->name] = $selectedOwnership;
             }
         }
 
-        $ownershipOptions = array_merge(['no' => 'no'], $ownerships->pluck('name', 'name')->toArray());
+        $ownerships = collect(["not" => ""])->merge($ownerships);
 
-        return view('genealabs-laravel-governor::roles.edit', compact('role', 'permissionMatrix', 'ownershipOptions'));
+        return view('genealabs-laravel-governor::roles.edit', compact(
+            'entities',
+            'role',
+            'permissionMatrix',
+            'ownerships'
+        ));
     }
 
-    public function update(UpdateRoleRequest $request, Role $role) : RedirectResponse
+    public function update(RoleUpdateRequest $request, Role $role): RedirectResponse
     {
         $request->process();
 
