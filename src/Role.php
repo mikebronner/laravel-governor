@@ -1,9 +1,10 @@
-<?php namespace GeneaLabs\LaravelGovernor;
+<?php
 
-use Illuminate\Database\Eloquent\Collection;
+namespace GeneaLabs\LaravelGovernor;
+
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model
 {
@@ -42,7 +43,7 @@ class Role extends Model
         });
     }
 
-    public function entities() : HasMany
+    public function entities(): HasMany
     {
         return $this->hasMany(
             config('genealabs-laravel-governor.models.entity'),
@@ -50,7 +51,7 @@ class Role extends Model
         );
     }
 
-    public function permissions() : HasMany
+    public function permissions(): HasMany
     {
         return $this->hasMany(
             config('genealabs-laravel-governor.models.permission'),
@@ -58,7 +59,7 @@ class Role extends Model
         );
     }
 
-    public function users() : BelongsToMany
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(
             config('genealabs-laravel-governor.models.auth'),

@@ -1,8 +1,8 @@
 <?php namespace GeneaLabs\LaravelGovernor\Http\Controllers;
 
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateAssignmentRequest;
-use GeneaLabs\LaravelGovernor\Role;
-use GeneaLabs\LaravelGovernor\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class AssignmentsController extends Controller
 {
@@ -15,10 +15,7 @@ class AssignmentsController extends Controller
         $this->displayNameField = config('genealabs-laravel-governor.user-name-property');
     }
 
-    /**
-     * @return mixed
-     */
-    public function edit()
+    public function create(): View
     {
         $assignmentClass = config("genealabs-laravel-governor.models.assignment");
         $assignment = new $assignmentClass;
@@ -26,6 +23,7 @@ class AssignmentsController extends Controller
         $displayNameField = $this->displayNameField;
         $userClass = app(config('genealabs-laravel-governor.models.auth'));
         $users = (new $userClass)
+            ->orderBy("name")
             ->get();
         $roleClass = config("genealabs-laravel-governor.models.role");
         $roles = (new $roleClass)
@@ -33,25 +31,16 @@ class AssignmentsController extends Controller
             ->orderBy("name")
             ->get();
 
-        return view('genealabs-laravel-governor::assignments.edit')->with(
+        return view('genealabs-laravel-governor::assignments.create')->with(
             compact('users', 'roles', 'displayNameField', 'assignment')
         );
     }
 
-    /**
-     * @return mixed
-     */
-    public function update(CreateAssignmentRequest $request)
+    public function store(CreateAssignmentRequest $request): RedirectResponse
     {
-        $actionClass = config("genealabs-laravel-governor.models.action");
-        $assignment = new $actionClass;
-        $assignment->removeAllUsersFromRoles();
-        $assignedUsers = $request->get('users');
-        $assignment->assignUsersToRoles($assignedUsers);
-        $assignment->addAllUsersToMemberRole();
-        $assignment->removeAllSuperAdminUsersFromOtherRoles($assignedUsers);
+        $request->process();
 
         return redirect()
-            ->route('genealabs.laravel-governor.assignments.edit', 0);
+            ->route('genealabs.laravel-governor.assignments.create');
     }
 }

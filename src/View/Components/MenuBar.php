@@ -25,7 +25,7 @@ class MenuBar extends Component
             ],
             [
                 "label" => "Assignments",
-                "url" => route("genealabs.laravel-governor.assignments.index"),
+                "url" => route("genealabs.laravel-governor.assignments.create"),
             ],
         ]));
     }

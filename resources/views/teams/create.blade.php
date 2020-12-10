@@ -9,28 +9,15 @@
         <div class="mt-6 mb-4 md:flex md:items-center md:justify-between">
             <div class="min-w-0">
                 <h1 class="text-2xl font-bold leading-7 text-gray-800 sm:text-3xl sm:truncate">
-                    {{ $role->name }}
+                    Create a new Team
                 </h1>
-            </div>
-            <div class="mt-4 lex-shrink-0 flex md:mt-0 md:ml-4">
-                <x-form
-                    :action="route('genealabs.laravel-governor.roles.destroy', $role)"
-                    :model="$role"
-                    method="DELETE"
-                >
-                    <x-form-submit
-                        class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-red-500"
-                        value="Delete"
-                    />
-                </x-form>
             </div>
         </div>
 
 
         <x-form
-            :action="route('genealabs.laravel-governor.roles.update', $role)"
-            :model="$role"
-            method="PUT"
+            :action="route('genealabs.laravel-governor.teams.store')"
+            method="POST"
             class="flex flex-col"
         >
             @errors()
@@ -332,7 +319,7 @@
 
                     <x-form-submit
                         class="mt-4 py-1 px-4 bg-blue-600 text-blue-100 rounded-md hover:bg-blue-700"
-                        value="Update Permissions"
+                        value="Create Team"
                     />
                 </div>
             </div>

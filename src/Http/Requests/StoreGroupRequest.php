@@ -1,10 +1,12 @@
-<?php namespace GeneaLabs\LaravelGovernor\Http\Requests;
+<?php
+
+namespace GeneaLabs\LaravelGovernor\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest as Request;
 
 class StoreGroupRequest extends Request
 {
-    public function authorize() : bool
+    public function authorize(): bool
     {
         $groupClass = config("genealabs-laravel-governor.models.group");
 
@@ -14,7 +16,7 @@ class StoreGroupRequest extends Request
                 : auth()->user()->can("create", $groupClass));
     }
 
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'name' => 'required|string',
@@ -26,9 +28,10 @@ class StoreGroupRequest extends Request
     {
         $entityClass = config("genealabs-laravel-governor.models.entity");
         $groupClass = config("genealabs-laravel-governor.models.group");
+
         (new $groupClass)->firstOrCreate([
-                "name" => $this->name,
-            ]);
+            "name" => $this->name,
+        ]);
 
         foreach ($this->entity_names as $entityName) {
             (new $entityClass)

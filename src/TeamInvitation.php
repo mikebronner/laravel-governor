@@ -1,4 +1,6 @@
-<?php namespace GeneaLabs\LaravelGovernor;
+<?php
+
+namespace GeneaLabs\LaravelGovernor;
 
 use GeneaLabs\LaravelGovernor\Traits\Governable;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +17,7 @@ class TeamInvitation extends Model
     ];
     protected $table = "governor_team_invitations";
 
-    public function team() : BelongsTo
+    public function team(): BelongsTo
     {
         return $this->belongsTo(
             config('genealabs-laravel-governor.models.team')

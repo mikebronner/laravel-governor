@@ -3,6 +3,7 @@
 use GeneaLabs\LaravelGovernor\Traits\Governable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -41,7 +42,22 @@ class Team extends Model
         });
     }
 
-    public function members() : BelongsToMany
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(
+            config('genealabs-laravel-governor.models.invitation'),
+            "team_id"
+        );
+    }
+
+    public function owner(): BelongsTo
+    {
+        $authClass = config("genealabs-laravel-governor.models.auth");
+
+        return $this->belongsTo($authClass, "governor_owned_by", "id");
+    }
+
+    public function members(): BelongsToMany
     {
         return $this->belongsToMany(
             config('genealabs-laravel-governor.models.auth'),
@@ -51,18 +67,16 @@ class Team extends Model
         );
     }
 
-    public function invitations() : HasMany
-    {
-        return $this->hasMany(
-            config('genealabs-laravel-governor.models.invitation'),
-            "team_id"
-        );
-    }
-
-    public function permissions() : HasMany
+    public function permissions(): HasMany
     {
         return $this->hasMany(
             config('genealabs-laravel-governor.models.permission')
         );
+    }
+
+    public function getOwnerNameAttribute(): string
+    {
+        return $this->owner->name
+            ?? "";
     }
 }

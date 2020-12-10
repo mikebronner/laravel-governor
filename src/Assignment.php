@@ -38,12 +38,12 @@ class Assignment extends Model
         $this->roles = app(config('genealabs-laravel-governor.models.role'));
     }
 
-    public function role() : BelongsTo
+    public function role(): BelongsTo
     {
         return $this->belongsTo(config('genealabs-laravel-governor.models.role'));
     }
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(config("genealabs-laravel-governor.models.auth"));
     }

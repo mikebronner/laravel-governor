@@ -39,7 +39,7 @@ class Action extends Model
         });
     }
 
-    public function permissions() : HasMany
+    public function permissions(): HasMany
     {
         return $this->hasMany(
             config('genealabs-laravel-governor.models.permission'),
