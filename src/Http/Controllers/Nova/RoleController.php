@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 
 class RoleController extends Controller
 {
-    public function index() : Collection
+    public function index(): Collection
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
 
@@ -19,14 +19,14 @@ class RoleController extends Controller
             ->get();
     }
 
-    public function store(StoreRoleRequest $request) : Response
+    public function store(StoreRoleRequest $request): Response
     {
         $request->process();
 
         return response(null, 204);
     }
 
-    public function show($id) : Role
+    public function show($id): Role
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
 
@@ -34,14 +34,14 @@ class RoleController extends Controller
             ->find($id);
     }
 
-    public function update(UpdateRoleRequest $request) : Response
+    public function update(UpdateRoleRequest $request): Response
     {
         $request->process();
 
         return response(null, 204);
     }
 
-    public function destroy($id) : Response
+    public function destroy($id): Response
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
 
