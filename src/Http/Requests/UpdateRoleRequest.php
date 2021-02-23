@@ -10,6 +10,12 @@ class UpdateRoleRequest extends Request
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
 
+        if (is_string($this->role)) {
+            $this->role = (new $roleClass)
+                ->where("name", $this->role)
+                ->first();
+        }
+
         return auth()->check()
             && ($this->role
                 ? auth()->user()->can("update", $this->role)
@@ -27,6 +33,14 @@ class UpdateRoleRequest extends Request
 
     public function process(): void
     {
+        $roleClass = config("genealabs-laravel-governor.models.role");
+
+        if (is_string($this->role)) {
+            $this->role = (new $roleClass)
+                ->where("name", $this->role)
+                ->first();
+        }
+
         $permissionClass = config("genealabs-laravel-governor.models.permission");
         $this->role->fill($this->all());
 
