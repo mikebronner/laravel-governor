@@ -1,8 +1,8 @@
 <?php namespace GeneaLabs\LaravelGovernor\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Text;
 
 class GovernorPermission extends Resource
 {
