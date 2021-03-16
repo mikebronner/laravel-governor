@@ -36,11 +36,8 @@ trait GovernorOwnedByField
         $connection = $model
             ->getConnection()
             ->getName();
-        $governorOwnedByExists = app("cache")
-            ->rememberForever("governor-{$model->getTable()}-table-check-ownedby-field", function () use ($connection, $model) {
-                return Schema::connection($connection)
-                    ->hasColumn($model->getTable(), 'governor_owned_by');
-            });
+        $governorOwnedByExists = Schema::connection($connection)
+            ->hasColumn($model->getTable(), 'governor_owned_by');
         
         if ($governorOwnedByExists) {
             return false;
@@ -62,7 +59,6 @@ trait GovernorOwnedByField
             $table->{$fieldType}('governor_owned_by')
                 ->nullable();
         });
-        app("cache")->forget("governor-{$model->getTable()}-table-check-ownedby-field");
 
         return true;
     }
