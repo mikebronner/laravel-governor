@@ -56,6 +56,8 @@ trait GovernorOwnedByField
             return false;
         }
 
+        Cache::delete("{$connection}{$table}governor_owned_by");
+
         Schema::connection($connection)->table($model->getTable(), function (Blueprint $table) {
             $authModelPrimaryKeyType = config("genealabs-laravel-governor.auth-model-primary-key-type", "bigInteger");
             $fieldType = "unsigned";
