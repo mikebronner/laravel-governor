@@ -1,23 +1,28 @@
-<?php namespace GeneaLabs\LaravelGovernor\Traits;
+<?php
+
+declare(strict_types=1);
+
+namespace GeneaLabs\LaravelGovernor\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 trait Governable
 {
     use EntityManagement;
 
-    protected function applyPermissionToQuery(Builder $query, string $ability) : Builder
+    protected function applyPermissionToQuery(Builder $query, string $ability): Builder
     {
         $entityName = $this->getEntityFromModel(get_class($this));
         $ownerships = $this->getOwnershipsForEntity($entityName, $ability);
-        
+
         return $this->filterQuery($query, $ownerships);
     }
 
-    protected function filterQuery(Builder $query, Collection $ownerships) : Builder
+    protected function filterQuery(Builder $query, Collection $ownerships): Builder
     {
         if ($ownerships->contains("any")
             || auth()->user()->hasRole("SuperAdmin")
@@ -52,7 +57,7 @@ trait Governable
             if ($query->getModel()->getTable() === $authTable) {
                 return $query->where($query->getModel()->getKeyName(), auth()->user()->getKey());
             }
-            
+
             return $query->where(
                 "{$query->getModel()->getTable()}.governor_owned_by",
                 auth()->user()->getKey()
@@ -62,21 +67,31 @@ trait Governable
         return $query->whereRaw("1 = 2");
     }
 
-    protected function getOwnershipsForEntity(string $entityName, string $ability) : Collection
-    {
+    protected function getOwnershipsForEntity(
+        string $entityName,
+        string $ability,
+    ): Collection {
         if (! $entityName) {
             return collect();
         }
 
-        $result = app("governor-permissions")
-            ->where("action_name", $ability)
-            ->where("entity_name", $entityName)
-            ->pluck("ownership_name");
+        $permissionClass = app(config('genealabs-laravel-governor.models.permission'));
+        $result = Cache::remember(
+            "governor-permissions",
+            5,
+            function () use ($ability, $entityName, $permissionClass) {
+                return (new $permissionClass)
+                    ->select("ownership_name")
+                    ->where("action_name", $ability)
+                    ->where("entity_name", $entityName)
+                    ->get();
+            },
+        );
 
         return $result;
     }
 
-    public function ownedBy() : BelongsTo
+    public function ownedBy(): BelongsTo
     {
         return $this->belongsTo(
             config("genealabs-laravel-governor.models.auth"),
@@ -84,7 +99,7 @@ trait Governable
         );
     }
 
-    public function teams() : MorphToMany
+    public function teams(): MorphToMany
     {
         return $this->MorphToMany(
             config("genealabs-laravel-governor.models.team"),
@@ -93,32 +108,32 @@ trait Governable
         );
     }
 
-    public function scopeDeletable(Builder $query) : Builder
+    public function scopeDeletable(Builder $query): Builder
     {
         return $this->applyPermissionToQuery($query, "delete");
     }
 
-    public function scopeForceDeletable(Builder $query) : Builder
+    public function scopeForceDeletable(Builder $query): Builder
     {
         return $this->applyPermissionToQuery($query, "forceDelete");
     }
 
-    public function scopeRestorable(Builder $query) : Builder
+    public function scopeRestorable(Builder $query): Builder
     {
         return $this->applyPermissionToQuery($query, "restore");
     }
 
-    public function scopeUpdatable(Builder $query) : Builder
+    public function scopeUpdatable(Builder $query): Builder
     {
         return $this->applyPermissionToQuery($query, "update");
     }
 
-    public function scopeViewable(Builder $query) : Builder
+    public function scopeViewable(Builder $query): Builder
     {
         return $this->applyPermissionToQuery($query, "view");
     }
 
-    public function scopeViewAnyable(Builder $query) : Builder
+    public function scopeViewAnyable(Builder $query): Builder
     {
         return $this->applyPermissionToQuery($query, "viewAny");
     }
