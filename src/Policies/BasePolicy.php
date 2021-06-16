@@ -109,6 +109,8 @@ abstract class BasePolicy
             $user = $this->createGuestUser();
         }
 
+        $user->load("roles", "teams");
+
         if ($user->hasRole("SuperAdmin")) {
             return true;
         }
