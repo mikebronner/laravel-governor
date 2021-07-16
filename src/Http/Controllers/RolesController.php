@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GeneaLabs\LaravelGovernor\Http\Controllers;
 
+use GeneaLabs\LaravelGovernor\Action;
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateRoleRequest;
 use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
 use GeneaLabs\LaravelGovernor\Role;
@@ -92,15 +95,21 @@ class RolesController extends Controller
         $this->parsePolicies();
 
         $entities = (new $entityClass)
-            ->whereNotIn('name', ['Permission (Laravel Governor)', 'Entity (Laravel Governor)', "Action (Laravel Governor)", "Ownership (Laravel Governor)", "Team Invitation (Laravel Governor)"])
+            ->whereNotIn("name", ['Permission (Laravel Governor)', 'Entity (Laravel Governor)', "Action (Laravel Governor)", "Ownership (Laravel Governor)", "Team Invitation (Laravel Governor)"])
             ->orderBy("group_name")
             ->orderBy("name")
             ->get();
+        $customActions = (new Action)
+            ->get()
+            ->filter(function ($action): bool {
+                return $action->model_class !== "";
+            });
 
         $permissionMatrix = $this->createPermissionMatrix($role, $entities);
         $ownerships = collect(["not" => ""])->merge($ownerships);
 
         return view('genealabs-laravel-governor::roles.edit', compact(
+            'customActions',
             'entities',
             'role',
             'permissionMatrix',

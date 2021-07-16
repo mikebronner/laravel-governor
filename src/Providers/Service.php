@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace GeneaLabs\LaravelGovernor\Providers;
 
 use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
+use GeneaLabs\LaravelGovernor\Http\Middleware\ParseCustomPolicyActions;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedInvitationListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedTeamListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingInvitationListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use GeneaLabs\LaravelGovernor\View\Components\MenuBar;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\AggregateServiceProvider;
-use ReflectionObject;
 
 class Service extends AggregateServiceProvider
 {
-    protected $defer = false;
+    protected $defer = true;
 
     public function register(): void
     {
@@ -69,21 +70,14 @@ class Service extends AggregateServiceProvider
             MenuBar::class,
         ]);
 
-        $this->registerActions();
+        $this
+            ->app
+            ->make(Kernel::class)
+            ->pushMiddleware(ParseCustomPolicyActions::class);
     }
 
     public function provides(): array
     {
         return [];
-    }
-
-    protected function registerActions(): void
-    {
-        $gate = app('Illuminate\Contracts\Auth\Access\Gate');
-        $reflectedGate = new ReflectionObject($gate);
-        $policies = $reflectedGate->getProperty("policies");
-        $policies->setAccessible(true);
-dd($policies->getValue($gate));
-
     }
 }

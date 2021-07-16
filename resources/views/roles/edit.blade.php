@@ -140,6 +140,16 @@
                                         >
                                             Force Delete
                                         </th>
+
+                                        @foreach ($customActions->pluck("action")->unique() as $customAction)
+                                            <th
+                                                scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            >
+                                                {{ ucwords($customAction) }}
+                                            </th>
+                                        @endforeach
+
                                     </tr>
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -235,6 +245,15 @@
                                                 x-on:change="updateOwnerships('forceDelete', '{{ urlencode($group) }}', $event)"
                                             />
                                         </th>
+
+                                        @foreach ($customActions->pluck("action")->unique() as $customAction)
+                                            <th
+                                                scope="col"
+                                                class="px-6 pt-0 pb-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            >
+                                            </th>
+                                        @endforeach
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -322,6 +341,25 @@
                                                     :selectedValues="collect($permission['forceDelete'])"
                                                 />
                                             </td>
+
+                                            @foreach ($customActions->unique("name") as $customAction)
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                                                >
+
+                                                    @if ($selectedAction = $customActions->where('name', $customAction->name)->where("entity", $entity)->first())
+                                                        <x-form-select
+                                                            name="permissions[{{ urlencode($group) }}][{{ urlencode($entity) }}][{{ $selectedAction->name  }}]"
+                                                            label=""
+                                                            class="form-select text-sm rounded-md border-gray-300"
+                                                            :options="$ownerships"
+                                                            :selectedValues="collect($permission[$selectedAction->name])"
+                                                        />
+                                                    @endif
+
+                                                </td>
+                                            @endforeach
+
                                         </tr>
                                     @endforeach
 
