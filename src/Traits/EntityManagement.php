@@ -1,4 +1,8 @@
-<?php namespace GeneaLabs\LaravelGovernor\Traits;
+<?php
+
+declare(strict_types=1);
+
+namespace GeneaLabs\LaravelGovernor\Traits;
 
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\Collection;
@@ -7,7 +11,7 @@ use ReflectionObject;
 
 trait EntityManagement
 {
-    protected function getEntity(string $policyClassName) : string
+    protected function getEntity(string $policyClassName): string
     {
         $entityClass = config("genealabs-laravel-governor.models.entity");
         $nameSpaceParts = collect(explode('\\', $policyClassName));
@@ -35,7 +39,7 @@ trait EntityManagement
         return $entity->name;
     }
 
-    public function getEntityFromModel(string $modelClass) : string
+    public function getEntityFromModel(string $modelClass): string
     {
         $policy = app(Gate::class)
             ->getPolicyFor($modelClass);
@@ -47,7 +51,7 @@ trait EntityManagement
         return $this->getEntity(get_class($policy));
     }
 
-    protected function getPolicies() : Collection
+    protected function getPolicies(): Collection
     {
         $gate = app('Illuminate\Contracts\Auth\Access\Gate');
         $reflectedGate = new ReflectionObject($gate);
@@ -57,7 +61,7 @@ trait EntityManagement
         return collect($policies->getValue($gate));
     }
 
-    public function parsePolicies()
+    public function parsePolicies(): void
     {
         $this->getPolicies()
             ->each(function ($policyClassName) {

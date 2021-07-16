@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GeneaLabs\LaravelGovernor\Providers;
 
 use GeneaLabs\LaravelGovernor\Console\Commands\Publish;
@@ -10,43 +12,13 @@ use GeneaLabs\LaravelGovernor\Listeners\CreatingInvitationListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use GeneaLabs\LaravelGovernor\View\Components\MenuBar;
 use Illuminate\Support\AggregateServiceProvider;
+use ReflectionObject;
 
 class Service extends AggregateServiceProvider
 {
     protected $defer = false;
 
-    /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
-    public function boot()
-    {
-        $teamClass = config("genealabs-laravel-governor.models.team");
-        $invitationClass = config("genealabs-laravel-governor.models.invitation");
-        app('events')->listen('eloquent.created: *', CreatedListener::class);
-        app('events')->listen('eloquent.creating: *', CreatingListener::class);
-        app('events')->listen('eloquent.saving: *', CreatingListener::class);
-        app('events')->listen("eloquent.created: {$invitationClass}", CreatedInvitationListener::class);
-        app('events')->listen("eloquent.created: {$teamClass}", CreatedTeamListener::class);
-        app('events')->listen("eloquent.creating: {$invitationClass}", CreatingInvitationListener::class);
-        $this->publishes([
-            __DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')
-        ], 'config');
-        $this->publishes([
-            __DIR__ . '/../../dist' => public_path('vendor/genealabs/laravel-governor')
-        ], 'assets');
-        $this->publishes([
-            __DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs-laravel-governor')
-        ], 'views');
-        $this->publishes([
-            __DIR__ . '/../../database/migrations' => base_path('database/migrations')
-        ], 'migrations');
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
-        $this->loadViewComponentsAs('governor', [
-            MenuBar::class,
-        ]);
-    }
-
-    public function register()
+    public function register(): void
     {
         parent::register();
 
@@ -82,8 +54,51 @@ class Service extends AggregateServiceProvider
         $this->commands(Publish::class);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public function boot(): void
+    {
+        $teamClass = config("genealabs-laravel-governor.models.team");
+        $invitationClass = config("genealabs-laravel-governor.models.invitation");
+        app('events')->listen('eloquent.created: *', CreatedListener::class);
+        app('events')->listen('eloquent.creating: *', CreatingListener::class);
+        app('events')->listen('eloquent.saving: *', CreatingListener::class);
+        app('events')->listen("eloquent.created: {$invitationClass}", CreatedInvitationListener::class);
+        app('events')->listen("eloquent.created: {$teamClass}", CreatedTeamListener::class);
+        app('events')->listen("eloquent.creating: {$invitationClass}", CreatingInvitationListener::class);
+        $this->publishes([
+            __DIR__ . '/../../config/config.php' => config_path('genealabs-laravel-governor.php')
+        ], 'config');
+        $this->publishes([
+            __DIR__ . '/../../dist' => public_path('vendor/genealabs/laravel-governor')
+        ], 'assets');
+        $this->publishes([
+            __DIR__ . '/../../resources/views' => base_path('resources/views/vendor/genealabs-laravel-governor')
+        ], 'views');
+        $this->publishes([
+            __DIR__ . '/../../database/migrations' => base_path('database/migrations')
+        ], 'migrations');
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'genealabs-laravel-governor');
+        $this->loadViewComponentsAs('governor', [
+            MenuBar::class,
+        ]);
+
+        $this->registerActions();
+    }
+
     public function provides(): array
     {
         return [];
+    }
+
+    protected function registerActions(): void
+    {
+        $gate = app('Illuminate\Contracts\Auth\Access\Gate');
+        $reflectedGate = new ReflectionObject($gate);
+        $policies = $reflectedGate->getProperty("policies");
+        $policies->setAccessible(true);
+dd($policies->getValue($gate));
+
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GeneaLabs\LaravelGovernor\Policies;
 
 use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
@@ -12,8 +14,8 @@ abstract class BasePolicy
     use EntityManagement;
     use GovernorOwnedByField;
 
-    protected $entity;
-    protected $permissions;
+    protected string $entity;
+    protected Collection $permissions;
 
     public function __construct()
     {
