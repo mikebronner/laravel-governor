@@ -28,24 +28,9 @@ class Service extends AggregateServiceProvider
                 $entityClass = app(config('genealabs-laravel-governor.models.entity'));
 
                 return (new $entityClass)
-                    ->with("group")
+                    ->select("name")
+                    ->with("group:name")
                     ->orderBy("name")
-                    ->get();
-            }
-        );
-        $this->app->singleton(
-            'governor-permissions',
-            function () {
-                $permissionClass = app(config('genealabs-laravel-governor.models.permission'));
-
-                return (new $permissionClass)
-                    ->where(function ($query) {
-                        $roleNames = auth()->user()->roles->pluck("name")->toArray();
-                        $teamIds = auth()->user()->teams->pluck("id")->toArray();
-
-                        $query->whereIn("role_name", $roleNames)
-                            ->orWhereIn("team_id", $teamIds);
-                    })
                     ->get();
             }
         );

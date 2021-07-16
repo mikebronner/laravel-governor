@@ -29,7 +29,9 @@ abstract class BasePolicy
         return app("cache")->remember("governor-permissions", 300, function () {
             $permissionClass = config("genealabs-laravel-governor.models.permission");
 
-            return (new $permissionClass)->with("role")->get();
+            return (new $permissionClass)
+                ->with("role", "team")
+                ->get();
         });
     }
 
@@ -110,6 +112,8 @@ abstract class BasePolicy
         if (! $user) {
             $user = $this->createGuestUser();
         }
+
+        $user->load("roles", "teams.permision");
 
         if ($user->hasRole("SuperAdmin")) {
             return true;

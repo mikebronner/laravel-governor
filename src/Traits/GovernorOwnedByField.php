@@ -1,8 +1,13 @@
-<?php namespace GeneaLabs\LaravelGovernor\Traits;
+<?php
+
+declare(strict_types=1);
+
+namespace GeneaLabs\LaravelGovernor\Traits;
 
 use GeneaLabs\LaravelGovernor\Policies\BasePolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use ReflectionClass;
 
@@ -27,7 +32,7 @@ trait GovernorOwnedByField
         return $this->createGovernorOwnedByFields($model);
     }
 
-    protected function createGovernorOwnedByFields(Model $model) : bool
+    protected function createGovernorOwnedByFields(Model $model): bool
     {
         if (! in_array("GeneaLabs\\LaravelGovernor\\Traits\\Governable", class_uses_recursive($model))) {
             return false;
@@ -36,15 +41,22 @@ trait GovernorOwnedByField
         $connection = $model
             ->getConnection()
             ->getName();
-        $governorOwnedByExists = app("cache")
-            ->rememberForever("governor-{$model->getTable()}-table-check-ownedby-field", function () use ($connection, $model) {
+        $table = $model->getTable();
+
+        $governorOwnedByExists = Cache::remember(
+            "{$connection}{$table}governor_owned_by",
+            5,
+            function () use ($connection, $model, $table) {
                 return Schema::connection($connection)
                     ->hasColumn($model->getTable(), 'governor_owned_by');
-            });
-        
+            },
+        );
+
         if ($governorOwnedByExists) {
             return false;
         }
+
+        Cache::delete("{$connection}{$table}governor_owned_by");
 
         Schema::connection($connection)->table($model->getTable(), function (Blueprint $table) {
             $authModelPrimaryKeyType = config("genealabs-laravel-governor.auth-model-primary-key-type", "bigInteger");
@@ -62,7 +74,6 @@ trait GovernorOwnedByField
             $table->{$fieldType}('governor_owned_by')
                 ->nullable();
         });
-        app("cache")->forget("governor-{$model->getTable()}-table-check-ownedby-field");
 
         return true;
     }

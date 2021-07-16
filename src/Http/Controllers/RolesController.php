@@ -3,7 +3,7 @@
 namespace GeneaLabs\LaravelGovernor\Http\Controllers;
 
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateRoleRequest;
-use GeneaLabs\LaravelGovernor\Http\Requests\RoleUpdateRequest;
+use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
 use GeneaLabs\LaravelGovernor\Role;
 use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 use Illuminate\Http\RedirectResponse;
@@ -108,7 +108,7 @@ class RolesController extends Controller
         ));
     }
 
-    public function update(RoleUpdateRequest $request, Role $role): RedirectResponse
+    public function update(UpdateRoleRequest $request): RedirectResponse
     {
         $request->process();
 

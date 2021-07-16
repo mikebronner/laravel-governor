@@ -1,39 +1,61 @@
-<?php namespace GeneaLabs\LaravelGovernor\Traits;
+<?php
+
+declare(strict_types=1);
+
+namespace GeneaLabs\LaravelGovernor\Traits;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 trait Governing
 {
     use Governable;
-    
-    public function hasRole(string $name) : bool
+
+    public function hasRole(string $name): bool
     {
-        if ($this->roles->isEmpty()) {
+        $roles = Cache::remember(
+            "roles" . auth()->user()->getKey(),
+            5,
+            function () {
+                return $this->roles()
+                    ->select('name')
+                    ->get();
+            }
+        );
+
+        if ($roles->count() === 0) {
             return false;
         }
 
         $roleClass = config("genealabs-laravel-governor.models.role");
-        $role = (new $roleClass)
-            ->find($name);
+        $role = Cache::remember(
+            "role{$roleClass}{$name}",
+            5,
+            function () use ($name, $roleClass) {
+                return (new $roleClass)
+                    ->select('name')
+                    ->find($name);
+            },
+        );
 
         if (! $role) {
             return false;
         }
 
-        return $this->roles->contains($role->name)
-            || $this->roles->contains("SuperAdmin");
+        return $roles->contains($role->name)
+            || $roles->contains("SuperAdmin");
     }
 
-    public function roles() : BelongsToMany
+    public function roles(): BelongsToMany
     {
         $roleClass = config("genealabs-laravel-governor.models.role");
 
         return $this->belongsToMany($roleClass, 'governor_role_user', 'user_id', 'role_name');
     }
 
-    public function ownedTeams() : HasMany
+    public function ownedTeams(): HasMany
     {
         return $this->hasMany(
             config("genealabs-laravel-governor.models.team"),
@@ -41,7 +63,7 @@ trait Governing
         );
     }
 
-    public function teams() : BelongsToMany
+    public function teams(): BelongsToMany
     {
         return $this->belongsToMany(
             config('genealabs-laravel-governor.models.team'),
@@ -51,7 +73,7 @@ trait Governing
         );
     }
 
-    public function getPermissionsAttribute() : Collection
+    public function getPermissionsAttribute(): Collection
     {
         $permissionClass = config("genealabs-laravel-governor.models.permission");
         $roleNames = $this->roles->pluck('name');
@@ -59,7 +81,7 @@ trait Governing
         return (new $permissionClass)->whereIn('role_name', $roleNames)->get();
     }
 
-    public function getEffectivePermissionsAttribute() : Collection
+    public function getEffectivePermissionsAttribute(): Collection
     {
         $results = collect();
         $groupedPermissions = $this->permissions
