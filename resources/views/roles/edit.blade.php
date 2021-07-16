@@ -349,7 +349,7 @@
 
                                                     @if ($selectedAction = $customActions->where('name', $customAction->name)->where("entity", $entity)->first())
                                                         <x-form-select
-                                                            name="permissions[{{ urlencode($group) }}][{{ urlencode($entity) }}][{{ $selectedAction->name  }}]"
+                                                            name="permissions[{{ urlencode($group) }}][{{ urlencode($entity) }}][{{ $selectedAction->name }}]"
                                                             label=""
                                                             class="form-select text-sm rounded-md border-gray-300"
                                                             :options="$ownerships"

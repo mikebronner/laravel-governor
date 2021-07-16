@@ -40,7 +40,7 @@ class ParseCustomPolicyActions
                         (new Permission)->firstOrCreate([
                             "role_name" => "SuperAdmin",
                             "entity_name" => $action->entity,
-                            "action_name" => $action->model_class . ":" . $action->name,
+                            "action_name" => $action->name,
                             "ownership_name" => "any",
                         ]);
 
