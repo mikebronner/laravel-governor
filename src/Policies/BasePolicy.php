@@ -103,6 +103,22 @@ abstract class BasePolicy
         );
     }
 
+    protected function authorizeCustomAction(?Model $user, Model $model): bool
+    {
+        $action = debug_backtrace(
+            ! DEBUG_BACKTRACE_PROVIDE_OBJECT
+                | DEBUG_BACKTRACE_IGNORE_ARGS,
+            2,
+        )[1]["function"];
+
+        return $this->validatePermissions(
+            $user,
+            get_class($model) . ":" . $action,
+            $this->entity,
+            $model,
+        );
+    }
+
     protected function validatePermissions(
         ?Model $user,
         string $action,
