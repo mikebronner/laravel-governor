@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -8,13 +10,13 @@ class CreateGovernorTeamInvitationsTable extends Migration
     public function __construct()
     {
         if (app()->bound("Hyn\Tenancy\Environment")) {
-            $this->connection = config("tenancy.tenant-connection-name");
+            $this->connection = config("tenancy.db.tenant-connection-name");
         }
     }
 
-    public function up()
+    public function up(): void
     {
-        Schema::create('governor_team_invitations', function (Blueprint $table) {
+        Schema::create('governor_team_invitations', function (Blueprint $table): void {
             $user = app(config('genealabs-laravel-governor.models.auth'));
 
             $table->bigIncrements("id");
@@ -34,7 +36,7 @@ class CreateGovernorTeamInvitationsTable extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::drop('governor_team_invitations');
     }
