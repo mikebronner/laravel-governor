@@ -106,7 +106,7 @@ class RolesController extends Controller
             });
 
         $permissionMatrix = $this->createPermissionMatrix($role, $entities);
-        $ownerships = collect(["not" => ""])->merge($ownerships);
+        $ownerships = collect(["not" => "no"])->merge($ownerships);
 
         return view('genealabs-laravel-governor::roles.edit', compact(
             'customActions',
