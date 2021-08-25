@@ -152,8 +152,10 @@ class RolesController extends Controller
                     }
                 }
 
-                $groupName = ucwords($entity->group_name)
-                    ?: "Ungrouped";
+                $groupName = ucwords(
+                    $entity->group_name
+                        ?? "Ungrouped"
+                );
                 $permissionMatrix[$groupName][$entity->name][$action->name] = $selectedOwnership;
             }
         }
