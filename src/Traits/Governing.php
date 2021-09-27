@@ -15,21 +15,6 @@ trait Governing
 
     public function hasRole(string $name): bool
     {
-        $roles = Cache::remember(
-            "roles" . auth()->user()->getKey(),
-            30,
-            function () {
-                return $this->roles()
-                    ->select('name')
-                    ->toBase()
-                    ->get();
-            }
-        );
-
-        if ($roles->count() === 0) {
-            return false;
-        }
-
         $roleClass = config("genealabs-laravel-governor.models.role");
         $role = Cache::remember(
             "role{$roleClass}{$name}",
@@ -45,8 +30,10 @@ trait Governing
             return false;
         }
 
-        return $roles->contains($role->name)
-            || $roles->contains("SuperAdmin");
+        $this->loadMissing("roles");
+
+        return $this->roles->contains($role->name)
+            || $this->roles->contains("SuperAdmin");
     }
 
     public function roles(): BelongsToMany
