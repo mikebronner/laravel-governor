@@ -32,6 +32,7 @@ class Service extends AggregateServiceProvider
                     ->select("name")
                     ->with("group:name")
                     ->orderBy("name")
+                    ->toBase()
                     ->get();
             }
         );

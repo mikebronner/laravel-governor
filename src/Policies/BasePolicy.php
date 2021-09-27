@@ -6,8 +6,8 @@ namespace GeneaLabs\LaravelGovernor\Policies;
 
 use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 use GeneaLabs\LaravelGovernor\Traits\GovernorOwnedByField;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 abstract class BasePolicy
 {
@@ -31,6 +31,7 @@ abstract class BasePolicy
 
             return (new $permissionClass)
                 ->with("role", "team")
+                ->toBase()
                 ->get();
         });
     }
@@ -153,7 +154,7 @@ abstract class BasePolicy
 
         foreach ($filteredPermissions as $permission) {
             if ($user->roles->pluck("name")->contains($permission->role_name)
-                || $user->teams->contains($permission->team)
+                || $user->teams->pluck("id")->contains($permission->team_id)
             ) {
                 return true;
             }

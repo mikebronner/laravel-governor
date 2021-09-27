@@ -45,7 +45,7 @@ trait GovernorOwnedByField
 
         $governorOwnedByExists = Cache::remember(
             "{$connection}{$table}governor_owned_by",
-            5,
+            30,
             function () use ($connection, $model, $table) {
                 return Schema::connection($connection)
                     ->hasColumn($model->getTable(), 'governor_owned_by');

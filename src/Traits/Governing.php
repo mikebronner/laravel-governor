@@ -17,10 +17,11 @@ trait Governing
     {
         $roles = Cache::remember(
             "roles" . auth()->user()->getKey(),
-            5,
+            30,
             function () {
                 return $this->roles()
                     ->select('name')
+                    ->toBase()
                     ->get();
             }
         );
@@ -32,7 +33,7 @@ trait Governing
         $roleClass = config("genealabs-laravel-governor.models.role");
         $role = Cache::remember(
             "role{$roleClass}{$name}",
-            5,
+            30,
             function () use ($name, $roleClass) {
                 return (new $roleClass)
                     ->select('name')
@@ -78,7 +79,10 @@ trait Governing
         $permissionClass = config("genealabs-laravel-governor.models.permission");
         $roleNames = $this->roles->pluck('name');
 
-        return (new $permissionClass)->whereIn('role_name', $roleNames)->get();
+        return (new $permissionClass)
+            ->whereIn('role_name', $roleNames)
+            ->toBase()
+            ->get();
     }
 
     public function getEffectivePermissionsAttribute(): Collection

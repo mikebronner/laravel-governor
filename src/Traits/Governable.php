@@ -78,12 +78,13 @@ trait Governable
         $permissionClass = app(config('genealabs-laravel-governor.models.permission'));
         $result = Cache::remember(
             "governor-permissions",
-            5,
+            30,
             function () use ($ability, $entityName, $permissionClass) {
                 return (new $permissionClass)
                     ->select("ownership_name")
                     ->where("action_name", $ability)
                     ->where("entity_name", $entityName)
+                    ->toBase()
                     ->get();
             },
         );
