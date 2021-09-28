@@ -18,11 +18,7 @@ class ParseCustomPolicyActions
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! cache()->has('governor.registered-custom-actions')) {
-            $this->registerCustomPolicyActions();
-
-            cache()->forever('governor.registered-custom-actions', true);
-        }
+        $this->registerCustomPolicyActions();
 
         return $next($request);
     }
@@ -34,15 +30,34 @@ class ParseCustomPolicyActions
             ->map(function (string $policyClass, string $modelClass): Collection {
                 return $this->getCustomActionMethods($policyClass)
                     ->map(function (string $method) use ($modelClass): Action {
-                        $action = (new Action)->firstOrCreate([
-                            "name" => "{$modelClass}:{$method}",
-                        ]);
-                        (new Permission)->firstOrCreate([
-                            "role_name" => "SuperAdmin",
-                            "entity_name" => $action->entity,
-                            "action_name" => $action->name,
-                            "ownership_name" => "any",
-                        ]);
+                        $action = app("governor-actions")
+                            ->where("name", "{$modelClass}:{$method}")
+                            ->first();
+
+                        if (! $action) {
+                            $actionClass = app(config('genealabs-laravel-governor.models.action'));
+                            $action = (new $actionClass)
+                                ->firstOrCreate([
+                                    "name" => "{$modelClass}:{$method}",
+                                ]);
+                        }
+
+                        $permission = app("governor-permissions")
+                            ->where("role_name", "SuperAdmin")
+                            ->where("entity_name", $action->entity)
+                            ->where("action_name", $action->name)
+                            ->where("ownership_name", "any")
+                            ->first();
+
+                        if (! $permission) {
+                            $permissionClass = config("genealabs-laravel-governor.models.permission");
+                            (new $permissionClass)->create([
+                                "role_name" => "SuperAdmin",
+                                "entity_name" => $action->entity,
+                                "action_name" => $action->name,
+                                "ownership_name" => "any",
+                            ]);
+                        }
 
                         return $action;
                     });

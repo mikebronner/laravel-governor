@@ -7,7 +7,6 @@ namespace GeneaLabs\LaravelGovernor\Traits;
 use GeneaLabs\LaravelGovernor\Policies\BasePolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use ReflectionClass;
 
@@ -41,22 +40,13 @@ trait GovernorOwnedByField
         $connection = $model
             ->getConnection()
             ->getName();
-        $table = $model->getTable();
 
-        $governorOwnedByExists = Cache::remember(
-            "{$connection}{$table}governor_owned_by",
-            30,
-            function () use ($connection, $model, $table) {
-                return Schema::connection($connection)
-                    ->hasColumn($model->getTable(), 'governor_owned_by');
-            },
-        );
+        $governorOwnedByExists = Schema::connection($connection)
+            ->hasColumn($model->getTable(), 'governor_owned_by');
 
         if ($governorOwnedByExists) {
             return false;
         }
-
-        Cache::delete("{$connection}{$table}governor_owned_by");
 
         Schema::connection($connection)->table($model->getTable(), function (Blueprint $table) {
             $authModelPrimaryKeyType = config("genealabs-laravel-governor.auth-model-primary-key-type", "bigInteger");

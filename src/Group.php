@@ -1,6 +1,9 @@
-<?php namespace GeneaLabs\LaravelGovernor;
+<?php
 
-use Illuminate\Database\Eloquent\Collection;
+declare(strict_types=1);
+
+namespace GeneaLabs\LaravelGovernor;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -17,27 +20,6 @@ class Group extends Model
     protected $table = "governor_groups";
 
     public $incrementing = false;
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function () {
-            app("cache")->forget("governor-groups");
-        });
-
-        static::deleted(function () {
-            app("cache")->forget("governor-groups");
-        });
-
-        static::saved(function () {
-            app("cache")->forget("governor-groups");
-        });
-
-        static::updated(function () {
-            app("cache")->forget("governor-groups");
-        });
-    }
 
     public function entities() : HasMany
     {

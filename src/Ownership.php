@@ -1,6 +1,9 @@
-<?php namespace GeneaLabs\LaravelGovernor;
+<?php
 
-use Illuminate\Database\Eloquent\Collection;
+declare(strict_types=1);
+
+namespace GeneaLabs\LaravelGovernor;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 

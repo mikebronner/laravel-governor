@@ -1,7 +1,10 @@
-<?php namespace GeneaLabs\LaravelGovernor;
+<?php
+
+declare(strict_types=1);
+
+namespace GeneaLabs\LaravelGovernor;
 
 use GeneaLabs\LaravelGovernor\Traits\Governable;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -20,27 +23,6 @@ class Team extends Model
         'description',
     ];
     protected $table = "governor_teams";
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function () {
-            app("cache")->forget("governor-teams");
-        });
-
-        static::deleted(function () {
-            app("cache")->forget("governor-teams");
-        });
-
-        static::saved(function () {
-            app("cache")->forget("governor-teams");
-        });
-
-        static::updated(function () {
-            app("cache")->forget("governor-teams");
-        });
-    }
 
     public function invitations(): HasMany
     {

@@ -1,4 +1,8 @@
-<?php namespace GeneaLabs\LaravelGovernor\Listeners;
+<?php
+
+declare(strict_types=1);
+
+namespace GeneaLabs\LaravelGovernor\Listeners;
 
 use GeneaLabs\LaravelGovernor\Traits\GovernorOwnedByField;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +17,8 @@ class CreatingListener
      */
     public function handle(string $event, array $models)
     {
-        if (Str::contains($event, "Hyn\Tenancy\Models\Website")
+        if (
+            Str::contains($event, "Hyn\Tenancy\Models\Website")
             || Str::contains($event, "Hyn\Tenancy\Models\Hostname")
         ) {
             return;
@@ -29,10 +34,10 @@ class CreatingListener
             })
             ->filter()
             ->each(function ($model) {
-                $this->createGovernorOwnedByFields($model);
                 $model->getEntityFromModel(get_class($model));
 
-                if (! $model->governor_owned_by
+                if (
+                    ! $model->governor_owned_by
                     && auth()->check()
                 ) {
                     $model->governor_owned_by = auth()->user()->id;

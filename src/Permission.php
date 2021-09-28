@@ -1,4 +1,8 @@
-<?php namespace GeneaLabs\LaravelGovernor;
+<?php
+
+declare(strict_types=1);
+
+namespace GeneaLabs\LaravelGovernor;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -20,28 +24,7 @@ class Permission extends Model
     ];
     protected $table = "governor_permissions";
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function () {
-            app("cache")->forget("governor-permissions");
-        });
-
-        static::deleted(function () {
-            app("cache")->forget("governor-permissions");
-        });
-
-        static::saved(function () {
-            app("cache")->forget("governor-permissions");
-        });
-
-        static::updated(function () {
-            app("cache")->forget("governor-permissions");
-        });
-    }
-
-    public function entity() : BelongsTo
+    public function entity(): BelongsTo
     {
         return $this->belongsTo(
             config('genealabs-laravel-governor.models.entity'),
@@ -49,7 +32,7 @@ class Permission extends Model
         );
     }
 
-    public function action() : BelongsTo
+    public function action(): BelongsTo
     {
         return $this->belongsTo(
             config('genealabs-laravel-governor.models.action'),
@@ -57,7 +40,7 @@ class Permission extends Model
         );
     }
 
-    public function ownership() : BelongsTo
+    public function ownership(): BelongsTo
     {
         return $this->belongsTo(
             config('genealabs-laravel-governor.models.ownership'),
@@ -65,7 +48,7 @@ class Permission extends Model
         );
     }
 
-    public function role() : BelongsTo
+    public function role(): BelongsTo
     {
         return $this->belongsTo(
             config('genealabs-laravel-governor.models.role'),
@@ -73,14 +56,14 @@ class Permission extends Model
         );
     }
 
-    public function team() : BelongsTo
+    public function team(): BelongsTo
     {
         return $this->belongsTo(
             config('genealabs-laravel-governor.models.team')
         );
     }
 
-    public function getFilteredBy(string $filter = null, string $value = null) : Collection
+    public function getFilteredBy(string $filter = null, string $value = null): Collection
     {
         return $this
             ->where(function ($query) use ($filter, $value) {

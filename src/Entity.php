@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GeneaLabs\LaravelGovernor;
 
 use Illuminate\Database\Eloquent\Model;
@@ -20,35 +22,14 @@ class Entity extends Model
 
     public $incrementing = false;
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function () {
-            app("cache")->forget("governor-entities");
-        });
-
-        static::deleted(function () {
-            app("cache")->forget("governor-entities");
-        });
-
-        static::saved(function () {
-            app("cache")->forget("governor-entities");
-        });
-
-        static::updated(function () {
-            app("cache")->forget("governor-entities");
-        });
-    }
-
-    public function group() : BelongsTo
+    public function group(): BelongsTo
     {
         return $this->belongsTo(
             config('genealabs-laravel-governor.models.group')
         );
     }
 
-    public function permissions() : HasMany
+    public function permissions(): HasMany
     {
         return $this->hasMany(
             config('genealabs-laravel-governor.models.permission'),

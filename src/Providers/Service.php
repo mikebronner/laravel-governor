@@ -14,6 +14,7 @@ use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
 use GeneaLabs\LaravelGovernor\View\Components\MenuBar;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\AggregateServiceProvider;
+use Illuminate\Support\Facades\Schema;
 
 class Service extends AggregateServiceProvider
 {
@@ -22,20 +23,6 @@ class Service extends AggregateServiceProvider
     public function register(): void
     {
         parent::register();
-
-        $this->app->singleton(
-            'governor-entities',
-            function () {
-                $entityClass = app(config('genealabs-laravel-governor.models.entity'));
-
-                return (new $entityClass)
-                    ->select("name")
-                    ->with("group:name")
-                    ->orderBy("name")
-                    ->toBase()
-                    ->get();
-            }
-        );
 
         $this->mergeConfigFrom(__DIR__ . '/../../config/config.php', 'genealabs-laravel-governor');
         $this->commands(Publish::class);
@@ -46,6 +33,44 @@ class Service extends AggregateServiceProvider
      */
     public function boot(): void
     {
+        $this->app
+            ->singleton('governor-actions', function () {
+                $actionClass = app(config('genealabs-laravel-governor.models.action'));
+
+                return (new $actionClass)
+                    ->orderBy("name")
+                    ->get();
+            });
+        $this->app
+            ->singleton('governor-entities', function () {
+                $entityClass = app(config('genealabs-laravel-governor.models.entity'));
+
+                return (new $entityClass)
+                    ->select("name")
+                    ->with("group:name")
+                    ->orderBy("name")
+                    ->toBase()
+                    ->get();
+            });
+        $this->app
+            ->singleton("governor-permissions", function () {
+                $permissionClass = config("genealabs-laravel-governor.models.permission");
+
+                return (new $permissionClass)
+                    ->with("role", "team")
+                    ->toBase()
+                    ->get();
+            });
+        $this->app
+            ->singleton("governor-roles", function () {
+                $roleClass = config("genealabs-laravel-governor.models.role");
+
+                return (new $roleClass)
+                    ->select('name')
+                    ->toBase()
+                    ->get();
+            });
+
         $teamClass = config("genealabs-laravel-governor.models.team");
         $invitationClass = config("genealabs-laravel-governor.models.invitation");
         app('events')->listen('eloquent.created: *', CreatedListener::class);
@@ -71,8 +96,7 @@ class Service extends AggregateServiceProvider
             MenuBar::class,
         ]);
 
-        $this
-            ->app
+        $this->app
             ->make(Kernel::class)
             ->pushMiddleware(ParseCustomPolicyActions::class);
     }

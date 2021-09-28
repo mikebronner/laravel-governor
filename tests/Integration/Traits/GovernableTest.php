@@ -182,6 +182,10 @@ class GovernableTest extends UnitTestCase
         ]);
         $permission->ownership_name = "own";
         $permission->save();
+        $permissions = (new Permission)
+            ->toBase()
+            ->get();
+        app()->instance("governor-permissions", $permissions);
         $authorResults = (new Author)
             ->viewable()
             ->get();
@@ -189,7 +193,7 @@ class GovernableTest extends UnitTestCase
         $userResults = (new $userClass)
             ->viewable()
             ->get();
-
+// dd($authorResults, $this->otherAuthor, $authorResults->contains($this->otherAuthor));
         $this->assertTrue($authorResults->isNotEmpty());
         $this->assertTrue($authorResults->contains($this->author));
         $this->assertFalse($authorResults->contains($this->otherAuthor));

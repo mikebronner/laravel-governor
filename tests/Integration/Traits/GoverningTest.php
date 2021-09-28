@@ -3,11 +3,11 @@
 namespace GeneaLabs\LaravelGovernor\Tests\Integration\Traits;
 
 use GeneaLabs\LaravelGovernor\Permission;
+use GeneaLabs\LaravelGovernor\Role;
 use GeneaLabs\LaravelGovernor\Team;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
-use GeneaLabs\LaravelGovernor\Role;
 
 class GoverningTest extends UnitTestCase
 {
@@ -52,6 +52,7 @@ class GoverningTest extends UnitTestCase
         $this->assertTrue($this->user->ownedTeams->contains($this->team));
     }
 
+    /** @group test */
     public function testPermissionsAttribute()
     {
         $permission = (new Permission)->create([
@@ -60,8 +61,12 @@ class GoverningTest extends UnitTestCase
             "action_name" => "delete",
             "ownership_name" => "any"
         ]);
+        $permissions = (new Permission)
+            ->toBase()
+            ->get();
+        app()->instance("governor-permissions", $permissions);
 
-        $this->assertTrue($this->user->permissions->contains($permission));
+        $this->assertTrue($this->user->permissions->keyBy("id")->has($permission->id));
     }
 
     public function testHasRoleWithNonExistingRole()

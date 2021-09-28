@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 
 trait Governable
 {
@@ -24,7 +23,8 @@ trait Governable
 
     protected function filterQuery(Builder $query, Collection $ownerships): Builder
     {
-        if ($ownerships->pluck("ownership_name")->contains("any")
+        if (
+            $ownerships->pluck("ownership_name")->contains("any")
             || auth()->user()->hasRole("SuperAdmin")
         ) {
             return $query;
@@ -75,21 +75,9 @@ trait Governable
             return collect();
         }
 
-        $permissionClass = app(config('genealabs-laravel-governor.models.permission'));
-        $result = Cache::remember(
-            "governor-permissions",
-            30,
-            function () use ($ability, $entityName, $permissionClass) {
-                return (new $permissionClass)
-                    ->select("ownership_name")
-                    ->where("action_name", $ability)
-                    ->where("entity_name", $entityName)
-                    ->toBase()
-                    ->get();
-            },
-        );
-
-        return $result;
+        return app("governor-permissions")
+            ->where("action_name", $ability)
+            ->where("entity_name", $entityName);
     }
 
     public function ownedBy(): BelongsTo

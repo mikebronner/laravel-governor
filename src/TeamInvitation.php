@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GeneaLabs\LaravelGovernor;
 
 use GeneaLabs\LaravelGovernor\Traits\Governable;

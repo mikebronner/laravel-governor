@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GeneaLabs\LaravelGovernor;
 
 use Illuminate\Database\Eloquent\Model;
@@ -21,27 +23,6 @@ class Role extends Model
     protected $table = "governor_roles";
 
     public $incrementing = false;
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function () {
-            app("cache")->forget("governor-roles");
-        });
-
-        static::deleted(function () {
-            app("cache")->forget("governor-roles");
-        });
-
-        static::saved(function () {
-            app("cache")->forget("governor-roles");
-        });
-
-        static::updated(function () {
-            app("cache")->forget("governor-roles");
-        });
-    }
 
     public function entities(): HasMany
     {

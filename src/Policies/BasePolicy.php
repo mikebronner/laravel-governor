@@ -19,21 +19,13 @@ abstract class BasePolicy
 
     public function __construct()
     {
-        $this->createGovernorOwnedByFieldsByPolicy($this);
         $this->entity = $this->getEntity(get_class($this));
         $this->permissions = $this->getPermissions();
     }
 
     protected function getPermissions(): Collection
     {
-        return app("cache")->remember("governor-permissions", 300, function () {
-            $permissionClass = config("genealabs-laravel-governor.models.permission");
-
-            return (new $permissionClass)
-                ->with("role", "team")
-                ->toBase()
-                ->get();
-        });
+        return app("governor-permissions");
     }
 
     public function create(?Model $user): bool

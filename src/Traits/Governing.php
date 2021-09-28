@@ -7,7 +7,6 @@ namespace GeneaLabs\LaravelGovernor\Traits;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 
 trait Governing
 {
@@ -15,16 +14,9 @@ trait Governing
 
     public function hasRole(string $name): bool
     {
-        $roleClass = config("genealabs-laravel-governor.models.role");
-        $role = Cache::remember(
-            "role{$roleClass}{$name}",
-            30,
-            function () use ($name, $roleClass) {
-                return (new $roleClass)
-                    ->select('name')
-                    ->find($name);
-            },
-        );
+        $role = app("governor-roles")
+            ->where("name", $name)
+            ->first();
 
         if (! $role) {
             return false;
@@ -63,13 +55,10 @@ trait Governing
 
     public function getPermissionsAttribute(): Collection
     {
-        $permissionClass = config("genealabs-laravel-governor.models.permission");
         $roleNames = $this->roles->pluck('name');
 
-        return (new $permissionClass)
-            ->whereIn('role_name', $roleNames)
-            ->toBase()
-            ->get();
+        return app("governor-permissions")
+            ->whereIn('role_name', $roleNames);
     }
 
     public function getEffectivePermissionsAttribute(): Collection
