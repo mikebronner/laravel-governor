@@ -40,6 +40,12 @@ class ParseCustomPolicyActions
                                 ->firstOrCreate([
                                     "name" => "{$modelClass}:{$method}",
                                 ]);
+                            $permissionClass = config("genealabs-laravel-governor.models.permission");
+                            $permissions = (new $permissionClass)
+                                ->with("role", "team")
+                                ->toBase()
+                                ->get();
+                            app()->instance("governor-permissions", $permissions);
                         }
 
                         $permission = app("governor-permissions")
@@ -57,6 +63,12 @@ class ParseCustomPolicyActions
                                 "action_name" => $action->name,
                                 "ownership_name" => "any",
                             ]);
+                            $permissionClass = config("genealabs-laravel-governor.models.permission");
+                            $permissions = (new $permissionClass)
+                                ->with("role", "team")
+                                ->toBase()
+                                ->get();
+                            app()->instance("governor-permissions", $permissions);
                         }
 
                         return $action;
