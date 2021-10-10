@@ -28,6 +28,10 @@ class ParseCustomPolicyActions
         $this
             ->getPolicies()
             ->map(function (string $policyClass, string $modelClass): Collection {
+                if (! is_subclass_of($policyClass, BasePolicy::class)) {
+                    return collect();
+                }
+
                 return $this->getCustomActionMethods($policyClass)
                     ->map(function (string $method) use ($modelClass): Action {
                         $action = app("governor-actions")
