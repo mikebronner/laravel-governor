@@ -17,6 +17,10 @@ class OwnedBySeeder extends Seeder
     {
         $this->getPolicies()
             ->each(function ($policy) {
+                if (! is_subclass_of($policy, BasePolicy::class)) {
+                    return collect();
+                }
+
                 $this->createGovernorOwnedByFieldsByPolicy(new $policy);
             });
     }
