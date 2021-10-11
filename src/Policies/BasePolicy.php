@@ -122,7 +122,7 @@ abstract class BasePolicy
             $user = $this->createGuestUser();
         }
 
-        $user->loadMissing("roles", "teams.permision");
+        $user->loadMissing("roles", "teams.permissions");
 
         if ($user->hasRole("SuperAdmin")) {
             return true;

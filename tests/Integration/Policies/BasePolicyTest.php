@@ -1,4 +1,8 @@
-<?php namespace GeneaLabs\LaravelGovernor\Tests\Integration\Policies;
+<?php
+
+declare(strict_types=1);
+
+namespace GeneaLabs\LaravelGovernor\Tests\Integration\Policies;
 
 use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Team;

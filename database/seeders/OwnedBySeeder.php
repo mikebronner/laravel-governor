@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GeneaLabs\LaravelGovernor\Database\Seeders;
 
+use GeneaLabs\LaravelGovernor\Policies\BasePolicy;
 use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 use GeneaLabs\LaravelGovernor\Traits\GovernorOwnedByField;
 use Illuminate\Database\Seeder;
@@ -17,7 +18,7 @@ class OwnedBySeeder extends Seeder
     {
         $this->getPolicies()
             ->each(function ($policy) {
-                if (! is_subclass_of($policy, BasePolicy::class)) {
+                if (! collect(class_parents($policy))->contains(BasePolicy::class)) {
                     return collect();
                 }
 

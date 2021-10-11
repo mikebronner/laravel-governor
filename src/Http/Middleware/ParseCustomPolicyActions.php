@@ -28,7 +28,7 @@ class ParseCustomPolicyActions
         $this
             ->getPolicies()
             ->map(function (string $policyClass, string $modelClass): Collection {
-                if (! is_subclass_of($policyClass, BasePolicy::class)) {
+                if (! collect(class_parents($policyClass))->contains(BasePolicy::class)) {
                     return collect();
                 }
 
