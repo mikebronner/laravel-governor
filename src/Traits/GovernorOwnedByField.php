@@ -12,7 +12,7 @@ use ReflectionClass;
 
 trait GovernorOwnedByField
 {
-    protected function createGovernorOwnedByFieldsByPolicy(BasePolicy $policy) : bool
+    protected function createGovernorOwnedByFieldsByPolicy(BasePolicy $policy): bool
     {
         $gate = app("Illuminate\Contracts\Auth\Access\Gate");
         $reflection = new ReflectionClass($gate);

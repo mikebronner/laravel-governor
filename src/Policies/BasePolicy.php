@@ -128,7 +128,8 @@ abstract class BasePolicy
             return true;
         }
 
-        if ($user->roles->isEmpty()
+        if (
+            $user->roles->isEmpty()
             && $user->teams->isEmpty()
         ) {
             return false;
@@ -136,7 +137,8 @@ abstract class BasePolicy
 
         $ownership = 'other';
 
-        if ($model
+        if (
+            $model
             && $user->getKey() == $model->governor_owned_by
         ) {
             $ownership = 'own';
@@ -145,7 +147,8 @@ abstract class BasePolicy
         $filteredPermissions = $this->filterPermissions($action, $entity, $ownership);
 
         foreach ($filteredPermissions as $permission) {
-            if ($user->roles->pluck("name")->contains($permission->role_name)
+            if (
+                $user->roles->pluck("name")->contains($permission->role_name)
                 || $user->teams->pluck("id")->contains($permission->team_id)
             ) {
                 return true;

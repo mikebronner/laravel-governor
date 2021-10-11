@@ -30,6 +30,6 @@ class GovernorOwnedByFieldTest extends UnitTestCase
     {
         $result = $this->createGovernorOwnedByFields(new User);
 
-        $this->assertTrue($result);
+        $this->assertFalse($result);
     }
 }

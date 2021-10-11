@@ -24,6 +24,28 @@ class Permission extends Model
     ];
     protected $table = "governor_permissions";
 
+    protected static function syncPermissionsSingleton(): void
+    {
+        $permissionClass = config("genealabs-laravel-governor.models.permission");
+        $permissions = (new $permissionClass)
+            ->with("role", "team")
+            ->toBase()
+            ->get();
+        app()->instance("governor-permissions", $permissions);
+    }
+
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::saved(function () {
+            self::syncPermissionsSingleton();
+        });
+        static::deleted(function () {
+            self::syncPermissionsSingleton();
+        });
+    }
+
     public function entity(): BelongsTo
     {
         return $this->belongsTo(

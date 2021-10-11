@@ -37,7 +37,7 @@ trait CreatesApplication
         ];
     }
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -50,5 +50,26 @@ trait CreatesApplication
             '--class' => LaravelGovernorDatabaseSeeder::class,
             '--no-interaction' => true
             ]);
+
+        $actionClass = app(config('genealabs-laravel-governor.models.action'));
+        $entityClass = app(config('genealabs-laravel-governor.models.entity'));
+        $roleClass = config("genealabs-laravel-governor.models.role");
+        $actions = (new $actionClass)
+            ->orderBy("name")
+            ->get();
+        $entities = (new $entityClass)
+            ->select("name")
+            ->with("group:name")
+            ->orderBy("name")
+            ->toBase()
+            ->get();
+        $roles = (new $roleClass)
+            ->select('name')
+            ->toBase()
+            ->get();
+
+        app()->instance("governor-actions", $actions);
+        app()->instance("governor-entities", $entities);
+        app()->instance("governor-roles", $roles);
     }
 }

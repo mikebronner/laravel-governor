@@ -52,7 +52,6 @@ class GoverningTest extends UnitTestCase
         $this->assertTrue($this->user->ownedTeams->contains($this->team));
     }
 
-    /** @group test */
     public function testPermissionsAttribute()
     {
         $permission = (new Permission)->create([

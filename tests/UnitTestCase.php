@@ -1,4 +1,8 @@
-<?php namespace GeneaLabs\LaravelGovernor\Tests;
+<?php
+
+declare(strict_types=1);
+
+namespace GeneaLabs\LaravelGovernor\Tests;
 
 use Orchestra\Testbench\TestCase;
 

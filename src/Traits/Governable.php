@@ -18,13 +18,13 @@ trait Governable
         $entityName = $this->getEntityFromModel(get_class($this));
         $ownerships = $this->getOwnershipsForEntity($entityName, $ability);
 
-        return $this->filterQuery($query, $ownerships);
+        return $this->filterQuery($query, $ownerships->pluck("ownership_name"));
     }
 
     protected function filterQuery(Builder $query, Collection $ownerships): Builder
     {
         if (
-            $ownerships->pluck("ownership_name")->contains("any")
+            $ownerships->contains("any")
             || auth()->user()->hasRole("SuperAdmin")
         ) {
             return $query;
@@ -35,7 +35,6 @@ trait Governable
             $authTable = (new $authModel)->getTable();
 
             if (method_exists($query->getModel(), "teams")) {
-
                 if ($query->getModel()->getTable() === $authTable) {
                     return $query
                         ->whereHas("teams", function ($query) {
@@ -55,12 +54,15 @@ trait Governable
             }
 
             if ($query->getModel()->getTable() === $authTable) {
-                return $query->where($query->getModel()->getKeyName(), auth()->user()->getKey());
+                return $query->where(
+                    $query->getModel()->getKeyName(),
+                    auth()->user()->getKey(),
+                );
             }
 
             return $query->where(
                 "{$query->getModel()->getTable()}.governor_owned_by",
-                auth()->user()->getKey()
+                auth()->user()->getKey(),
             );
         }
 

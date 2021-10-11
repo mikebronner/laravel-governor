@@ -165,7 +165,6 @@ class GovernableTest extends UnitTestCase
         $this->assertTrue($results->contains($this->otherAuthor));
     }
 
-    /** @group test */
     public function testScopeViewableWithOwnPermission()
     {
         (new Permission)->firstOrCreate([
@@ -193,7 +192,7 @@ class GovernableTest extends UnitTestCase
         $userResults = (new $userClass)
             ->viewable()
             ->get();
-// dd($authorResults, $this->otherAuthor, $authorResults->contains($this->otherAuthor));
+
         $this->assertTrue($authorResults->isNotEmpty());
         $this->assertTrue($authorResults->contains($this->author));
         $this->assertFalse($authorResults->contains($this->otherAuthor));
