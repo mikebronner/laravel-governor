@@ -6,7 +6,7 @@ namespace GeneaLabs\LaravelGovernor\Http\Middleware;
 
 use Closure;
 use GeneaLabs\LaravelGovernor\Action;
-use GeneaLabs\LaravelGovernor\Permission;
+use GeneaLabs\LaravelGovernor\Policies\BasePolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use ReflectionClass;
