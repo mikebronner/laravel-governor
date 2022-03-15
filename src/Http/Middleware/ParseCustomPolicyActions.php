@@ -84,25 +84,29 @@ class ParseCustomPolicyActions
 
     protected function getCustomActionMethods(string $policyClass): Collection
     {
-        $parentClass = new ReflectionClass(get_parent_class($policyClass));
-        $parentMethods = collect($parentClass->getMethods(ReflectionMethod::IS_PUBLIC))
-            ->pluck("name");
-        $class = new ReflectionClass($policyClass);
-        $methods = collect($class->getMethods(ReflectionMethod::IS_PUBLIC))
-            ->pluck("name");
+        return cache()->remember("genealabs:laravel-governor:custom-action-methods", 300, function () use ($policyClass): Collection {
+            $parentClass = new ReflectionClass(get_parent_class($policyClass));
+            $parentMethods = collect($parentClass->getMethods(ReflectionMethod::IS_PUBLIC))
+                ->pluck("name");
+            $class = new ReflectionClass($policyClass);
+            $methods = collect($class->getMethods(ReflectionMethod::IS_PUBLIC))
+                ->pluck("name");
 
-        return $methods
-            ->diff($parentMethods)
-            ->sort();
+            return $methods
+                ->diff($parentMethods)
+                ->sort();
+        });
     }
 
     protected function getPolicies(): Collection
     {
-        $gate = app('Illuminate\Contracts\Auth\Access\Gate');
-        $reflectedGate = new ReflectionObject($gate);
-        $policies = $reflectedGate->getProperty("policies");
-        $policies->setAccessible(true);
+        return cache()->remember("genealabs:laravel-governor:policies", 300, function (): Collection {
+            $gate = app('Illuminate\Contracts\Auth\Access\Gate');
+            $reflectedGate = new ReflectionObject($gate);
+            $policies = $reflectedGate->getProperty("policies");
+            $policies->setAccessible(true);
 
-        return collect($policies->getValue($gate));
+            return collect($policies->getValue($gate));
+        });
     }
 }
