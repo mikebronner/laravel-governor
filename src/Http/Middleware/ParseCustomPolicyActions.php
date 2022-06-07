@@ -61,13 +61,12 @@ class ParseCustomPolicyActions
 
                         if (! $permission) {
                             $permissionClass = config("genealabs-laravel-governor.models.permission");
-                            (new $permissionClass)->create([
+                            (new $permissionClass)->firstOrCreate([
                                 "role_name" => "SuperAdmin",
                                 "entity_name" => $action->entity,
                                 "action_name" => $action->name,
                                 "ownership_name" => "any",
                             ]);
-                            $permissionClass = config("genealabs-laravel-governor.models.permission");
                             $permissions = (new $permissionClass)
                                 ->with("role", "team")
                                 ->toBase()
