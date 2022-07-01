@@ -67,7 +67,7 @@ class ParseCustomPolicyActions
                             ]);
                             (new $permissionClass)->firstOrCreate([
                                 "role_name" => "SuperAdmin",
-                                "entity_name" => $entity,
+                                "entity_name" => $action->entity,
                                 "action_name" => $action->name,
                                 "ownership_name" => "any",
                             ]);
