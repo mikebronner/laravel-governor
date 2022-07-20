@@ -25,7 +25,7 @@ trait Governable
     {
         if (
             $ownerships->contains("any")
-            || auth()->user()->hasRole("SuperAdmin")
+            || auth()->user()?->hasRole("SuperAdmin")
         ) {
             return $query;
         }
