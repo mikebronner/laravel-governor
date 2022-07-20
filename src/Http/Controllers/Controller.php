@@ -15,26 +15,4 @@ abstract class Controller extends BaseController
     {
         $this->middleware('auth');
     }
-
-    protected function resetSuperAdminPermissions()
-    {
-        $permissionClass = config("genealabs-laravel-governor.models.permission");
-        (new $permissionClass)->where('role_name', 'SuperAdmin')->delete();
-        $entities = app("governor-entities");
-        $actionClass = app(config('genealabs-laravel-governor.models.action'));
-        $actions = (new $actionClass)
-            ->orderBy("name")
-            ->get();
-
-        foreach ($entities as $entity) {
-            foreach ($actions as $action) {
-                (new $permissionClass)->updateOrCreate([
-                    'role_name' => 'SuperAdmin',
-                    'entity_name' => $entity->name,
-                    'action_name' => $action->name,
-                    'ownership_name' => 'any',
-                ]);
-            }
-        }
-    }
 }

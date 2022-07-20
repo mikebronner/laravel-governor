@@ -44,38 +44,6 @@ class ParseCustomPolicyActions
                                 ->firstOrCreate([
                                     "name" => "{$modelClass}:{$method}",
                                 ]);
-                            $permissionClass = config("genealabs-laravel-governor.models.permission");
-                            $permissions = (new $permissionClass)
-                                ->with("role", "team")
-                                ->toBase()
-                                ->get();
-                            app()->instance("governor-permissions", $permissions);
-                        }
-
-                        $permission = app("governor-permissions")
-                            ->where("role_name", "SuperAdmin")
-                            ->where("entity_name", $action->entity)
-                            ->where("action_name", $action->name)
-                            ->where("ownership_name", "any")
-                            ->first();
-
-                        if (! $permission) {
-                            $entityClass = config("genealabs-laravel-governor.models.entity");
-                            $permissionClass = config("genealabs-laravel-governor.models.permission");
-                            $entity = (new $entityClass)->firstOrCreate([
-                                "name" => $action->entity,
-                            ]);
-                            (new $permissionClass)->firstOrCreate([
-                                "role_name" => "SuperAdmin",
-                                "entity_name" => $action->entity,
-                                "action_name" => $action->name,
-                                "ownership_name" => "any",
-                            ]);
-                            $permissions = (new $permissionClass)
-                                ->with("role", "team")
-                                ->toBase()
-                                ->get();
-                            app()->instance("governor-permissions", $permissions);
                         }
 
                         return $action;

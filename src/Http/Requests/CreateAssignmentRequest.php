@@ -26,6 +26,5 @@ class CreateAssignmentRequest extends Request
         $assignment->removeAllUsersFromRoles();
         $assignment->assignUsersToRoles($this->users);
         $assignment->addAllUsersToMemberRole();
-        $assignment->removeAllSuperAdminUsersFromOtherRoles($this->users);
     }
 }
