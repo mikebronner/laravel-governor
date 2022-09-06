@@ -12,24 +12,29 @@ class LaravelGovernorSuperAdminSeeder extends Seeder
         $roleClass = config("genealabs-laravel-governor.models.role");
         $superAdminRole = (new $roleClass)->find("SuperAdmin");
         $memberRole = (new $roleClass)->find("Member");
-        $superadmins = config('genealabs-laravel-governor.superadmins');
-        $superadmins = json_decode($superadmins);
+        $superAdmins = config('genealabs-laravel-governor.superadmins');
 
-        if (!is_array($superadmins)) {
+        if (! $superAdmins) {
             return;
         }
 
-        foreach ($superadmins as $superadmin) {
-            if ($superadmin->email) {
+        $superAdmins = json_decode($superAdmins);
+
+        if (! is_array($superAdmins)) {
+            return;
+        }
+
+        foreach ($superAdmins as $superAdmin) {
+            if ($superAdmin->email) {
                 $superuser = $users
                     ->firstOrNew([
-                        "email" => $superadmin->email,
+                        "email" => $superAdmin->email,
                     ]);
 
                 if (!$superuser->exists) {
                     $superuser->fill([
-                        "name" => $superadmin->name,
-                        "password" => bcrypt($superadmin->password),
+                        "name" => $superAdmin->name,
+                        "password" => bcrypt($superAdmin->password),
                     ]);
                     $superuser->save();
                 }

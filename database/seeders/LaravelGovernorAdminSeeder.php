@@ -13,6 +13,11 @@ class LaravelGovernorAdminSeeder extends Seeder
         $adminRole = (new $roleClass)->find("Admin");
         $memberRole = (new $roleClass)->find("Member");
         $admins = config('genealabs-laravel-governor.admins');
+
+        if (! $admins) {
+            return;
+        }
+
         $admins = json_decode($admins);
 
         if (! is_array($admins)) {
