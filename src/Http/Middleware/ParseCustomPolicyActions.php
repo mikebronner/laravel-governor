@@ -32,7 +32,8 @@ class ParseCustomPolicyActions
                     return collect();
                 }
 
-                return $this->getCustomActionMethods($policyClass)
+                return $this
+                    ->getCustomActionMethods($policyClass)
                     ->map(function (string $method) use ($modelClass): Action {
                         $action = app("governor-actions")
                             ->where("name", "{$modelClass}:{$method}")
@@ -55,7 +56,7 @@ class ParseCustomPolicyActions
 
     protected function getCustomActionMethods(string $policyClass): Collection
     {
-        return cache()->remember("genealabs:laravel-governor:custom-action-methods", 300, function () use ($policyClass): Collection {
+        return cache()->remember("genealabs:laravel-governor:custom-action-methods:policy-{$policyClass}", 300, function () use ($policyClass): Collection {
             $parentClass = new ReflectionClass(get_parent_class($policyClass));
             $parentMethods = collect($parentClass->getMethods(ReflectionMethod::IS_PUBLIC))
                 ->pluck("name");

@@ -1,6 +1,11 @@
 # Change Log
 [Package Checklist](http://phppackagechecklist.com/#1,2,3,4,6,7,8,9,10,11,12,13,14)
 
+## [0.19.8] - 2022-11-17
+### Fixed
+- caching of custom actions.
+- loading of role creation and edit pages.
+
 ## [0.19.5] - 2022-07-20
 ### Removed
 - creation of SuperAdmin permission records.

@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace GeneaLabs\LaravelGovernor\Http\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
+use GeneaLabs\LaravelGovernor\Role;
 use GeneaLabs\LaravelGovernor\Action;
+use GeneaLabs\LaravelGovernor\Entity;
+use Illuminate\Http\RedirectResponse;
+use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateRoleRequest;
 use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
-use GeneaLabs\LaravelGovernor\Role;
-use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Collection;
-use Illuminate\View\View;
 
 class RolesController extends Controller
 {
@@ -27,7 +29,6 @@ class RolesController extends Controller
         $roleClass = config("genealabs-laravel-governor.models.role");
         $this->authorize('viewAny', $roleClass);
         $roles = (new $roleClass)
-            ->with("users")
             ->orderBy("name")
             ->get();
 
@@ -50,10 +51,17 @@ class RolesController extends Controller
         $ownerships = collect(["not" => ""])->merge($ownerships);
         $role = new $roleClass;
         $this->authorize('create', $role);
-        $permissionMatrix = $this->createPermissionMatrix($role, $entities);
+        $customActions = (new Action)
+            ->distinct()
+            ->get()
+            ->filter(function (Action $action): bool {
+                return $action->model_class !== "";
+            });
+        $permissionMatrix = $this->createPermissionMatrix($role, $entities, $customActions);
 
         return view('genealabs-laravel-governor::roles.create')
             ->with([
+                "customActions" => $customActions,
                 "entities" => $entities,
                 "ownerships" => $ownerships,
                 "permissionMatrix" => $permissionMatrix,
@@ -71,7 +79,6 @@ class RolesController extends Controller
     public function edit(Role $role): View
     {
         $this->authorize('update', $role);
-
         $entityClass = config("genealabs-laravel-governor.models.entity");
         $ownershipClass = config("genealabs-laravel-governor.models.ownership");
         $roleClass = config("genealabs-laravel-governor.models.role");
@@ -83,7 +90,7 @@ class RolesController extends Controller
         $permissibleClass = request("filter") === "team_id"
             ? $teamClass
             : $roleClass;
-        $role->load("permissions.action", "permissions.entity", "permissions.ownership");
+        $role->load("permissions");
 
         if (request("owner") === "yes") {
             return $role
@@ -95,17 +102,26 @@ class RolesController extends Controller
         $this->parsePolicies();
 
         $entities = (new $entityClass)
-            ->whereNotIn("name", ['Permission (Laravel Governor)', 'Entity (Laravel Governor)', "Action (Laravel Governor)", "Ownership (Laravel Governor)", "Team Invitation (Laravel Governor)"])
+            ->whereNotIn(
+                "name",
+                [
+                    "Action (Laravel Governor)",
+                    "Entity (Laravel Governor)",
+                    "Ownership (Laravel Governor)",
+                    "Permission (Laravel Governor)",
+                    "Team Invitation (Laravel Governor)",
+                ],
+            )
             ->orderBy("group_name")
             ->orderBy("name")
             ->get();
         $customActions = (new Action)
+            ->distinct()
             ->get()
-            ->filter(function ($action): bool {
+            ->filter(function (Action $action): bool {
                 return $action->model_class !== "";
             });
-
-        $permissionMatrix = $this->createPermissionMatrix($role, $entities);
+        $permissionMatrix = $this->createPermissionMatrix($role, $entities, $customActions);
         $ownerships = collect(["not" => "no"])->merge($ownerships);
 
         return view('genealabs-laravel-governor::roles.edit', compact(
@@ -132,33 +148,37 @@ class RolesController extends Controller
         return redirect()->route('genealabs.laravel-governor.roles.index');
     }
 
-    protected function createPermissionMatrix(Role $role, Collection $entities): array
+    protected function createPermissionMatrix(Role $role, Collection $entities, Collection $customActions): array
     {
         $permissionMatrix = [];
-
         $actionClass = app(config('genealabs-laravel-governor.models.action'));
         $actions = (new $actionClass)
             ->orderBy("name")
             ->get();
-
-        foreach ($entities as $entity) {
-            foreach ($actions as $action) {
-                $selectedOwnership = 'no';
-
-                foreach ($role->permissions as $permissioncheck) {
-                    if (($permissioncheck->entity->name === $entity->name)
-                        && ($permissioncheck->action->name === $action->name)) {
-                        $selectedOwnership = $permissioncheck->ownership->name;
-                    }
-                }
-
+        $entities->each(function (Entity $entity) use ($actions, $customActions, &$permissionMatrix, $role) {
+            // dd($customActions->where("entity", $entity)->first());
+            $customActions = $customActions->where("entity", $entity);
+            $permissions = $role->permissions
+                ->where("entity_name", $entity->name);
+            $actions
+                ->filter(function (Action $action) use ($entity): bool {
+                    return Str::contains($action->name, "\\{$entity->name}:")
+                        || ! Str::contains($action->name, ":");
+                })
+                ->each(function (Action $action) use ($customActions, $entity, $permissions, &$permissionMatrix) {
+                $selectedOwnership = $permissions
+                    ->where("action_name", $action->name)
+                    ->first()
+                    ?->ownership_name
+                    ?? "no";
                 $groupName = ucwords(
                     $entity->group_name
                         ?? "Ungrouped"
                 );
+
                 $permissionMatrix[$groupName][$entity->name][$action->name] = $selectedOwnership;
-            }
-        }
+            });
+        });
 
         return $permissionMatrix;
     }
