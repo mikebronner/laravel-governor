@@ -15,10 +15,10 @@
         }
     ],
     "require": {
-        "genealabs/laravel-casts": "dev-feature/upgrade-to-blade-components@dev",
-        "illuminate/support": "^10.0",
-        "illuminate/view": "^10.0",
-        "php": "^8.2",
+        "genealabs/laravel-casts": "dev-feature/upgrade-to-blade-components @dev",
+        "illuminate/support": "^9.0|^10.0",
+        "illuminate/view": "^9.0|^10.0",
+        "php": "^7.3|^8.0",
         "ramsey/uuid": "^4.0",
         "titasgailius/search-relations": "^1.0"
     },
@@ -26,9 +26,9 @@
         "doctrine/dbal": "^2.9",
         "fakerphp/faker": "^1.11",
         "laravel/legacy-factories": "^1.0",
-        "orchestra/testbench": "^8.0",
+        "orchestra/testbench": "^7.0|^8.0",
+        "phpunit/phpunit": "^9.5|^10.0",
         "php-coveralls/php-coveralls": "^2.1",
-        "phpunit/phpunit": "^10.0",
         "symfony/thanks": "^1.2"
     },
     "autoload": {
