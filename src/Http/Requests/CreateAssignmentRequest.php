@@ -23,7 +23,7 @@ class CreateAssignmentRequest extends Request
     {
         $assignmentClass = config("genealabs-laravel-governor.models.assignment");
         $assignment = new $assignmentClass;
-        $assignment->removeAllUsersFromRoles();
+        $assignment->removeUsersFromRoles($this->users);
         $assignment->assignUsersToRoles($this->users);
         $assignment->addAllUsersToMemberRole();
     }

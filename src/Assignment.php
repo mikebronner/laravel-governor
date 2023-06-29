@@ -69,7 +69,7 @@ class Assignment extends Model
     public function assignUsersToRoles($assignedUsers)
     {
         foreach ($assignedUsers as $role => $users) {
-            if ($role === 'SuperAdmin' || $role === 'Member') {
+            if ($role === 'Member') {
                 continue;
             }
 
@@ -81,13 +81,15 @@ class Assignment extends Model
         }
     }
 
-    public function removeAllUsersFromRoles()
+    public function removeUsersFromRoles($assignedUsers)
     {
         $this->roles
-            ->with('users')
+            ->with("users")
             ->get()
-            ->each(function ($role) {
-                $role->users()->detach();
+            ->each(function ($role) use ($assignedUsers) {
+                $role->users()
+                    ->whereIn("id", $assignedUsers)
+                    ->detach();
             });
     }
 
