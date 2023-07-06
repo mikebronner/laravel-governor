@@ -88,7 +88,7 @@ class Assignment extends Model
             ->get()
             ->each(function ($role) use ($assignedUsers) {
                 $role->users()
-                    ->whereIn("id", $assignedUsers)
+                    ->whereIn("id", data_get($assignedUsers, $role->name, []))
                     ->detach();
             });
     }
