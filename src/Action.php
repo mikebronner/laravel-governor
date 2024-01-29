@@ -10,6 +10,9 @@ use Illuminate\Support\Str;
 
 class Action extends Model
 {
+    protected $appends = [
+        "entity",
+    ];
     protected $keyType = 'string';
     protected $primaryKey = 'name';
     protected $rules = [
@@ -32,9 +35,11 @@ class Action extends Model
 
     public function getEntityAttribute(): string
     {
-        return collect(explode("\\", $this->model_class))
+        $entity = collect(explode("\\", $this->model_class))
             ->last()
             ?? "";
+
+        return trim(ucwords(preg_replace('/[A-Z]/m', " $0", $entity)));
     }
 
     public function getModelClassAttribute(): string
