@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace GeneaLabs\LaravelGovernor\Http\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
-use GeneaLabs\LaravelGovernor\Role;
 use GeneaLabs\LaravelGovernor\Action;
 use GeneaLabs\LaravelGovernor\Entity;
-use Illuminate\Http\RedirectResponse;
-use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
 use GeneaLabs\LaravelGovernor\Http\Requests\CreateRoleRequest;
 use GeneaLabs\LaravelGovernor\Http\Requests\UpdateRoleRequest;
+use GeneaLabs\LaravelGovernor\Role;
+use GeneaLabs\LaravelGovernor\Traits\EntityManagement;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class RolesController extends Controller
 {
@@ -156,28 +156,28 @@ class RolesController extends Controller
             ->orderBy("name")
             ->get();
         $entities->each(function (Entity $entity) use ($actions, $customActions, &$permissionMatrix, $role) {
-            // dd($customActions->where("entity", $entity)->first());
-            $customActions = $customActions->where("entity", $entity);
             $permissions = $role->permissions
                 ->where("entity_name", $entity->name);
             $actions
                 ->filter(function (Action $action) use ($entity): bool {
-                    return Str::contains($action->name, "\\{$entity->name}:")
+                    $entityName = Str::replace(" ", "", $entity->name);
+
+                    return Str::contains($action->name, "\\{$entityName}:")
                         || ! Str::contains($action->name, ":");
                 })
-                ->each(function (Action $action) use ($customActions, $entity, $permissions, &$permissionMatrix) {
-                $selectedOwnership = $permissions
-                    ->where("action_name", $action->name)
-                    ->first()
-                    ?->ownership_name
-                    ?? "no";
-                $groupName = ucwords(
-                    $entity->group_name
-                        ?? "Ungrouped"
-                );
+                ->each(function (Action $action) use ($entity, $permissions, &$permissionMatrix) {
+                    $selectedOwnership = $permissions
+                        ->where("action_name", $action->name)
+                        ->first()
+                        ?->ownership_name
+                        ?? "no";
+                    $groupName = ucwords(
+                        $entity->group_name
+                            ?? "Ungrouped"
+                    );
 
-                $permissionMatrix[$groupName][$entity->name][$action->name] = $selectedOwnership;
-            });
+                    $permissionMatrix[$groupName][$entity->name][$action->name] = $selectedOwnership;
+                });
         });
 
         return $permissionMatrix;
