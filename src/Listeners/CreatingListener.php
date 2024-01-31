@@ -35,7 +35,6 @@ class CreatingListener
             ->filter()
             ->each(function ($model) {
                 $model->getEntityFromModel(get_class($model));
-                $this->createGovernorOwnedByFields($model);
 
                 if (
                     ! $model->governor_owned_by
