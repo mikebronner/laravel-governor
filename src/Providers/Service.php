@@ -28,9 +28,6 @@ class Service extends AggregateServiceProvider
         $this->commands(Publish::class);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
     public function boot(): void
     {
         $this->app
@@ -95,6 +92,7 @@ class Service extends AggregateServiceProvider
         $this->loadViewComponentsAs('governor', [
             MenuBar::class,
         ]);
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
         $this->app
             ->make(Kernel::class)
