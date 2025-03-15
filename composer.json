@@ -9,15 +9,15 @@
         }
     ],
     "require": {
+        "genealabs/laravel-casts": "dev-feature/upgrade-to-blade-components @dev",
         "illuminate/database": "^9.0|^10.0|^11.0|^12.0",
         "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
-        "illuminate/view": "^9.0|^10.0|^11.0|^12.0",
         "php": "^7.3|^8.0",
-        "ramsey/uuid": "^4.0",
+        "ramsey/uuid": "^4.0"
     },
     "require-dev": {
         "doctrine/dbal": "^2.9",
-        "fakerphp/faker": "^1.28",
+        "fakerphp/faker": "^1.23",
         "laravel/legacy-factories": "^1.0",
         "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
         "phpunit/phpunit": "^9.5|^10.0|^11.0",
