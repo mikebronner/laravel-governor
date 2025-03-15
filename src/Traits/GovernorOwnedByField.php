@@ -36,7 +36,8 @@ trait GovernorOwnedByField
         $class = new ReflectionClass($model);
 
         if (
-            ! in_array("GeneaLabs\\LaravelGovernor\\Traits\\Governable", class_uses_recursive($model))
+            (! in_array("GeneaLabs\\LaravelGovernor\\Traits\\Governable", class_uses_recursive($model))
+                && ! in_array("GeneaLabs\\LaravelGovernor\\Traits\\Governing", class_uses_recursive($model)))
             || $class->isAbstract()
         ) {
             return false;
