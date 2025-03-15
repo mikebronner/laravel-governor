@@ -33,7 +33,12 @@ trait GovernorOwnedByField
 
     protected function createGovernorOwnedByFields(Model $model): bool
     {
-        if (! in_array("GeneaLabs\\LaravelGovernor\\Traits\\Governable", class_uses_recursive($model))) {
+        $class = new ReflectionClass($model);
+
+        if (
+            ! in_array("GeneaLabs\\LaravelGovernor\\Traits\\Governable", class_uses_recursive($model))
+            || $class->isAbstract()
+        ) {
             return false;
         }
 
