@@ -30,6 +30,23 @@ class CreatedListenerTest extends UnitTestCase
         $this->assertTrue($newUser->roles->contains('Member'));
     }
 
+    public function testCreatedListenerRecreatesMemberRoleWhenSyncFails()
+    {
+        // Remove the seeded Member role so syncWithoutDetaching('Member') fails
+        // the role_name foreign key, exercising the catch path that recreates
+        // the role and attaches it to the new user.
+        \Illuminate\Support\Facades\DB::statement('PRAGMA foreign_keys = ON');
+        \GeneaLabs\LaravelGovernor\Role::query()->whereKey('Member')->delete();
+
+        $newUser = User::factory()->create();
+
+        $this->assertTrue(
+            \GeneaLabs\LaravelGovernor\Role::query()->whereKey('Member')->exists(),
+            'The catch path should recreate the Member role when the initial sync fails.',
+        );
+        $this->assertTrue($newUser->fresh()->roles->contains('Member'));
+    }
+
     public function testCreatedListenerSkipsTenancyModels()
     {
         $listener = new CreatedListener();
