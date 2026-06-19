@@ -82,19 +82,31 @@ class CreatedListener
             GovernorOwnable::class,
         );
 
+        // Write on the governed model's own connection so the ownership row
+        // lands in the same database governorOwner() reads from — the MorphOne
+        // resolves GovernorOwnable on the parent model's connection. A
+        // default-connection write would orphan ownership for any governed
+        // model on a non-default (e.g. tenant) connection.
+        //
         // Store the morph class (alias under a registered morph map, FQCN
         // otherwise) so writes match how the governorOwner() MorphOne reads
         // the relationship — without this, ownership silently breaks under a
         // morph map.
-        (new $ownableClass)->firstOrCreate(
-            [
-                'ownable_type' => $model->getMorphClass(),
-                'ownable_id' => $model->getKey(),
-            ],
-            [
-                'user_id' => $ownerId,
-            ],
-        );
+        //
+        // updateOrCreate (not firstOrCreate) re-attributes a reused primary key
+        // to the current owner instead of silently inheriting a stale orphan
+        // row's owner if one survived a prior delete.
+        (new $ownableClass)
+            ->setConnection($model->getConnectionName())
+            ->updateOrCreate(
+                [
+                    'ownable_type' => $model->getMorphClass(),
+                    'ownable_id' => $model->getKey(),
+                ],
+                [
+                    'user_id' => $ownerId,
+                ],
+            );
     }
 
     protected function shouldAssignAuthenticatedOwner(): bool

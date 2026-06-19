@@ -54,9 +54,14 @@ trait Governing
             \GeneaLabs\LaravelGovernor\GovernorOwnable::class,
         );
 
-        // Filter on the team's morph class (alias under a registered morph map,
-        // FQCN otherwise) so this read matches how ownership rows are written.
+        // Read on the team's own connection so this lookup matches the database
+        // ownership rows are written to — ownership for a team is written on the
+        // team's connection, so a default-connection read would miss rows for a
+        // team on a non-default connection. Filter on the team's morph class
+        // (alias under a registered morph map, FQCN otherwise) so this read
+        // matches how ownership rows are written.
         $teamIds = (new $ownableClass)
+            ->setConnection((new $teamClass)->getConnectionName())
             ->where('ownable_type', (new $teamClass)->getMorphClass())
             ->where('user_id', $this->getKey())
             ->pluck('ownable_id');

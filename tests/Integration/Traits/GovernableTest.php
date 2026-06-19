@@ -7,6 +7,8 @@ use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\AuthorWithoutPolicy;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\DB;
 
 class GovernableTest extends UnitTestCase
 {
@@ -38,6 +40,54 @@ class GovernableTest extends UnitTestCase
         ]);
         $this->author = Author::factory()->create();
         $this->author->teams()->attach($this->team);
+    }
+
+    protected function tearDown(): void
+    {
+        // Reset any morph map a test registered so it can't leak into the rest
+        // of the suite.
+        Relation::morphMap([], false);
+        Relation::requireMorphMap(false);
+
+        parent::tearDown();
+    }
+
+    public function testScopeWithOwnPermissionResolvesPolymorphicOwnershipUnderMorphMap()
+    {
+        // The owned-records scope filters via whereHas("governorOwner"), which
+        // applies getMorphClass() — the morph alias once a map is registered.
+        // With ownership rows written under that same alias, the own-scope must
+        // resolve ownership through the polymorphic path even with the
+        // deprecated column cleared, proving the write and read alias agree.
+        Relation::morphMap(['author' => Author::class]);
+
+        $permission = (new Permission)->firstOrNew([
+            "role_name" => "Member",
+            "entity_name" => "Author (Laravel Governor)",
+            "action_name" => "update",
+        ]);
+        $permission->ownership_name = "own";
+        $permission->save();
+
+        // Records created under the map store ownable_type as the 'author' alias.
+        $ownAuthor = Author::factory()->create();
+        $this->actingAs($this->otherUser);
+        $foreignAuthor = Author::factory()->create();
+        $this->actingAs($this->user);
+
+        // Clear the deprecated column so only the polymorphic (alias) path can
+        // resolve ownership — isolates the morph-map read from the legacy-column
+        // fallback so a broken morph read can't be masked.
+        DB::table('authors')
+            ->whereIn('id', [$ownAuthor->id, $foreignAuthor->id])
+            ->update(['governor_owned_by' => null]);
+
+        $results = (new Author)
+            ->updatable()
+            ->get();
+
+        $this->assertTrue($results->contains($ownAuthor));
+        $this->assertFalse($results->contains($foreignAuthor));
     }
 
     public function testOwnedByRelationship()

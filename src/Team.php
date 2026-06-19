@@ -121,17 +121,23 @@ class Team extends Model
         // Wrap both stores in a transaction so the polymorphic record and the
         // deprecated column never disagree on the owner if the save throws.
         DB::transaction(function () use ($newOwner, $ownableClass): void {
-            // Update polymorphic ownership. Store the morph class so the write
-            // matches how governorOwner() reads under a registered morph map.
-            (new $ownableClass)->updateOrCreate(
-                [
-                    'ownable_type' => $this->getMorphClass(),
-                    'ownable_id' => $this->getKey(),
-                ],
-                [
-                    'user_id' => $newOwner->getKey(),
-                ],
-            );
+            // Update polymorphic ownership on the team's own connection so the
+            // write lands in the same database governorOwner() reads from — the
+            // MorphOne resolves GovernorOwnable on the parent's connection, so a
+            // default-connection write would be invisible for a team on a
+            // non-default connection. Store the morph class so the write matches
+            // how governorOwner() reads under a registered morph map.
+            (new $ownableClass)
+                ->setConnection($this->getConnectionName())
+                ->updateOrCreate(
+                    [
+                        'ownable_type' => $this->getMorphClass(),
+                        'ownable_id' => $this->getKey(),
+                    ],
+                    [
+                        'user_id' => $newOwner->getKey(),
+                    ],
+                );
 
             // Deprecated: maintain governor_owned_by for backward compatibility
             $this->governor_owned_by = $newOwner->getKey();
