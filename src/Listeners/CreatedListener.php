@@ -58,16 +58,15 @@ class CreatedListener
             return;
         }
 
-        $ownerId = $model->_governor_pending_owner_id ?? null;
-        unset($model->_governor_pending_owner_id);
+        $ownerId = null;
 
-        // Use the column value if explicitly set (deprecated but maintained for backward compat)
-        if (! $ownerId) {
-            // Check raw attributes directly, don't use accessor
-            $attrs = $model->getAttributes();
-            if (isset($attrs['governor_owned_by'])) {
-                $ownerId = $attrs['governor_owned_by'];
-            }
+        // Use the column value if explicitly set (deprecated, but maintained for
+        // backward compatibility). Read raw attributes directly so we don't trigger
+        // the polymorphic governorOwner accessor while the record is still being created.
+        $attributes = $model->getAttributes();
+
+        if (isset($attributes['governor_owned_by'])) {
+            $ownerId = $attributes['governor_owned_by'];
         }
 
         if (! $ownerId && auth()->check()) {

@@ -92,4 +92,63 @@ class UpgradeTo0130SeederTest extends UnitTestCase
 
         $this->assertTrue(true);
     }
+
+    public function testMigrateModelRecreatesPolymorphicRecordsFromDeprecatedColumn()
+    {
+        $author = Author::factory()->create();
+
+        // Simulate pre-upgrade state: the deprecated column still holds the
+        // owner, but no polymorphic record exists yet.
+        GovernorOwnable::where('ownable_type', Author::class)
+            ->where('ownable_id', $author->getKey())
+            ->delete();
+        $this->assertDatabaseMissing('governor_ownables', [
+            'ownable_type' => Author::class,
+            'ownable_id' => $author->getKey(),
+        ]);
+
+        (new LaravelGovernorUpgradeTo0130())->migrateModel(Author::class);
+
+        $this->assertDatabaseHas('governor_ownables', [
+            'ownable_type' => Author::class,
+            'ownable_id' => $author->getKey(),
+            'user_id' => $this->user->id,
+        ]);
+    }
+
+    public function testMigrateModelIsIdempotent()
+    {
+        $author = Author::factory()->create();
+
+        // A record already exists from auto-creation; running the migration
+        // again must not duplicate it (insertOrIgnore + unique constraint).
+        (new LaravelGovernorUpgradeTo0130())->migrateModel(Author::class);
+
+        $this->assertEquals(
+            1,
+            GovernorOwnable::where('ownable_type', Author::class)
+                ->where('ownable_id', $author->getKey())
+                ->count()
+        );
+    }
+
+    public function testMigrateModelRecreatesOwnershipAcrossManyRecords()
+    {
+        $authors = Author::factory()->count(5)->create();
+
+        // Clear all polymorphic records to simulate the pre-upgrade state,
+        // then exercise the chunked migration path.
+        GovernorOwnable::where('ownable_type', Author::class)->delete();
+        $this->assertEquals(
+            0,
+            GovernorOwnable::where('ownable_type', Author::class)->count()
+        );
+
+        (new LaravelGovernorUpgradeTo0130())->migrateModel(Author::class);
+
+        $this->assertEquals(
+            $authors->count(),
+            GovernorOwnable::where('ownable_type', Author::class)->count()
+        );
+    }
 }

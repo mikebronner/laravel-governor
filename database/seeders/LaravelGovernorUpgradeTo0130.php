@@ -26,32 +26,43 @@ class LaravelGovernorUpgradeTo0130 extends Seeder
     {
         $this->getModels()
             ->each(function (string $modelClass): void {
-                $model = new $modelClass;
-                $table = $model->getTable();
-                $connection = $model->getConnectionName();
+                $this->migrateModel($modelClass);
+            });
+    }
 
-                if (! Schema::connection($connection)->hasColumn($table, 'governor_owned_by')) {
-                    return;
-                }
+    public function migrateModel(string $modelClass): void
+    {
+        $model = new $modelClass;
+        $table = $model->getTable();
+        $connection = $model->getConnectionName();
+        $keyName = $model->getKeyName();
 
-                $records = DB::connection($connection)
-                    ->table($table)
-                    ->whereNotNull('governor_owned_by')
-                    ->select([$model->getKeyName(), 'governor_owned_by'])
-                    ->get();
+        if (! Schema::connection($connection)->hasColumn($table, 'governor_owned_by')) {
+            return;
+        }
 
-                foreach ($records as $record) {
-                    $keyName = $model->getKeyName();
-
-                    DB::table('governor_ownables')->insertOrIgnore([
+        // Chunk by primary key so the upgrade scales to large tables without
+        // loading every row into memory at once, and batch-insert each chunk.
+        DB::connection($connection)
+            ->table($table)
+            ->whereNotNull('governor_owned_by')
+            ->select([$keyName, 'governor_owned_by'])
+            ->orderBy($keyName)
+            ->chunkById(1000, function (Collection $records) use ($modelClass, $keyName): void {
+                $rows = $records
+                    ->map(fn ($record): array => [
                         'ownable_type' => $modelClass,
                         'ownable_id' => $record->{$keyName},
                         'user_id' => $record->governor_owned_by,
                         'created_at' => now(),
                         'updated_at' => now(),
-                    ]);
+                    ])
+                    ->all();
+
+                if ($rows !== []) {
+                    DB::table('governor_ownables')->insertOrIgnore($rows);
                 }
-            });
+            }, $keyName);
     }
 
     protected function getModels(): Collection
