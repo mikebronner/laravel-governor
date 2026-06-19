@@ -64,17 +64,26 @@ composer require genealabs/laravel-governor
     php artisan governor:publish --assets
     ```
 
-5. Lastly, add the Governable trait to the User model of your app:
+5. Lastly, add the `Governing` trait to the User model of your app. This is the
+    trait for your authenticatable/user model — it provides role checks
+    (`hasRole()`), the `roles`, `teams`, and `ownedTeams` relationships, and the
+    `permissions` / `effective_permissions` attributes. (`Governing` also pulls in
+    the `Governable` trait, so user models receive its query scopes and ownership
+    relationship as well.)
     ```php
     // [...]
-    use GeneaLabs\LaravelGovernor\Traits\Governable;
+    use GeneaLabs\LaravelGovernor\Traits\Governing;
 
     class User extends Authenticatable
     {
-        use Governable;
+        use Governing;
         // [...]
     }
     ```
+
+    > **Note:** Add the `Governable` trait (not `Governing`) to any *other* model
+    > you want Governor to protect with policies and ownership tracking. See the
+    > [API Reference](#api-reference) for the full trait surface.
 
 ## Upgrading
 The following upgrade guides should help navigate updates with breaking changes.
@@ -144,23 +153,27 @@ Policies are now auto-detected and automatically added to the entities list. You
  policies and check for them in code:
  https://laravel.com/docs/5.4/authorization#writing-policies
 
-**Your policies must extend LaravelGovernorPolicy in order to function with
- Governor.** By default you do not need to include any of the methods, as they
- are implemented automatically and perform checks based on reflection. However,
- if you need to customize anything, you are free to override any of the `before`,
- `create`, `edit`, `view`, `inspect`, and `remove` methods.
+**Your policies must extend `GeneaLabs\LaravelGovernor\Policies\BasePolicy` in
+ order to function with Governor.** By default you do not need to include any of
+ the methods, as they are implemented automatically and perform checks based on
+ reflection. However, if you need to customize anything, you are free to override
+ any of the `create`, `update`, `viewAny`, `view`, `delete`, `restore`, and
+ `forceDelete` methods.
 
 #### Checking Authorization
 To validate a user against a given policy, use one of the keywords that Governor
- validates against: `before`, `create`, `edit`, `view`, `inspect`, and `remove`.
- For example, if the desired policy to check has a class name of `BlogPostPolicy`,
- you would authorize your user with something like `$user->can('create', (new BlogPost))`
- or `$user->can('edit', $blogPost)`.
+ validates against: `create`, `view`, `viewAny`, `update`, `delete`, `restore`,
+ and `forceDelete`. For example, if the desired policy to check has a
+ class name of `BlogPostPolicy`, you would authorize your user with something
+ like `$user->can('create', BlogPost::class)` or `$user->can('update', $blogPost)`.
+ Custom policy actions are supported too — they are registered automatically (see
+ the [API Reference](#api-reference)).
 
-### Filter Queries To Show Ownly Allowed Items
+### Filter Queries To Show Only Allowed Items
 Often it is desirable to let the user see only the items that they have access
-    to. This was previously difficult and tedious. Using Nova as an example, you
-    can now limit the index view as follows:
+    to. The `Governable` trait adds Eloquent query scopes to your governed models
+    that constrain a query to the records the authenticated user is permitted to
+    act on. Using Nova as an example, you can limit the index view as follows:
     ```php
     <?php namespace App\Nova;
 
@@ -175,9 +188,9 @@ Often it is desirable to let the user see only the items that they have access
 
             if ($model
                 && is_object($model)
-                && method_exists($model, "filterViewAnyable")
+                && method_exists($model, "scopeViewAnyable")
             ) {
-                $query = $model->filterViewAnyable($query);
+                return $query->viewAnyable();
             }
 
             return $query;
@@ -187,17 +200,15 @@ Often it is desirable to let the user see only the items that they have access
     }
     ```
 
-    The available query filters are:
-    - `filterDeletable(Builder $query)`
-    - `filterUpdatable(Builder $query)`
-    - `filterViewable(Builder $query)`
-    - `filterViewAnyable(Builder $query)`
+    The available query scopes are:
+    - `deletable()` — records the user may `delete`
+    - `forceDeletable()` — records the user may `forceDelete`
+    - `restorable()` — records the user may `restore`
+    - `updatable()` — records the user may `update`
+    - `viewable()` — records the user may `view`
+    - `viewAnyable()` — records the user may `viewAny`
 
-    The same functionality is availabe via model scopes, as well:
-    - `deletable()`
-    - `updatable()`
-    - `viewable()`
-    - `viewAnyable()`
+    See the [API Reference](#api-reference) for full details on these scopes.
 
 ### Caching
 Governor can cache lookup table queries (roles, actions, entities, permissions)
@@ -243,51 +254,294 @@ We recommend making a custom 403 error page to let the user know they don't have
  how to set those up.
 
 ### Authorization API
-You can check a user's ability to perform certain actions via a public API. It
-is recommended to use Laravel Passport to maintain session state between your
-client and your backend. Here's an example that checks if the currently logged
-in user can create `GeneaLabs\LaravelGovernor\Role` model records:
+Governor exposes a small read-only HTTP API for checking the authenticated
+user's authorization from a decoupled client (SPA, mobile app, etc.). The routes
+are registered under the hard-coded `api/` prefix combined with your configured
+`url-prefix` (which defaults to `/genealabs/laravel-governor/`), so the resulting
+base path is `api/genealabs/laravel-governor/`. They are protected by the
+`auth:api` middleware, so the caller must be authenticated against your API
+guard. Laravel Passport (or Sanctum) is a convenient way to maintain that
+session state between your client and your backend.
 
+Both endpoints answer with an **empty body** and communicate the result purely
+through the HTTP status code:
+
+| Status | Meaning |
+|--------|---------|
+| `204 No Content` | The user **is** authorized — the check passed. |
+| `403 Forbidden` | The user is **not** authorized — the check failed. |
+
+Authorization is evaluated *before* request validation, so a request that cannot
+be authorized — including one that omits the required `model` parameter, leaving
+nothing to authorize against — also resolves to `403 Forbidden` rather than a
+validation error.
+
+#### Ability Check — `user-can`
+- **Endpoint:** `GET api/genealabs/laravel-governor/user-can/{ability}`
+- **Route name:** `genealabs.laravel-governor.api.user-can.show`
+
+Checks whether the authenticated user may perform `{ability}` (`create`, `view`,
+`viewAny`, `update`, `delete`, `restore`, `forceDelete`, or any custom policy
+action) against the given model.
+
+| Parameter | In | Required | Description |
+|-----------|----|----------|-------------|
+| `ability` | URL | yes | The policy ability/action to check. |
+| `model` | query/body | yes | Fully-qualified class name of the model the ability applies to. |
+| `primary-key` | query/body | record-level abilities only | Primary key of a specific record. Required when the ability targets an existing record (e.g. `update`, `view`, `delete`); omit it for class-level abilities such as `create` and `viewAny`. |
+
+> **Security:** the `model` value is resolved as a class name server-side
+> (`new $model` when a `primary-key` is supplied), so it must be **trusted**
+> input. Do not forward a raw, client-supplied class name straight through —
+> validate or allowlist it against your set of governed models first. The
+> endpoint is gated behind `auth:api`, but authentication alone does not make
+> an arbitrary class name safe to instantiate.
+
+Class-level check (may the user create any `Role`?):
 ```php
-$response = $this
-    ->json(
-        "GET",
-        route('genealabs.laravel-governor.api.user-can.show', "create"),
-        [
-            "model" => "GeneaLabs\LaravelGovernor\Role",
-        ]
-    );
+$response = $this->json(
+    "GET",
+    route('genealabs.laravel-governor.api.user-can.show', "create"),
+    [
+        "model" => "GeneaLabs\\LaravelGovernor\\Role",
+    ]
+);
+
+$response->assertNoContent(); // 204 when authorized, 403 when not
 ```
 
-This next example checks if the user can edit `GeneaLabs\LaravelGovernor\Role`
-model records:
+Record-level check (may the user update `Role` #1?):
 ```php
-$response = $this
-    ->json(
-        "GET",
-        route('genealabs.laravel-governor.api.user-can.show', "edit"),
-        [
-            "model" => "GeneaLabs\LaravelGovernor\Role",
-            "primary-key" => 1,
-        ]
-    );
+$response = $this->json(
+    "GET",
+    route('genealabs.laravel-governor.api.user-can.show', "update"),
+    [
+        "model" => "GeneaLabs\\LaravelGovernor\\Role",
+        "primary-key" => 1,
+    ]
+);
 ```
 
-The abilities `inspect`, `edit`, and `remove`, except `create` and `view`,
-require the primary key to be passed.
+#### Role Check — `user-is`
+- **Endpoint:** `GET api/genealabs/laravel-governor/user-is/{role}`
+- **Route name:** `genealabs.laravel-governor.api.user-is.show`
 
-### Role-Check API
-// TODO: add documentation
+Checks whether the authenticated user is assigned the given role. Users with the
+`SuperAdmin` role always pass. Returns `204 No Content` when the user has the
+role and `403 Forbidden` when they do not.
+
+| Parameter | In | Required | Description |
+|-----------|----|----------|-------------|
+| `role` | URL | yes | Name of the role to check for. |
+
 ```php
-$response = $this
-    ->json(
-        "GET",
-        route('genealabs.laravel-governor.api.user-is.show', "SuperAdmin")
-    );
+$response = $this->json(
+    "GET",
+    route('genealabs.laravel-governor.api.user-is.show', "SuperAdmin")
+);
+
+$response->assertNoContent(); // 204 when the user has the role, 403 when not
 ```
+
+## API Reference
+This section documents Governor's public API: the traits you add to your models
+(and their methods, relationships, and query scopes), the Artisan commands, the
+model lifecycle events Governor reacts to, and the configuration options.
+
+### Traits
+
+#### `Governing`
+Add to your **authenticatable / user model**. It composes the `Governable` trait,
+so a user model also receives everything `Governable` provides (see below).
+
+| Member | Signature | Returns | Purpose |
+|--------|-----------|---------|---------|
+| `hasRole()` | `hasRole(string $name): bool` | `bool` | Whether the user is assigned the named role. The role name is looked up first, so an unknown role always returns `false` — even for a `SuperAdmin`; a `SuperAdmin` returns `true` only for roles that actually exist. |
+| `roles()` | `roles(): BelongsToMany` | relationship | The roles assigned to the user (via the `governor_role_user` pivot). |
+| `teams()` | `teams(): BelongsToMany` | relationship | The teams the user belongs to (via the `governor_team_user` pivot). |
+| `ownedTeams()` | `ownedTeams(): HasMany` | relationship | The teams the user owns (created). |
+| `permissions` | accessor attribute | `Collection` | Every permission granted to the user through their roles. |
+| `effective_permissions` | accessor attribute | `Collection` | The user's permissions de-duplicated per entity + action, collapsed to the broadest ownership (`any` is preferred over `own`). |
+
+```php
+use GeneaLabs\LaravelGovernor\Traits\Governing;
+
+class User extends Authenticatable
+{
+    use Governing;
+}
+
+$user->hasRole("SuperAdmin");   // bool
+$user->roles;                    // Collection<Role>
+$user->teams;                    // Collection<Team>
+$user->ownedTeams;               // Collection<Team>
+$user->permissions;              // Collection<Permission>
+$user->effective_permissions;    // Collection<Permission>
+```
+
+#### `Governable`
+Add to any **model you want Governor to protect** (governed entities). It adds
+ownership tracking, the team relationship, and authorization-aware query scopes.
+Governor automatically adds a `governor_owned_by` column to governed tables and
+populates it with the creating user's key.
+
+**Relationships**
+
+| Member | Signature | Returns | Purpose |
+|--------|-----------|---------|---------|
+| `ownedBy()` | `ownedBy(): BelongsTo` | relationship | The user that owns (created) the record, resolved via `governor_owned_by`. |
+| `teams()` | `teams(): MorphToMany` | relationship | The teams the record is shared with (via the `governor_teamables` pivot). |
+
+**Query scopes** — each narrows a query to the records the authenticated user
+may perform the action on. A `SuperAdmin` (or a permission with `any` ownership)
+sees all records; an `own` permission limits results to records the user owns or
+shares via a team; an unauthorized user gets no records.
+
+| Scope | Signature | Action checked |
+|-------|-----------|----------------|
+| `viewable()` | `viewable(Builder $query): Builder` | `view` |
+| `viewAnyable()` | `viewAnyable(Builder $query): Builder` | `viewAny` |
+| `updatable()` | `updatable(Builder $query): Builder` | `update` |
+| `deletable()` | `deletable(Builder $query): Builder` | `delete` |
+| `restorable()` | `restorable(Builder $query): Builder` | `restore` |
+| `forceDeletable()` | `forceDeletable(Builder $query): Builder` | `forceDelete` |
+
+```php
+use GeneaLabs\LaravelGovernor\Traits\Governable;
+use Illuminate\Database\Eloquent\Model;
+
+class Article extends Model
+{
+    use Governable;
+}
+
+// Only the articles the current user may view:
+$articles = Article::viewable()->get();
+
+// Scopes compose with other query constraints:
+$articles = Article::updatable()->where("published", true)->get();
+
+$article->ownedBy;   // the owning User (BelongsTo)
+$article->teams;     // Collection<Team> the article is shared with
+```
+
+### Policies (`BasePolicy`)
+Every governed model resolves to a policy that extends
+`GeneaLabs\LaravelGovernor\Policies\BasePolicy`. The base class implements the
+seven standard Laravel policy actions for you — each delegates to Governor's
+permission engine, so you only override a method when you need custom behavior.
+You rarely call these directly; Laravel's `Gate` / `$user->can()` invokes them
+(see [Checking Authorization In Code](#checking-authorization-in-code)).
+
+| Method | Signature | Returns | Purpose |
+|--------|-----------|---------|---------|
+| `create()` | `create(?Model $user): bool` | `bool` | Whether the user may create a new record of the entity. |
+| `viewAny()` | `viewAny(?Model $user): bool` | `bool` | Whether the user may view the entity's listing/index. |
+| `view()` | `view(?Model $user, Model $model): bool` | `bool` | Whether the user may view the given record. |
+| `update()` | `update(?Model $user, Model $model): bool` | `bool` | Whether the user may update the given record. |
+| `delete()` | `delete(?Model $user, Model $model): bool` | `bool` | Whether the user may delete the given record. |
+| `restore()` | `restore(?Model $user, Model $model): bool` | `bool` | Whether the user may restore the given soft-deleted record. |
+| `forceDelete()` | `forceDelete(?Model $user, Model $model): bool` | `bool` | Whether the user may permanently delete the given record. |
+
+A `SuperAdmin` short-circuits every action to `true`; otherwise the result is
+driven by the role/team permissions seeded for the entity. See the
+[Default Methods In A Policy Class](#default-methods-in-a-policy-class) example
+below for the exact bodies, and add any extra public method to your policy to
+register a [custom action](#checking-authorization-in-code).
+
+**Entity-resolution helpers** (provided by the `EntityManagement` trait, which
+both `BasePolicy` and `Governable` compose) are public and occasionally useful
+when integrating with the package:
+
+| Method | Signature | Returns | Purpose |
+|--------|-----------|---------|---------|
+| `getEntityFromModel()` | `getEntityFromModel(string $modelClass): string` | `string` | The Governor entity name a model class resolves to (via its policy), or `""` when the model has no policy. |
+| `parsePolicies()` | `parsePolicies(): void` | `void` | Discovers and registers all policies as Governor entities. Runs automatically through the package middleware; call it manually only when you need to force discovery. |
+
+### Checking Authorization In Code
+Because Governor builds on Laravel's native authorization, check abilities with
+the standard `Gate` / `$user->can()` API — Governor resolves the policy and
+validates the user's permissions automatically:
+
+```php
+$user->can("create", Article::class);   // class-level ability
+$user->can("update", $article);          // record-level ability
+```
+
+The default policy actions Governor validates against are `create`, `view`,
+`viewAny`, `update`, `delete`, `restore`, and `forceDelete`. Any
+additional public method you add to a policy is treated as a **custom action**
+and is registered automatically (under the name `{ModelClass}:{method}`) the
+first time a request passes through the package's middleware.
+
+### Artisan Commands
+
+#### `governor:setup`
+Assigns the `SuperAdmin` role (and `Member`, when that role exists) to a user.
+Provide exactly one of the two options to identify the user. The Governor seeders
+must have been run first so that the `SuperAdmin` role exists.
+
+```sh
+php artisan governor:setup --superadmin=jane@example.com
+php artisan governor:setup --user=1
+```
+
+| Option | Description |
+|--------|-------------|
+| `--superadmin=<email>` | Email address of the user to promote to SuperAdmin. |
+| `--user=<id>` | Primary key of the user to promote to SuperAdmin. |
+
+#### `governor:publish`
+Publishes the package's publishable resources. Pass one or more flags:
+
+```sh
+php artisan governor:publish --config --views --assets --migrations
+```
+
+| Flag | Publishes |
+|------|-----------|
+| `--config` | The configuration file to `config/genealabs-laravel-governor.php`. |
+| `--views` | The Blade views, for customization. |
+| `--assets` | The CSS/JS assets to your `public/` directory. |
+| `--migrations` | The package migrations to your app's `database/migrations` directory. |
+
+### Events
+Governor listens to Eloquent model lifecycle events globally and reacts as
+follows. You do not need to wire anything up — these run automatically once the
+service provider is registered:
+
+| Event | Applies to | Behavior |
+|-------|-----------|----------|
+| `eloquent.creating` / `eloquent.saving` | Any model using `Governable` | Resolves the model's policy entity and sets `governor_owned_by` to the authenticated user's key when it is not already set. |
+| `eloquent.created` | Your auth/user model | Assigns the new user the `Member` role, creating that role if it does not yet exist. |
+| `eloquent.creating` | Team-invitation model | Generates a UUID token for the invitation and associates it with the authenticated user. |
+| `eloquent.created` | Team-invitation model | Sends the `TeamInvitation` notification to the invitee's email address. |
+| `eloquent.created` | Team model | Adds the creating user as a team member and seeds the team's permissions from the owner's role permissions. |
+
+### Configuration Options
+The following keys are available in `config/genealabs-laravel-governor.php`
+(publish it with `php artisan governor:publish --config`):
+
+| Key | Default | Purpose |
+|-----|---------|---------|
+| `layout-view` | `'layouts.app'` | Blade layout that wraps Governor's admin views. Must include Bootstrap 3 and FontAwesome 4. |
+| `content-section` | `'content'` | Name of the layout section Governor renders its content into. |
+| `auth-model-primary-key-type` | `'bigInteger'` | Column type for the `governor_owned_by` foreign key (`bigInteger` or `integer`), to match your user table's primary key. |
+| `models` | Governor's model classes | Map of the model classes Governor uses (`auth`, `action`, `assignment`, `entity`, `group`, `ownership`, `permission`, `role`, `team`, `invitation`). `auth` defaults to your app's configured user model; override any entry to swap in your own model. |
+| `user-name-property` | `'name'` | The auth-model property displayed when assigning users to roles. |
+| `url-prefix` | `'/genealabs/laravel-governor/'` | URL prefix for the admin pages, and the base used for the API routes. |
+| `superadmins` | `env("GOVERNOR_SUPERADMINS")` | Optional JSON array of SuperAdmin users to create if missing. |
+| `admins` | `env("GOVERNOR_ADMINS")` | Optional JSON array of Admin users to create if missing. |
+| `entity-aliases` | `[]` | Map of raw entity name → display name shown in the UI. |
+| `policy_paths` | `[app_path('Policies')]` | Directories Governor scans to auto-discover policy classes and register them as governed entities. Add paths when your policies live outside `app/Policies` (e.g. in a module or package). |
+| `cache.enabled` | `false` | Enable cross-request caching of lookup tables (roles, actions, entities, permissions). |
+| `cache.ttl` | `3600` | Cache lifetime in seconds; use `null` to cache forever (until invalidated). |
 
 ## Examples
 ### Config File
+For a per-key description of every option, see the
+[Configuration Options](#configuration-options) table in the API Reference. The
+published config file looks like this:
 ```php
 <?php
 
@@ -323,7 +577,20 @@ return [
     | Here you can customize what model should be used for authorization checks
     | in the event that you have customized your authentication processes.
     */
-    'auth-model' => config('auth.providers.users.model') ?? config('auth.model'),
+    'auth-model-primary-key-type' => 'bigInteger',
+    "models" => [
+        "auth" => config('auth.providers.users.model')
+            ?? config('auth.model'),
+        "action" => GeneaLabs\LaravelGovernor\Action::class,
+        "assignment" => GeneaLabs\LaravelGovernor\Assignment::class,
+        "entity" => GeneaLabs\LaravelGovernor\Entity::class,
+        "group" => GeneaLabs\LaravelGovernor\Group::class,
+        "ownership" => GeneaLabs\LaravelGovernor\Ownership::class,
+        "permission" => GeneaLabs\LaravelGovernor\Permission::class,
+        "role" => GeneaLabs\LaravelGovernor\Role::class,
+        "team" => GeneaLabs\LaravelGovernor\Team::class,
+        "invitation" => GeneaLabs\LaravelGovernor\TeamInvitation::class,
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -346,6 +613,59 @@ return [
     | existing URLs of your app when doing so.
     */
     'url-prefix' => '/genealabs/laravel-governor/',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default SuperAdmin User
+    |--------------------------------------------------------------------------
+    |
+    | You may optionally specify a set of SuperAdmin and Admin users that will
+    | be created if they don't already exist, formatted as JSON.
+    | Example: [{"name":"Joe Doe","email":"joe@example.com","password":"secret1"}]
+    */
+    "superadmins" => env("GOVERNOR_SUPERADMINS"),
+    "admins" => env("GOVERNOR_ADMINS"),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Entity Aliases
+    |--------------------------------------------------------------------------
+    |
+    | Define display aliases for entity names. Keys are the raw entity
+    | names (as stored in the database), and values are the display
+    | names shown in the UI. Any entity not listed here will display
+    | its original name.
+    */
+    'entity-aliases' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Policy Discovery Paths
+    |--------------------------------------------------------------------------
+    |
+    | Governor auto-discovers your policy classes and registers each as a
+    | governed entity. By default it scans your app's `app/Policies` directory;
+    | add more paths here when your policies live elsewhere (e.g. in a module
+    | or a package).
+    */
+    'policy_paths' => [
+        app_path('Policies'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Lookup Table Cache
+    |--------------------------------------------------------------------------
+    |
+    | Governor can cache lookup table queries (roles, actions, entities,
+    | permissions) across requests to reduce database load.
+    | Set 'enabled' to true to activate cross-request caching, and 'ttl' to
+    | the number of seconds cached data should persist (null for "forever").
+    */
+    'cache' => [
+        'enabled' => false,
+        'ttl' => 3600,
+    ],
 ];
 ```
 
@@ -355,32 +675,28 @@ Adding policies is crazily simple! All the work has been refactored out so all
  you need to worry about now is creating a policy class, and that's it!
 
 ```php
-<?php namespace GeneaLabs\LaravelGovernor\Policies;
+<?php namespace App\Policies;
 
-use GeneaLabs\LaravelGovernor\Interfaces\GovernablePolicy;
-use Illuminate\Auth\Access\HandlesAuthorization;
+use GeneaLabs\LaravelGovernor\Policies\BasePolicy;
 
-class MyPolicy extends LaravelGovernorPolicy
+class ArticlePolicy extends BasePolicy
 {
-    use HandlesAuthorization;
 }
 ```
 
 #### Default Methods In A Policy Class
-Adding any of the `before`, `create`, `update`, `view`, `viewAny`, `delete`,
-`restore`, and `forceDelete` methods to your policy is only required if you want
-to customize a given method.
+Adding any of the `create`, `update`, `viewAny`, `view`, `delete`, `restore`,
+and `forceDelete` methods to your policy is only required if you want to
+customize a given method. The implementations below mirror `BasePolicy` — each
+delegates to `validatePermissions()`, which short-circuits to `true` for a
+`SuperAdmin` and otherwise checks the user's role/team permissions for the
+action. Record-level methods pass the `$model` itself; `validatePermissions()`
+reads the record's owner from it internally.
 
 ```php
 abstract class BasePolicy
 {
-    public function before($user)
-    {
-        return $user->hasRole("SuperAdmin")
-            ?: null;
-    }
-
-    public function create(Model $user) : bool
+    public function create(?Model $user) : bool
     {
         return $this->validatePermissions(
             $user,
@@ -389,20 +705,18 @@ abstract class BasePolicy
         );
     }
 
-    public function update(Model $user, Model $model) : bool
+    public function update(?Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
             'update',
             $this->entity,
-            $model->governor_owned_by
+            $model
         );
     }
 
-    public function viewAny(Model $user) : bool
+    public function viewAny(?Model $user) : bool
     {
-        return true;
-
         return $this->validatePermissions(
             $user,
             'viewAny',
@@ -410,43 +724,43 @@ abstract class BasePolicy
         );
     }
 
-    public function view(Model $user, Model $model) : bool
+    public function view(?Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
             'view',
             $this->entity,
-            $model->governor_owned_by
+            $model
         );
     }
 
-    public function delete(Model $user, Model $model) : bool
+    public function delete(?Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
             'delete',
             $this->entity,
-            $model->governor_owned_by
+            $model
         );
     }
 
-    public function restore(Model $user, Model $model) : bool
+    public function restore(?Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
             'restore',
             $this->entity,
-            $model->governor_owned_by
+            $model
         );
     }
 
-    public function forceDelete(Model $user, Model $model) : bool
+    public function forceDelete(?Model $user, Model $model) : bool
     {
         return $this->validatePermissions(
             $user,
             'forceDelete',
             $this->entity,
-            $model->governor_owned_by
+            $model
         );
     }
 }

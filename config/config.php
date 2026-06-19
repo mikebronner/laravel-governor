@@ -101,11 +101,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Policy Discovery Paths
+    |--------------------------------------------------------------------------
+    |
+    | Governor auto-discovers your policy classes and registers each as a
+    | governed entity. By default it scans your app's `app/Policies` directory;
+    | add more paths here when your policies live elsewhere (e.g. in a module
+    | or a package).
+    */
+    'policy_paths' => [
+        app_path('Policies'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Lookup Table Cache
     |--------------------------------------------------------------------------
     |
     | Governor can cache lookup table queries (roles, actions, entities,
-    | ownerships, permissions) across requests to reduce database load.
+    | permissions) across requests to reduce database load.
     | When enabled, results are stored in your configured cache driver
     | with the specified TTL. Cache is automatically invalidated when
     | any lookup table is modified.
