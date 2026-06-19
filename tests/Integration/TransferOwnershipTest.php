@@ -52,6 +52,39 @@ class TransferOwnershipTest extends UnitTestCase
         $this->assertEquals($this->member->getKey(), $this->team->governor_owned_by);
     }
 
+    public function testDetachReadsFreshOwnerAfterOutOfBandTransfer(): void
+    {
+        // Eager-load governorOwner so this instance holds a now-stale owner.
+        $this->team->load('governorOwner');
+        $this->assertEquals(
+            $this->owner->getKey(),
+            (int) $this->team->governor_owned_by,
+        );
+
+        // Transfer ownership out-of-band on a separate instance, leaving the
+        // eager-loaded owner on $this->team stale.
+        Team::find($this->team->getKey())->transferOwnership($this->member);
+
+        // The stale instance must refuse to detach the NEW owner (member)...
+        try {
+            $this->team->members()->detach($this->member);
+            $this->fail('Expected the new owner to be protected from detachment.');
+        } catch (\LogicException $exception) {
+            $this->assertStringContainsString(
+                'team owner cannot be removed',
+                $exception->getMessage(),
+            );
+        }
+
+        // ...and must allow detaching the FORMER owner, proving detach() re-read
+        // ownership fresh instead of trusting the stale eager-loaded value.
+        $this->team->members()->detach($this->owner);
+        $this->team->load('members');
+
+        $this->assertFalse($this->team->members->contains($this->owner));
+        $this->assertTrue($this->team->members->contains($this->member));
+    }
+
     public function testPreviousOwnerRetainsMembershipAfterTransfer(): void
     {
         $this->team->transferOwnership($this->member);

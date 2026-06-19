@@ -79,6 +79,16 @@ composer require genealabs/laravel-governor
 ## Upgrading
 The following upgrade guides should help navigate updates with breaking changes.
 
+### From 0.12 to 0.13 [Breaking]
+Governed-model ownership has moved from the per-table `governor_owned_by` column to a dedicated polymorphic `governor_ownables` table. This removes the need to add (and migrate) a `governor_owned_by` column on every governed model's table. After running the migrations, run the upgrade seeder to copy existing ownership data into the new table:
+```sh
+php artisan db:seed --class="LaravelGovernorUpgradeTo0130"
+```
+Notes:
+- The deprecated `governor_owned_by` column is kept and still written for backward compatibility; it will be removed in a future release. Until you run the seeder above, existing records resolve ownership by falling back to that column, so authorization keeps working during the upgrade window.
+- If a governed model lives on a non-default database connection (e.g. a tenant connection under `hyn/multi-tenancy`), run the seeder against that connection so its ownership rows are written to the same database.
+- **Queue/console contexts:** automatic owner assignment is skipped for models created inside queued jobs or console commands (to avoid attributing a leaked authenticated user). To assign ownership in those contexts, set `governor_owned_by` explicitly on the model before saving — the listener honors an explicit value in any context.
+
 ### From 0.11.5+ to 0.12 [Breaking]
 The role_user pivot table has replaced the composite key with a primary key, as Laravel does not fully support composite keys. Run:
 ```sh

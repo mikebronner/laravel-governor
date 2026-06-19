@@ -107,6 +107,13 @@ class CreatedListener
         // console contexts, where the wildcard eloquent.created listener may
         // fire without a genuine request-bound user. The package's own tests
         // run in the console but rely on the acting user, so allow them.
+        //
+        // Limitation: queue:work runs in the console, so Governable models
+        // created inside queued jobs get NO automatic ownership row. To assign
+        // ownership in a queue/console context, set governor_owned_by explicitly
+        // on the model before saving — createOwnershipRecord() honors an explicit
+        // column value in any context (see above), so that path is unaffected by
+        // this guard. This limitation is documented in the README upgrade guide.
         return ! app()->runningInConsole() || app()->runningUnitTests();
     }
 }

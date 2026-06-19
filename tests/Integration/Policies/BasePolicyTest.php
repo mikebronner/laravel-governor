@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GeneaLabs\LaravelGovernor\Tests\Integration\Policies;
 
+use GeneaLabs\LaravelGovernor\GovernorOwnable;
 use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Team;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
@@ -11,6 +12,7 @@ use GeneaLabs\LaravelGovernor\Tests\Fixtures\AuthorWithoutGovernable;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Policies\Author as AuthorPolicy;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class BasePolicyTest extends UnitTestCase
 {
@@ -42,6 +44,16 @@ class BasePolicyTest extends UnitTestCase
         ]);
         $this->author = Author::factory()->create();
         $this->author->teams()->attach($this->team);
+    }
+
+    protected function tearDown(): void
+    {
+        // Reset any morph map a test registered so it can't leak into the rest
+        // of the suite.
+        Relation::morphMap([], false);
+        Relation::requireMorphMap(false);
+
+        parent::tearDown();
     }
 
     protected function updatePermission(string $role, string $action, string $ownership)
@@ -430,6 +442,44 @@ class BasePolicyTest extends UnitTestCase
         $this->updatePermission("Member", "forceDelete", "own");
 
         $this->assertTrue($this->user->can("forceDelete", $this->author));
+    }
+
+    public function testPolicyFallsBackToLegacyColumnWhenPolymorphicRowMissing()
+    {
+        // Pre-upgrade state: a Governable model whose governor_owned_by column
+        // is set but whose polymorphic governor_ownables row hasn't been created
+        // yet (the upgrade seeder hasn't run). Ownership must still resolve to
+        // 'own' via the column fallback, not silently downgrade to 'other'.
+        $this->updatePermission("Member", "update", "own");
+
+        GovernorOwnable::where('ownable_type', Author::class)
+            ->where('ownable_id', $this->author->getKey())
+            ->delete();
+        $this->author->unsetRelation('governorOwner');
+
+        $this->assertEquals($this->user->id, $this->author->governor_owned_by);
+        $this->assertTrue($this->user->can("update", $this->author));
+    }
+
+    public function testPolicyResolvesOwnershipThroughRealGateUnderMorphMap()
+    {
+        // Fire an actual policy gate against records stored under a registered
+        // morph alias — the own/other decision must hold end-to-end, proving the
+        // write alias and the relationship's read path (getMorphClass()) agree.
+        Relation::morphMap(['author' => Author::class]);
+        $this->updatePermission("Member", "update", "own");
+
+        // Owned by the acting user; ownership row stored under the 'author' alias.
+        $ownAuthor = Author::factory()->create();
+
+        // Owned by a different user.
+        $foreignOwner = User::factory()->create();
+        $this->actingAs($foreignOwner);
+        $foreignAuthor = Author::factory()->create();
+        $this->actingAs($this->user);
+
+        $this->assertTrue($this->user->can("update", $ownAuthor));
+        $this->assertFalse($this->user->can("update", $foreignAuthor));
     }
 
     public function testPolicyResolvesOwnershipForGovernedModelWithoutGovernableTrait()

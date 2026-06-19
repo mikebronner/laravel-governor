@@ -1,5 +1,6 @@
 <?php namespace GeneaLabs\LaravelGovernor\Tests\Integration\Traits;
 
+use GeneaLabs\LaravelGovernor\GovernorOwnable;
 use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Team;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
@@ -135,6 +136,31 @@ class GovernableTest extends UnitTestCase
             ->get();
 
         $this->assertTrue($results->isNotEmpty());
+        $this->assertTrue($results->contains($this->author));
+        $this->assertFalse($results->contains($this->otherAuthor));
+    }
+
+    public function testScopeWithOwnPermissionFallsBackToLegacyColumn()
+    {
+        // Pre-upgrade state: governor_owned_by is set but the polymorphic
+        // governor_ownables row hasn't been created yet. The owned scope must
+        // still include the record via the legacy-column fallback, matching the
+        // graceful degradation the rest of the package provides.
+        $permission = (new Permission)->firstOrNew([
+            "role_name" => "Member",
+            "entity_name" => "Author (Laravel Governor)",
+            "action_name" => "update",
+        ]);
+        $permission->ownership_name = "own";
+        $permission->save();
+
+        // Drop every Author's polymorphic ownership row to simulate pre-upgrade.
+        GovernorOwnable::where('ownable_type', Author::class)->delete();
+
+        $results = (new Author)
+            ->updatable()
+            ->get();
+
         $this->assertTrue($results->contains($this->author));
         $this->assertFalse($results->contains($this->otherAuthor));
     }

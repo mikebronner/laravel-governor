@@ -53,7 +53,7 @@ class LaravelGovernorUpgradeTo0130 extends Seeder
             ->whereNotNull('governor_owned_by')
             ->select([$keyName, 'governor_owned_by'])
             ->orderBy($keyName)
-            ->chunkById(1000, function (Collection $records) use ($morphClass, $keyName): void {
+            ->chunkById(1000, function (Collection $records) use ($morphClass, $keyName, $connection): void {
                 $rows = $records
                     ->map(fn ($record): array => [
                         'ownable_type' => $morphClass,
@@ -65,7 +65,14 @@ class LaravelGovernorUpgradeTo0130 extends Seeder
                     ->all();
 
                 if ($rows !== []) {
-                    DB::table('governor_ownables')->insertOrIgnore($rows);
+                    // Write to the model's own connection so ownership rows land
+                    // in the same database they were read from. The new table's
+                    // migration sets a tenant connection under Hyn\Tenancy, so a
+                    // default-connection write would silently lose (or error on)
+                    // ownership for any governed model on a non-default connection.
+                    DB::connection($connection)
+                        ->table('governor_ownables')
+                        ->insertOrIgnore($rows);
                 }
             }, $keyName);
     }

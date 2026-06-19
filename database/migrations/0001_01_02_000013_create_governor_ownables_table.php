@@ -19,7 +19,12 @@ class CreateGovernorOwnablesTable extends Migration
     {
         Schema::create('governor_ownables', function (Blueprint $table): void {
             $table->id();
-            $table->morphs('ownable');
+            // Define the morph columns by hand instead of $table->morphs() so the
+            // unique constraint below is the sole index on the pair. morphs()
+            // would add its own composite index, leaving a second, redundant
+            // index on the identical (ownable_type, ownable_id) columns.
+            $table->string('ownable_type');
+            $table->unsignedBigInteger('ownable_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 

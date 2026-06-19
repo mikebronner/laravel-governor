@@ -10,9 +10,17 @@ class TransferTeamOwnershipRequest extends Request
 {
     public function authorize(): bool
     {
-        return auth()->check()
-            && $this->team
-            && (int) $this->team->governor_owned_by === (int) auth()->id();
+        if (! auth()->check() || ! $this->team) {
+            return false;
+        }
+
+        // Read the current owner fresh so a stale eager-loaded governorOwner
+        // can't authorize (or wrongly deny) a transfer after an out-of-band
+        // ownership change. The accessor re-reads the polymorphic record and
+        // falls back to the deprecated column.
+        $this->team->unsetRelation('governorOwner');
+
+        return (int) $this->team->governor_owned_by === (int) auth()->id();
     }
 
     public function rules(): array
