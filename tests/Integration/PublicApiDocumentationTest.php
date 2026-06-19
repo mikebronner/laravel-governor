@@ -233,6 +233,33 @@ class PublicApiDocumentationTest extends UnitTestCase
         );
     }
 
+    public function testEffectivePermissionsExcludesUnrecognizedOwnership(): void
+    {
+        // The documented contract covers only the "any"/"own" ownership levels.
+        // A permission at any other seeded ownership (e.g. "other") is not part
+        // of that contract and is omitted from effective_permissions.
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Permission::create([
+            'role_name' => 'Member',
+            'entity_name' => 'author',
+            'action_name' => 'delete',
+            'ownership_name' => 'other',
+        ]);
+
+        $deletePermissions = $user->effective_permissions
+            ->filter(
+                static fn ($permission): bool => $permission->entity_name === 'author'
+                    && $permission->action_name === 'delete',
+            );
+
+        $this->assertTrue(
+            $deletePermissions->isEmpty(),
+            'effective_permissions must surface only the documented "any"/"own" levels.',
+        );
+    }
+
     // -- Documented HTTP response contract ----------------------------------
 
     public function testUserCanApiReturnsDocumented204WhenAuthorized(): void
