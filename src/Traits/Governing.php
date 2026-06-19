@@ -70,19 +70,25 @@ trait Governing
             });
 
         foreach ($groupedPermissions as $entityAction => $permissions) {
-            $permission = $permissions->first();
+            $ownershipNames = $permissions->pluck("ownership_name");
+
+            if ($ownershipNames->contains("any")) {
+                $broadestOwnership = "any";
+            } elseif ($ownershipNames->contains("own")) {
+                $broadestOwnership = "own";
+            } else {
+                continue;
+            }
+
+            // Clone so the cached `governor-permissions` rows are never mutated,
+            // and emit exactly one entry per entity+action collapsed to the
+            // broadest ownership ("any" wins over "own").
+            $permission = clone $permissions->first();
             $permission->role_name = null;
             $permission->team_name = null;
+            $permission->ownership_name = $broadestOwnership;
 
-            if ($permissions->pluck("ownership_name")->contains("any")) {
-                $permission->ownership_name = "any";
-                $results = $results->push($permission);
-            }
-
-            if ($permissions->pluck("ownership_name")->contains("own")) {
-                $permission->ownership_name = "own";
-                $results = $results->push($permission);
-            }
+            $results = $results->push($permission);
         }
 
         return $results;

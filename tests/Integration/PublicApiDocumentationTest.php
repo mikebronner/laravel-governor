@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GeneaLabs\LaravelGovernor\Tests\Integration;
 
 use GeneaLabs\LaravelGovernor\GovernorCache;
+use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Policies\BasePolicy;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
@@ -149,11 +150,22 @@ class PublicApiDocumentationTest extends UnitTestCase
         }
 
         // Ownership is only observed for invalidation, never cached, so the
-        // README must not list it among the cached lookup tables.
-        $this->assertStringNotContainsString(
-            'ownerships, permissions',
-            $this->readme,
-            'README still lists "ownerships" as a cached lookup table; GovernorCache::KEYS does not cache ownerships.',
+        // README's Caching section must not list it among the cached lookup
+        // tables. Assert against the section itself rather than a brittle
+        // literal substring (the `ownership` config model key legitimately
+        // appears elsewhere in the README).
+        $cachingSection = $this->readmeSection('Caching');
+
+        $this->assertNotSame(
+            '',
+            $cachingSection,
+            'Could not locate the "### Caching" section in the README.',
+        );
+        $this->assertStringNotContainsStringIgnoringCase(
+            'ownership',
+            $cachingSection,
+            'The Caching section lists "ownership(s)" as a cached lookup table; '
+                . 'GovernorCache::KEYS caches only ' . implode(', ', $keys) . '.',
         );
     }
 
@@ -175,6 +187,50 @@ class PublicApiDocumentationTest extends UnitTestCase
         $this->assertInstanceOf(BelongsTo::class, $author->ownedBy());
         $this->assertInstanceOf(MorphToMany::class, $author->teams());
         $this->assertInstanceOf(Builder::class, Author::viewable());
+    }
+
+    public function testEffectivePermissionsCollapsesToTheDocumentedBroadestOwnership(): void
+    {
+        // README "Governing" → effective_permissions: "de-duplicated per
+        // entity + action, collapsed to the broadest ownership (`any` is
+        // preferred over `own`)." Lock that exact contract: grant the user's
+        // role the same entity+action at *both* ownership levels...
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Permission::create([
+            'role_name' => 'Member',
+            'entity_name' => 'author',
+            'action_name' => 'view',
+            'ownership_name' => 'any',
+        ]);
+        Permission::create([
+            'role_name' => 'Member',
+            'entity_name' => 'author',
+            'action_name' => 'view',
+            'ownership_name' => 'own',
+        ]);
+
+        $viewPermissions = $user->effective_permissions
+            ->filter(
+                static fn ($permission): bool => $permission->entity_name === 'author'
+                    && $permission->action_name === 'view',
+            )
+            ->values();
+
+        // ...and assert exactly one collapsed entry, at the broadest ownership.
+        // The pre-collapse accessor returned two entries (and, via a shared
+        // object reference, both read "own"), so this would have failed then.
+        $this->assertCount(
+            1,
+            $viewPermissions,
+            'effective_permissions must de-duplicate each entity+action to a single entry.',
+        );
+        $this->assertSame(
+            'any',
+            $viewPermissions->first()->ownership_name,
+            '"any" ownership must win over "own" when both are granted.',
+        );
     }
 
     // -- Documented HTTP response contract ----------------------------------
@@ -210,15 +266,36 @@ class PublicApiDocumentationTest extends UnitTestCase
         $response->assertForbidden();
     }
 
-    public function testUserIsApiReturnsDocumented204WhenUserHasRole(): void
+    public function testUserCanApiReturnsDocumented403WhenModelOmitted(): void
     {
-        $superAdmin = User::factory()->create();
-        $superAdmin->roles()->attach('SuperAdmin');
-        $this->actingAs($superAdmin, 'api');
+        // README "Authorization API": authorization is evaluated *before*
+        // request validation, so omitting the required `model` parameter leaves
+        // nothing to authorize against and resolves to 403 — not a 422
+        // validation error. UserCan::authorize() runs before rules() in the
+        // FormRequest lifecycle, so the documented ordering is locked here.
+        $user = User::factory()->create();
+        $this->actingAs($user, 'api');
 
         $response = $this->json(
             'GET',
-            route('genealabs.laravel-governor.api.user-is.show', 'SuperAdmin'),
+            route('genealabs.laravel-governor.api.user-can.show', 'create'),
+        );
+
+        $response->assertForbidden();
+    }
+
+    public function testUserIsApiReturnsDocumented204WhenUserHasRole(): void
+    {
+        // Use an ordinary (non-SuperAdmin) role so the role-match branch of
+        // UserIs::authorize() is actually exercised — a SuperAdmin would pass
+        // via the bypass even if the role-match branch were broken. A freshly
+        // created user is seeded the baseline "Member" role.
+        $user = User::factory()->create();
+        $this->actingAs($user, 'api');
+
+        $response = $this->json(
+            'GET',
+            route('genealabs.laravel-governor.api.user-is.show', 'Member'),
         );
 
         $response->assertNoContent(204);
@@ -235,6 +312,22 @@ class PublicApiDocumentationTest extends UnitTestCase
         );
 
         $response->assertForbidden();
+    }
+
+    /**
+     * Extract a single README section by its heading text — everything from the
+     * matching `##`/`###` heading up to (but not including) the next heading of
+     * the same-or-higher level. Returns '' when the heading is not found.
+     */
+    protected function readmeSection(string $heading): string
+    {
+        $pattern = '/^#{2,3}\s+' . preg_quote($heading, '/') . '\b.*?(?=^#{2,3}\s|\z)/ms';
+
+        if (preg_match($pattern, $this->readme, $matches) !== 1) {
+            return '';
+        }
+
+        return $matches[0];
     }
 
     /**

@@ -290,6 +290,13 @@ action) against the given model.
 | `model` | query/body | yes | Fully-qualified class name of the model the ability applies to. |
 | `primary-key` | query/body | record-level abilities only | Primary key of a specific record. Required when the ability targets an existing record (e.g. `update`, `view`, `delete`); omit it for class-level abilities such as `create` and `viewAny`. |
 
+> **Security:** the `model` value is resolved as a class name server-side
+> (`new $model` when a `primary-key` is supplied), so it must be **trusted**
+> input. Do not forward a raw, client-supplied class name straight through —
+> validate or allowlist it against your set of governed models first. The
+> endpoint is gated behind `auth:api`, but authentication alone does not make
+> an arbitrary class name safe to instantiate.
+
 Class-level check (may the user create any `Role`?):
 ```php
 $response = $this->json(
@@ -349,7 +356,7 @@ so a user model also receives everything `Governable` provides (see below).
 
 | Member | Signature | Returns | Purpose |
 |--------|-----------|---------|---------|
-| `hasRole()` | `hasRole(string $name): bool` | `bool` | Whether the user is assigned the named role. Users with the `SuperAdmin` role always return `true`. |
+| `hasRole()` | `hasRole(string $name): bool` | `bool` | Whether the user is assigned the named role. The role name is looked up first, so an unknown role always returns `false` — even for a `SuperAdmin`; a `SuperAdmin` returns `true` only for roles that actually exist. |
 | `roles()` | `roles(): BelongsToMany` | relationship | The roles assigned to the user (via the `governor_role_user` pivot). |
 | `teams()` | `teams(): BelongsToMany` | relationship | The teams the user belongs to (via the `governor_team_user` pivot). |
 | `ownedTeams()` | `ownedTeams(): HasMany` | relationship | The teams the user owns (created). |
@@ -526,6 +533,7 @@ The following keys are available in `config/genealabs-laravel-governor.php`
 | `superadmins` | `env("GOVERNOR_SUPERADMINS")` | Optional JSON array of SuperAdmin users to create if missing. |
 | `admins` | `env("GOVERNOR_ADMINS")` | Optional JSON array of Admin users to create if missing. |
 | `entity-aliases` | `[]` | Map of raw entity name → display name shown in the UI. |
+| `policy_paths` | `[app_path('Policies')]` | Directories Governor scans to auto-discover policy classes and register them as governed entities. Add paths when your policies live outside `app/Policies` (e.g. in a module or package). |
 | `cache.enabled` | `false` | Enable cross-request caching of lookup tables (roles, actions, entities, permissions). |
 | `cache.ttl` | `3600` | Cache lifetime in seconds; use `null` to cache forever (until invalidated). |
 
@@ -629,6 +637,20 @@ return [
     | its original name.
     */
     'entity-aliases' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Policy Discovery Paths
+    |--------------------------------------------------------------------------
+    |
+    | Governor auto-discovers your policy classes and registers each as a
+    | governed entity. By default it scans your app's `app/Policies` directory;
+    | add more paths here when your policies live elsewhere (e.g. in a module
+    | or a package).
+    */
+    'policy_paths' => [
+        app_path('Policies'),
+    ],
 
     /*
     |--------------------------------------------------------------------------

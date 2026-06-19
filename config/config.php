@@ -101,6 +101,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Policy Discovery Paths
+    |--------------------------------------------------------------------------
+    |
+    | Governor auto-discovers your policy classes and registers each as a
+    | governed entity. By default it scans your app's `app/Policies` directory;
+    | add more paths here when your policies live elsewhere (e.g. in a module
+    | or a package).
+    */
+    'policy_paths' => [
+        app_path('Policies'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Lookup Table Cache
     |--------------------------------------------------------------------------
     |
