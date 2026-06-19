@@ -41,7 +41,7 @@ class RolesController extends Controller
         $ownershipClass = config("genealabs-laravel-governor.models.ownership");
         $roleClass = config("genealabs-laravel-governor.models.role");
         $entities = (new $entityClass)
-            ->whereNotIn('name', ['Permission (Laravel Governor)', 'Entity (Laravel Governor)', "Ability (Laravel Governor)", "Owned Resource (Laravel Governor)", "Team Invitation (Laravel Governor)"])
+            ->whereNotIn('name', ['Permission (Laravel Governor)', 'Entity (Laravel Governor)', "Ability (Laravel Governor)", "Resource (Laravel Governor)", "Team Invitation (Laravel Governor)"])
             ->orderBy("group_name")
             ->orderBy("name")
             ->get();
@@ -107,7 +107,7 @@ class RolesController extends Controller
                 [
                     "Ability (Laravel Governor)",
                     "Entity (Laravel Governor)",
-                    "Owned Resource (Laravel Governor)",
+                    "Resource (Laravel Governor)",
                     "Permission (Laravel Governor)",
                     "Team Invitation (Laravel Governor)",
                 ],

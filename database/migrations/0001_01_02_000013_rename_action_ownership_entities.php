@@ -14,10 +14,10 @@ return new class extends Migration
             ->where('name', 'Action (Laravel Governor)')
             ->update(['name' => 'Ability (Laravel Governor)']);
 
-        // Rename entity "Ownership (Laravel Governor)" to "Owned Resource (Laravel Governor)"
+        // Rename entity "Ownership (Laravel Governor)" to "Resource (Laravel Governor)"
         DB::table('governor_entities')
             ->where('name', 'Ownership (Laravel Governor)')
-            ->update(['name' => 'Owned Resource (Laravel Governor)']);
+            ->update(['name' => 'Resource (Laravel Governor)']);
     }
 
     public function down(): void
@@ -28,7 +28,7 @@ return new class extends Migration
             ->update(['name' => 'Action (Laravel Governor)']);
 
         DB::table('governor_entities')
-            ->where('name', 'Owned Resource (Laravel Governor)')
+            ->where('name', 'Resource (Laravel Governor)')
             ->update(['name' => 'Ownership (Laravel Governor)']);
     }
 };

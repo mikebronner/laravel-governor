@@ -22,7 +22,7 @@ class EntityRenameTest extends IntegrationTestCase
     /** @var list<string> */
     private array $internalEntities = [
         'Ability (Laravel Governor)',
-        'Owned Resource (Laravel Governor)',
+        'Resource (Laravel Governor)',
         'Permission (Laravel Governor)',
         'Entity (Laravel Governor)',
         'Team Invitation (Laravel Governor)',
@@ -58,10 +58,10 @@ class EntityRenameTest extends IntegrationTestCase
         ]);
     }
 
-    public function testMigrationRenamesOwnershipEntityToOwnedResource(): void
+    public function testMigrationRenamesOwnershipEntityToResource(): void
     {
         DB::table('governor_entities')
-            ->where('name', 'Owned Resource (Laravel Governor)')
+            ->where('name', 'Resource (Laravel Governor)')
             ->update(['name' => 'Ownership (Laravel Governor)']);
 
         $migration = require __DIR__ . '/../../database/migrations/0001_01_02_000013_rename_action_ownership_entities.php';
@@ -71,7 +71,7 @@ class EntityRenameTest extends IntegrationTestCase
             'name' => 'Ownership (Laravel Governor)',
         ]);
         $this->assertDatabaseHas('governor_entities', [
-            'name' => 'Owned Resource (Laravel Governor)',
+            'name' => 'Resource (Laravel Governor)',
         ]);
     }
 
@@ -90,7 +90,7 @@ class EntityRenameTest extends IntegrationTestCase
             'name' => 'Ability (Laravel Governor)',
         ]);
         $this->assertDatabaseMissing('governor_entities', [
-            'name' => 'Owned Resource (Laravel Governor)',
+            'name' => 'Resource (Laravel Governor)',
         ]);
     }
 
@@ -103,7 +103,7 @@ class EntityRenameTest extends IntegrationTestCase
             'name' => 'Ability (Laravel Governor)',
         ]);
         $this->assertDatabaseHas('governor_entities', [
-            'name' => 'Owned Resource (Laravel Governor)',
+            'name' => 'Resource (Laravel Governor)',
         ]);
     }
 
@@ -113,7 +113,7 @@ class EntityRenameTest extends IntegrationTestCase
             ->where('name', 'Ability (Laravel Governor)')
             ->update(['name' => 'Action (Laravel Governor)']);
         DB::table('governor_entities')
-            ->where('name', 'Owned Resource (Laravel Governor)')
+            ->where('name', 'Resource (Laravel Governor)')
             ->update(['name' => 'Ownership (Laravel Governor)']);
 
         $migration = require __DIR__ . '/../../database/migrations/0001_01_02_000013_rename_action_ownership_entities.php';
@@ -122,7 +122,7 @@ class EntityRenameTest extends IntegrationTestCase
         $this->assertDatabaseMissing('governor_entities', ['name' => 'Action (Laravel Governor)']);
         $this->assertDatabaseMissing('governor_entities', ['name' => 'Ownership (Laravel Governor)']);
         $this->assertDatabaseHas('governor_entities', ['name' => 'Ability (Laravel Governor)']);
-        $this->assertDatabaseHas('governor_entities', ['name' => 'Owned Resource (Laravel Governor)']);
+        $this->assertDatabaseHas('governor_entities', ['name' => 'Resource (Laravel Governor)']);
     }
 
     // ──────────────────────────────────────────────
