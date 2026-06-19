@@ -68,6 +68,18 @@ class CreatedListenerTest extends UnitTestCase
         $this->assertNull($model->governor_owned_by ?? null);
     }
 
+    public function testCreatingListenerSkipsOwnerAssignmentWhenNotAuthenticated()
+    {
+        auth()->logout();
+
+        $listener = new CreatingListener();
+        $author = new Author(['name' => 'No Auth']);
+
+        $listener->handle('eloquent.creating: ' . Author::class, [$author]);
+
+        $this->assertNull($author->getAttributes()['governor_owned_by'] ?? null);
+    }
+
     public function testCreatingListenerDoesNotOverrideExistingOwner()
     {
         $otherUser = User::factory()->create();
@@ -135,6 +147,28 @@ class CreatedListenerTest extends UnitTestCase
             'ownable_type' => Author::class,
             'ownable_id' => $author->getKey(),
             'user_id' => $otherUser->id,
+        ]);
+    }
+
+    public function testCreatedListenerSkipsAuthOwnerWhenConsoleGuardDeniesIt()
+    {
+        // Simulate a queue/console context where the authenticated user is
+        // treated as leaked: the guard denies assigning it as owner, so the
+        // wildcard listener writes no ownership row (preventing mis-attribution).
+        $listener = new class extends CreatedListener {
+            protected function shouldAssignAuthenticatedOwner(): bool
+            {
+                return false;
+            }
+        };
+
+        $author = new Author(['name' => 'Console Created']);
+        $author->saveQuietly();
+        $listener->handle('eloquent.created: ' . Author::class, [$author]);
+
+        $this->assertDatabaseMissing('governor_ownables', [
+            'ownable_type' => Author::class,
+            'ownable_id' => $author->getKey(),
         ]);
     }
 }

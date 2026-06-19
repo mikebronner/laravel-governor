@@ -9,6 +9,7 @@ use GeneaLabs\LaravelGovernor\GovernorOwnable;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
 
 class UpgradeTo0130SeederTest extends UnitTestCase
@@ -23,35 +24,46 @@ class UpgradeTo0130SeederTest extends UnitTestCase
         $this->actingAs($this->user);
     }
 
-    public function testSeederMigratesExistingOwnedByDataToPolymorphicTable()
+    protected function tearDown(): void
     {
-        // Create an author (auto-creates polymorphic record)
+        // Reset any morph map a test registered so it can't leak into the rest
+        // of the suite.
+        Relation::morphMap([], false);
+        Relation::requireMorphMap(false);
+
+        parent::tearDown();
+    }
+
+    public function testSeederRunLeavesFixtureModelsUntouchedBecauseTheyAreOutsideAppPath()
+    {
+        // Create an author (auto-creates polymorphic record).
         $author = Author::factory()->create();
 
-        // Delete the auto-created polymorphic record to simulate pre-upgrade state
+        // Delete the auto-created polymorphic record to simulate pre-upgrade state.
         GovernorOwnable::where('ownable_type', Author::class)
             ->where('ownable_id', $author->getKey())
             ->delete();
-
-        // Verify it's gone
         $this->assertDatabaseMissing('governor_ownables', [
             'ownable_type' => Author::class,
             'ownable_id' => $author->getKey(),
         ]);
 
-        // Ensure the old column still has the value
+        // Ensure the old column still has the value.
         $this->assertEquals(
             $this->user->id,
             DB::table('authors')->where('id', $author->id)->value('governor_owned_by')
         );
 
-        // Run the upgrade seeder
-        $seeder = new LaravelGovernorUpgradeTo0130();
-        $seeder->run();
+        // run() discovers governable models under app_path(), which holds no
+        // test fixtures, so it completes without recreating the fixture's
+        // polymorphic record. The per-model migration itself is covered by the
+        // migrateModel() tests below.
+        (new LaravelGovernorUpgradeTo0130())->run();
 
-        // The seeder scans app_path() models which won't find test fixtures.
-        // This validates the seeder doesn't crash on empty model sets.
-        // The core migration logic is tested via the DB-level test below.
+        $this->assertDatabaseMissing('governor_ownables', [
+            'ownable_type' => Author::class,
+            'ownable_id' => $author->getKey(),
+        ]);
     }
 
     public function testSeederDoesNotDuplicateExistingPolymorphicRecords()
@@ -85,12 +97,11 @@ class UpgradeTo0130SeederTest extends UnitTestCase
 
     public function testSeederRunsWithoutErrorOnEmptyModelSet()
     {
-        // The seeder scans app_path() which in test environment has no models.
-        // It should complete without throwing.
-        $seeder = new LaravelGovernorUpgradeTo0130();
-        $seeder->run();
+        // The seeder scans app_path() which in the test environment has no
+        // governable models; run() must complete without throwing.
+        $this->expectNotToPerformAssertions();
 
-        $this->assertTrue(true);
+        (new LaravelGovernorUpgradeTo0130())->run();
     }
 
     public function testMigrateModelRecreatesPolymorphicRecordsFromDeprecatedColumn()
@@ -150,5 +161,31 @@ class UpgradeTo0130SeederTest extends UnitTestCase
             $authors->count(),
             GovernorOwnable::where('ownable_type', Author::class)->count()
         );
+    }
+
+    public function testMigrateModelWritesMorphAliasUnderMorphMap()
+    {
+        // Under a morph map, migrateModel() must store the alias getMorphClass()
+        // returns, not the raw FQCN — otherwise the migrated rows are orphaned
+        // and governorOwner() resolves to null.
+        Relation::morphMap(['author' => Author::class]);
+
+        $author = Author::factory()->create();
+
+        GovernorOwnable::where('ownable_type', 'author')
+            ->where('ownable_id', $author->getKey())
+            ->delete();
+
+        (new LaravelGovernorUpgradeTo0130())->migrateModel(Author::class);
+
+        $this->assertDatabaseHas('governor_ownables', [
+            'ownable_type' => 'author',
+            'ownable_id' => $author->getKey(),
+            'user_id' => $this->user->id,
+        ]);
+
+        $author->unsetRelation('governorOwner');
+        $this->assertNotNull($author->governorOwner);
+        $this->assertEquals($this->user->id, $author->governorOwner->user_id);
     }
 }

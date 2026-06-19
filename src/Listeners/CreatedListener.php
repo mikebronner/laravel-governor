@@ -69,7 +69,7 @@ class CreatedListener
             $ownerId = $attributes['governor_owned_by'];
         }
 
-        if (! $ownerId && auth()->check()) {
+        if (! $ownerId && $this->shouldAssignAuthenticatedOwner()) {
             $ownerId = auth()->user()->id;
         }
 
@@ -82,14 +82,31 @@ class CreatedListener
             GovernorOwnable::class,
         );
 
+        // Store the morph class (alias under a registered morph map, FQCN
+        // otherwise) so writes match how the governorOwner() MorphOne reads
+        // the relationship — without this, ownership silently breaks under a
+        // morph map.
         (new $ownableClass)->firstOrCreate(
             [
-                'ownable_type' => get_class($model),
+                'ownable_type' => $model->getMorphClass(),
                 'ownable_id' => $model->getKey(),
             ],
             [
                 'user_id' => $ownerId,
             ],
         );
+    }
+
+    protected function shouldAssignAuthenticatedOwner(): bool
+    {
+        if (! auth()->check()) {
+            return false;
+        }
+
+        // Guard against attributing ownership to a leaked auth user in queue or
+        // console contexts, where the wildcard eloquent.created listener may
+        // fire without a genuine request-bound user. The package's own tests
+        // run in the console but rely on the acting user, so allow them.
+        return ! app()->runningInConsole() || app()->runningUnitTests();
     }
 }

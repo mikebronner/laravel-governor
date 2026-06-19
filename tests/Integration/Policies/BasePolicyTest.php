@@ -7,6 +7,8 @@ namespace GeneaLabs\LaravelGovernor\Tests\Integration\Policies;
 use GeneaLabs\LaravelGovernor\Permission;
 use GeneaLabs\LaravelGovernor\Team;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
+use GeneaLabs\LaravelGovernor\Tests\Fixtures\AuthorWithoutGovernable;
+use GeneaLabs\LaravelGovernor\Tests\Fixtures\Policies\Author as AuthorPolicy;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
 
@@ -428,5 +430,33 @@ class BasePolicyTest extends UnitTestCase
         $this->updatePermission("Member", "forceDelete", "own");
 
         $this->assertTrue($this->user->can("forceDelete", $this->author));
+    }
+
+    public function testPolicyResolvesOwnershipForGovernedModelWithoutGovernableTrait()
+    {
+        // A governed model registered the deprecated way — governor_owned_by
+        // column, no Governable trait, so no governorOwner() relationship.
+        // Ownership resolution must fall back to the column instead of throwing
+        // BadMethodCallException on $model->governorOwner.
+        $this->updatePermission("Member", "update", "own");
+
+        $model = new AuthorWithoutGovernable(["name" => "Legacy"]);
+        $model->governor_owned_by = $this->user->id;
+        $model->saveQuietly();
+
+        $this->assertTrue((new AuthorPolicy)->update($this->user, $model));
+    }
+
+    public function testPolicyDeniesNonOwnerForGovernedModelWithoutGovernableTrait()
+    {
+        // Same trait-less model owned by someone else — the column fallback must
+        // resolve ownership to 'other' and deny, without throwing.
+        $this->updatePermission("Member", "update", "own");
+
+        $model = new AuthorWithoutGovernable(["name" => "Legacy"]);
+        $model->governor_owned_by = $this->otherUser->id;
+        $model->saveQuietly();
+
+        $this->assertFalse((new AuthorPolicy)->update($this->user, $model));
     }
 }

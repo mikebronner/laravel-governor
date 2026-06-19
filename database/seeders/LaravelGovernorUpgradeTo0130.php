@@ -37,6 +37,11 @@ class LaravelGovernorUpgradeTo0130 extends Seeder
         $connection = $model->getConnectionName();
         $keyName = $model->getKeyName();
 
+        // Store the morph class (alias under a registered morph map, FQCN
+        // otherwise) so migrated rows match how the governorOwner() MorphOne
+        // reads ownership — a raw FQCN would orphan the rows under a morph map.
+        $morphClass = $model->getMorphClass();
+
         if (! Schema::connection($connection)->hasColumn($table, 'governor_owned_by')) {
             return;
         }
@@ -48,10 +53,10 @@ class LaravelGovernorUpgradeTo0130 extends Seeder
             ->whereNotNull('governor_owned_by')
             ->select([$keyName, 'governor_owned_by'])
             ->orderBy($keyName)
-            ->chunkById(1000, function (Collection $records) use ($modelClass, $keyName): void {
+            ->chunkById(1000, function (Collection $records) use ($morphClass, $keyName): void {
                 $rows = $records
                     ->map(fn ($record): array => [
-                        'ownable_type' => $modelClass,
+                        'ownable_type' => $morphClass,
                         'ownable_id' => $record->{$keyName},
                         'user_id' => $record->governor_owned_by,
                         'created_at' => now(),

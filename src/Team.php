@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Team extends Model
 {
@@ -112,25 +113,30 @@ class Team extends Model
     {
         $this->loadMissing('members');
 
-        // Update polymorphic ownership
         $ownableClass = config(
             "genealabs-laravel-governor.models.ownable",
             \GeneaLabs\LaravelGovernor\GovernorOwnable::class,
         );
 
-        (new $ownableClass)->updateOrCreate(
-            [
-                'ownable_type' => get_class($this),
-                'ownable_id' => $this->getKey(),
-            ],
-            [
-                'user_id' => $newOwner->getKey(),
-            ],
-        );
+        // Wrap both stores in a transaction so the polymorphic record and the
+        // deprecated column never disagree on the owner if the save throws.
+        DB::transaction(function () use ($newOwner, $ownableClass): void {
+            // Update polymorphic ownership. Store the morph class so the write
+            // matches how governorOwner() reads under a registered morph map.
+            (new $ownableClass)->updateOrCreate(
+                [
+                    'ownable_type' => $this->getMorphClass(),
+                    'ownable_id' => $this->getKey(),
+                ],
+                [
+                    'user_id' => $newOwner->getKey(),
+                ],
+            );
 
-        // Deprecated: maintain governor_owned_by for backward compatibility
-        $this->governor_owned_by = $newOwner->getKey();
-        $this->save();
+            // Deprecated: maintain governor_owned_by for backward compatibility
+            $this->governor_owned_by = $newOwner->getKey();
+            $this->save();
+        });
 
         // Clear cached relationship
         $this->unsetRelation('governorOwner');

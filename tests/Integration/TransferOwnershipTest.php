@@ -6,6 +6,8 @@ use GeneaLabs\LaravelGovernor\GovernorOwnable;
 use GeneaLabs\LaravelGovernor\Team;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
+use Illuminate\Database\Eloquent\Relations\Relation;
+
 class TransferOwnershipTest extends UnitTestCase
 {
     protected User $owner;
@@ -29,6 +31,16 @@ class TransferOwnershipTest extends UnitTestCase
         $this->team->members()->attach($this->owner);
         $this->team->members()->attach($this->member);
         $this->team->load("members");
+    }
+
+    protected function tearDown(): void
+    {
+        // Reset any morph map a test registered so it can't leak into the rest
+        // of the suite.
+        Relation::morphMap([], false);
+        Relation::requireMorphMap(false);
+
+        parent::tearDown();
     }
 
     public function testOwnerCanTransferOwnershipToMember(): void
@@ -147,6 +159,24 @@ class TransferOwnershipTest extends UnitTestCase
         $this->team->transferOwnership($this->member);
 
         $this->assertFalse($this->team->relationLoaded('governorOwner'));
+    }
+
+    public function testTransferOwnershipWritesMorphAliasUnderMorphMap(): void
+    {
+        // transferOwnership() must store the morph alias getMorphClass()
+        // returns under a morph map, matching how governorOwner() reads it.
+        Relation::morphMap(['team' => Team::class]);
+
+        $this->team->transferOwnership($this->member);
+
+        $this->assertDatabaseHas('governor_ownables', [
+            'ownable_type' => 'team',
+            'ownable_id' => $this->team->getKey(),
+            'user_id' => $this->member->getKey(),
+        ]);
+
+        $this->team->unsetRelation('governorOwner');
+        $this->assertEquals($this->member->getKey(), $this->team->governorOwner->user_id);
     }
 
     public function testOwnerNameUsesPolymorphicRelationship(): void

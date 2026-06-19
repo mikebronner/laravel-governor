@@ -138,8 +138,15 @@ abstract class BasePolicy
         $ownership = 'other';
 
         if ($model) {
-            $ownable = $model->governorOwner;
-            $ownerId = $ownable?->user_id;
+            if (method_exists($model, 'governorOwner')) {
+                $ownerId = $model->governorOwner?->user_id;
+            } else {
+                // Backward compatibility: a governed model registered via the
+                // deprecated governor_owned_by column without the Governable
+                // trait has no governorOwner() relationship. Reading it would
+                // throw BadMethodCallException, so fall back to the column.
+                $ownerId = $model->governor_owned_by ?? null;
+            }
 
             if ($ownerId !== null && $user->getKey() == $ownerId) {
                 $ownership = 'own';

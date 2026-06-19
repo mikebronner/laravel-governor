@@ -8,6 +8,7 @@ use GeneaLabs\LaravelGovernor\GovernorOwnable;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\Author;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class PolymorphicOwnershipTest extends UnitTestCase
 {
@@ -19,6 +20,16 @@ class PolymorphicOwnershipTest extends UnitTestCase
 
         $this->user = User::factory()->create();
         $this->actingAs($this->user);
+    }
+
+    protected function tearDown(): void
+    {
+        // Reset any morph map a test registered so it can't leak into the rest
+        // of the suite.
+        Relation::morphMap([], false);
+        Relation::requireMorphMap(false);
+
+        parent::tearDown();
     }
 
     // --- GovernorOwnable model tests ---
@@ -85,6 +96,34 @@ class PolymorphicOwnershipTest extends UnitTestCase
         $this->assertEquals($this->user->id, $ownable->user_id);
         $this->assertEquals(Author::class, $ownable->ownable_type);
         $this->assertEquals($author->getKey(), $ownable->ownable_id);
+    }
+
+    public function testOwnershipWriteAndReadUseMorphAliasUnderMorphMap()
+    {
+        // The MorphOne reads governor_ownables.ownable_type via getMorphClass(),
+        // which returns the alias once a morph map is registered. The write path
+        // must store that same alias, or the relationship silently resolves to
+        // null and every policy check downgrades the owner to 'other'.
+        Relation::morphMap(['author' => Author::class]);
+
+        $author = Author::factory()->create();
+
+        // Stored as the morph alias, not the raw FQCN.
+        $this->assertDatabaseHas('governor_ownables', [
+            'ownable_type' => 'author',
+            'ownable_id' => $author->getKey(),
+            'user_id' => $this->user->id,
+        ]);
+        $this->assertDatabaseMissing('governor_ownables', [
+            'ownable_type' => Author::class,
+            'ownable_id' => $author->getKey(),
+        ]);
+
+        // And the relationship still resolves to the owner.
+        $author->unsetRelation('governorOwner');
+        $this->assertNotNull($author->governorOwner);
+        $this->assertEquals($this->user->id, $author->governorOwner->user_id);
+        $this->assertEquals($this->user->id, $author->governor_owned_by);
     }
 
     public function testGovernorOwnerRelationshipReturnsNullWhenNoOwner()

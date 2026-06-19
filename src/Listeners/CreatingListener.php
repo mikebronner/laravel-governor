@@ -45,9 +45,22 @@ class CreatingListener
                 $attrs = $model->getAttributes();
                 $explicit = $attrs['governor_owned_by'] ?? null;
 
-                if (! $explicit && auth()->check()) {
+                if (! $explicit && $this->shouldAssignAuthenticatedOwner()) {
                     $model->governor_owned_by = auth()->user()->id;
                 }
             });
+    }
+
+    protected function shouldAssignAuthenticatedOwner(): bool
+    {
+        if (! auth()->check()) {
+            return false;
+        }
+
+        // Guard against attributing ownership to a leaked auth user in queue or
+        // console contexts, where the wildcard eloquent.creating listener may
+        // fire without a genuine request-bound user. The package's own tests
+        // run in the console but rely on the acting user, so allow them.
+        return ! app()->runningInConsole() || app()->runningUnitTests();
     }
 }

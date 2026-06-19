@@ -54,8 +54,10 @@ trait Governing
             \GeneaLabs\LaravelGovernor\GovernorOwnable::class,
         );
 
+        // Filter on the team's morph class (alias under a registered morph map,
+        // FQCN otherwise) so this read matches how ownership rows are written.
         $teamIds = (new $ownableClass)
-            ->where('ownable_type', $teamClass)
+            ->where('ownable_type', (new $teamClass)->getMorphClass())
             ->where('user_id', $this->getKey())
             ->pluck('ownable_id');
 
