@@ -105,7 +105,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Governor can cache lookup table queries (roles, actions, entities,
-    | ownerships, permissions) across requests to reduce database load.
+    | permissions) across requests to reduce database load.
     | When enabled, results are stored in your configured cache driver
     | with the specified TTL. Cache is automatically invalidated when
     | any lookup table is modified.
