@@ -68,4 +68,18 @@ class GoverningTest extends UnitTestCase
 
         $this->assertCount(0, $ownedTeams);
     }
+
+    public function testDeprecatedOwnedTeamsRelationResolvesViaLegacyColumn(): void
+    {
+        $team = (new Team)->create([
+            'name' => 'Legacy Team',
+            'description' => 'Owned via the deprecated governor_owned_by column',
+        ]);
+
+        // The deprecated ownedTeams() HasMany still resolves against the
+        // backward-compatible governor_owned_by column maintained by CreatingListener.
+        $ownedTeams = $this->user->ownedTeams;
+
+        $this->assertTrue($ownedTeams->contains('id', $team->id));
+    }
 }
