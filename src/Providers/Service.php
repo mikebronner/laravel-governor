@@ -15,6 +15,7 @@ use GeneaLabs\LaravelGovernor\Listeners\CreatedListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatedTeamListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingInvitationListener;
 use GeneaLabs\LaravelGovernor\Listeners\CreatingListener;
+use GeneaLabs\LaravelGovernor\Listeners\DeletingListener;
 use GeneaLabs\LaravelGovernor\Observers\LookupTableObserver;
 use GeneaLabs\LaravelGovernor\Ownership;
 use GeneaLabs\LaravelGovernor\Permission;
@@ -84,6 +85,7 @@ class Service extends AggregateServiceProvider
         app('events')->listen('eloquent.created: *', CreatedListener::class);
         app('events')->listen('eloquent.creating: *', CreatingListener::class);
         app('events')->listen('eloquent.saving: *', CreatingListener::class);
+        app('events')->listen('eloquent.deleting: *', DeletingListener::class);
         app('events')->listen("eloquent.created: {$invitationClass}", CreatedInvitationListener::class);
         app('events')->listen("eloquent.created: {$teamClass}", CreatedTeamListener::class);
         app('events')->listen("eloquent.creating: {$invitationClass}", CreatingInvitationListener::class);

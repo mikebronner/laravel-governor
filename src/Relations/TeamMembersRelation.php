@@ -12,6 +12,13 @@ class TeamMembersRelation extends BelongsToMany
     public function detach($ids = null, $touch = true)
     {
         $team = $this->getParent();
+
+        // Resolve the owner fresh: drop any eager-loaded governorOwner so the
+        // dual-source accessor re-reads the authoritative polymorphic record
+        // (falling back to the deprecated column). Without this, a stale
+        // in-memory owner held across an out-of-band transferOwnership() could
+        // let a former owner be detached, or wrongly block the current one.
+        $team->unsetRelation('governorOwner');
         $ownerId = (int) $team->governor_owned_by;
 
         if ($ownerId === 0) {

@@ -137,11 +137,26 @@ abstract class BasePolicy
 
         $ownership = 'other';
 
-        if (
-            $model
-            && $user->getKey() == $model->governor_owned_by
-        ) {
-            $ownership = 'own';
+        if ($model) {
+            if (method_exists($model, 'governorOwner')) {
+                // The getGovernorOwnedByAttribute() accessor resolves the
+                // polymorphic owner, falling back to the deprecated
+                // governor_owned_by column for records not yet migrated by the
+                // upgrade seeder. Reading governorOwner?->user_id directly would
+                // skip that fallback and silently downgrade every pre-upgrade
+                // record to 'other', breaking its own-ownership policy checks.
+                $ownerId = $model->governor_owned_by;
+            } else {
+                // Backward compatibility: a governed model registered via the
+                // deprecated governor_owned_by column without the Governable
+                // trait has no governorOwner() relationship. Reading it would
+                // throw BadMethodCallException, so fall back to the column.
+                $ownerId = $model->governor_owned_by ?? null;
+            }
+
+            if ($ownerId !== null && $user->getKey() == $ownerId) {
+                $ownership = 'own';
+            }
         }
 
         $filteredPermissions = $this->filterPermissions($action, $entity, $ownership);

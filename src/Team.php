@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Team extends Model
 {
@@ -34,6 +35,9 @@ class Team extends Model
         );
     }
 
+    /**
+     * @deprecated Use governorOwner() relationship instead.
+     */
     public function owner(): BelongsTo
     {
         $authClass = config("genealabs-laravel-governor.models.auth");
@@ -100,7 +104,8 @@ class Team extends Model
 
     public function getOwnerNameAttribute(): string
     {
-        return $this->owner->name
+        return $this->governorOwner?->owner?->name
+            ?? $this->owner?->name
             ?? "";
     }
 
@@ -108,8 +113,39 @@ class Team extends Model
     {
         $this->loadMissing('members');
 
-        $this->governor_owned_by = $newOwner->getKey();
-        $this->save();
+        $ownableClass = config(
+            "genealabs-laravel-governor.models.ownable",
+            \GeneaLabs\LaravelGovernor\GovernorOwnable::class,
+        );
+
+        // Wrap both stores in a transaction so the polymorphic record and the
+        // deprecated column never disagree on the owner if the save throws.
+        DB::transaction(function () use ($newOwner, $ownableClass): void {
+            // Update polymorphic ownership on the team's own connection so the
+            // write lands in the same database governorOwner() reads from — the
+            // MorphOne resolves GovernorOwnable on the parent's connection, so a
+            // default-connection write would be invisible for a team on a
+            // non-default connection. Store the morph class so the write matches
+            // how governorOwner() reads under a registered morph map.
+            (new $ownableClass)
+                ->setConnection($this->getConnectionName())
+                ->updateOrCreate(
+                    [
+                        'ownable_type' => $this->getMorphClass(),
+                        'ownable_id' => $this->getKey(),
+                    ],
+                    [
+                        'user_id' => $newOwner->getKey(),
+                    ],
+                );
+
+            // Deprecated: maintain governor_owned_by for backward compatibility
+            $this->governor_owned_by = $newOwner->getKey();
+            $this->save();
+        });
+
+        // Clear cached relationship
+        $this->unsetRelation('governorOwner');
 
         return $this;
     }

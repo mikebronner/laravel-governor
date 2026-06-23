@@ -2,9 +2,12 @@
 
 namespace GeneaLabs\LaravelGovernor\Tests\Integration;
 
+use GeneaLabs\LaravelGovernor\GovernorOwnable;
 use GeneaLabs\LaravelGovernor\Team;
 use GeneaLabs\LaravelGovernor\Tests\Fixtures\User;
 use GeneaLabs\LaravelGovernor\Tests\UnitTestCase;
+use Illuminate\Database\Eloquent\Relations\Relation;
+
 class TransferOwnershipTest extends UnitTestCase
 {
     protected User $owner;
@@ -30,6 +33,16 @@ class TransferOwnershipTest extends UnitTestCase
         $this->team->load("members");
     }
 
+    protected function tearDown(): void
+    {
+        // Reset any morph map a test registered so it can't leak into the rest
+        // of the suite.
+        Relation::morphMap([], false);
+        Relation::requireMorphMap(false);
+
+        parent::tearDown();
+    }
+
     public function testOwnerCanTransferOwnershipToMember(): void
     {
         $this->team->transferOwnership($this->member);
@@ -37,6 +50,39 @@ class TransferOwnershipTest extends UnitTestCase
         $this->team->refresh();
 
         $this->assertEquals($this->member->getKey(), $this->team->governor_owned_by);
+    }
+
+    public function testDetachReadsFreshOwnerAfterOutOfBandTransfer(): void
+    {
+        // Eager-load governorOwner so this instance holds a now-stale owner.
+        $this->team->load('governorOwner');
+        $this->assertEquals(
+            $this->owner->getKey(),
+            (int) $this->team->governor_owned_by,
+        );
+
+        // Transfer ownership out-of-band on a separate instance, leaving the
+        // eager-loaded owner on $this->team stale.
+        Team::find($this->team->getKey())->transferOwnership($this->member);
+
+        // The stale instance must refuse to detach the NEW owner (member)...
+        try {
+            $this->team->members()->detach($this->member);
+            $this->fail('Expected the new owner to be protected from detachment.');
+        } catch (\LogicException $exception) {
+            $this->assertStringContainsString(
+                'team owner cannot be removed',
+                $exception->getMessage(),
+            );
+        }
+
+        // ...and must allow detaching the FORMER owner, proving detach() re-read
+        // ownership fresh instead of trusting the stale eager-loaded value.
+        $this->team->members()->detach($this->owner);
+        $this->team->load('members');
+
+        $this->assertFalse($this->team->members->contains($this->owner));
+        $this->assertTrue($this->team->members->contains($this->member));
     }
 
     public function testPreviousOwnerRetainsMembershipAfterTransfer(): void
@@ -107,6 +153,83 @@ class TransferOwnershipTest extends UnitTestCase
         );
 
         $response->assertSessionHasErrors("new_owner_id");
+    }
+
+    public function testTransferOwnershipCreatesPolymorphicRecord(): void
+    {
+        $this->team->transferOwnership($this->member);
+
+        $this->assertDatabaseHas('governor_ownables', [
+            'ownable_type' => Team::class,
+            'ownable_id' => $this->team->getKey(),
+            'user_id' => $this->member->getKey(),
+        ]);
+    }
+
+    public function testTransferOwnershipUpdatesExistingPolymorphicRecord(): void
+    {
+        // First transfer
+        $this->team->transferOwnership($this->member);
+
+        // Second transfer back
+        $this->team->transferOwnership($this->owner);
+
+        $this->assertDatabaseHas('governor_ownables', [
+            'ownable_type' => Team::class,
+            'ownable_id' => $this->team->getKey(),
+            'user_id' => $this->owner->getKey(),
+        ]);
+
+        // Should only have one record, not two
+        $count = GovernorOwnable::where('ownable_type', Team::class)
+            ->where('ownable_id', $this->team->getKey())
+            ->count();
+        $this->assertEquals(1, $count);
+    }
+
+    public function testTransferOwnershipClearsGovernorOwnerRelation(): void
+    {
+        $this->team->transferOwnership($this->member);
+
+        $this->assertFalse($this->team->relationLoaded('governorOwner'));
+    }
+
+    public function testTransferOwnershipWritesMorphAliasUnderMorphMap(): void
+    {
+        // transferOwnership() must store the morph alias getMorphClass()
+        // returns under a morph map, matching how governorOwner() reads it.
+        Relation::morphMap(['team' => Team::class]);
+
+        $this->team->transferOwnership($this->member);
+
+        $this->assertDatabaseHas('governor_ownables', [
+            'ownable_type' => 'team',
+            'ownable_id' => $this->team->getKey(),
+            'user_id' => $this->member->getKey(),
+        ]);
+
+        $this->team->unsetRelation('governorOwner');
+        $this->assertEquals($this->member->getKey(), $this->team->governorOwner->user_id);
+    }
+
+    public function testOwnerNameUsesPolymorphicRelationship(): void
+    {
+        $this->team->transferOwnership($this->member);
+        $this->team->refresh();
+
+        $this->assertEquals($this->member->name, $this->team->ownerName);
+    }
+
+    public function testOwnerNameFallsBackToDeprecatedOwnerRelationship(): void
+    {
+        // Remove polymorphic record but keep column — should fall back to owner()
+        GovernorOwnable::where('ownable_type', Team::class)
+            ->where('ownable_id', $this->team->getKey())
+            ->delete();
+
+        $freshTeam = Team::find($this->team->id);
+
+        $this->assertEquals($this->owner->name, $freshTeam->ownerName);
     }
 
     public function testPreviousOwnerCannotPerformOwnerActionsAfterTransfer(): void
